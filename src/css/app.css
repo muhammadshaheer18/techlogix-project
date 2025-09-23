@@ -1,0 +1,74 @@
+/*
+    Document   : override
+    Created on : <date>
+    Author     : <author>
+    Description:
+        This is where any of your application specific styles should be included
+*/
+
+.oj-webs-applayout-body {
+  background-color: #ffffff !important;
+}
+
+.image-background {
+  background-image: url("images/bank_background.jpg");
+  background-size: cover;
+  /* Scales the image to cover the element */
+  background-repeat: no-repeat;
+  /* Prevents the image from tiling */
+  background-position: center;
+  /* Centers the image */
+}
+
+.send-off-screen {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.meezan-logo {
+  width: 137px;
+  height: 18px;
+  content: url("images/Icons/meezan-logo.svg")
+}
+
+html:not([dir="rtl"]) .meezan-logo {
+  padding-right: 4px
+}
+
+html[dir="rtl"] .meezan-logo {
+  padding-left: 4px
+}
+
+.meezan-logo:before {
+  display: inline
+}
+
+.demo-appheader-avatar {
+  width: 24px;
+  height: 24px
+}
+
+.nav-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.demo-appheader-avatar:before {
+  content: url("images/avatar_24px.png")
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5),
+(min-resolution: 144dpi),
+(min-resolution: 1.5dppx) {
+  .demo-appheader-avatar:before {
+    content: url("images/avatar_24px_2x.png");
+    -webkit-transform: translate(-25%, -25%) scale(0.5);
+    transform: translate(-25%, -25%) scale(0.5)
+  }
+}
