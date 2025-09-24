@@ -1,96 +1,92 @@
-/*
-    Document   : override
-    Created on : <date>
-    Author     : <author>
-    Description:
-        This is where any of your application specific styles should be included
-*/
-
-/* .oj-webs-applayout-body {
-  background-color: #ffffff !important;
-} */
- .secondary-container{
+.secondary-container {
   position: relative;
   z-index: 2;
- }
-.primary-container{
-  height: 800px;
-  width: 1400px;
-  border-radius: 3%;
-  margin-left: 22%;
+  padding: 1rem;
+}
+
+/* Primary content container */
+.primary-container {
+  max-width: 1200px;   /* limits size on large screens */
+  width: 100%;         /* full width on small screens */
+  min-height: 600px;   /* allows flexibility */
+  border-radius: 12px;
+  margin: 20px auto 100px auto; /* centers and adds space */
   background-color: #ffffff !important;
-  margin-bottom: 150px;
-  margin-top: 20px;
+  padding: 1rem;
+  box-sizing: border-box;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
+
+/* Background Image with Overlay */
 .image-background {
-  background-image: url("images/bank_background.jpg");
+  background-image: url("./images/bank_background.png");
   background-size: cover;
-  /* Scales the image to cover the element */
   background-repeat: no-repeat;
-  /* Prevents the image from tiling */
   background-position: center;
-  /* Centers the image */
+  min-height: 100vh; /* ensures full screen coverage */
+  position: relative;
 }
+
 .image-background::after {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0; /* shorthand for top/right/bottom/left:0 */
   background: purple;
-  opacity: 0.4; /* adjust transparency */
-  pointer-events: none; /* lets you click through */
-}
-.send-off-screen {
-  position: absolute;
-  left: -10000px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
+  opacity: 0.4;
+  pointer-events: none;
 }
 
+/* Responsive Meezan Logo */
 .meezan-logo {
-  width: 137px;
-  height: 18px;
-  content: url("images/Icons/meezan-logo.svg")
-}
-
-html:not([dir="rtl"]) .meezan-logo {
-  padding-right: 4px
-}
-
-html[dir="rtl"] .meezan-logo {
-  padding-left: 4px
-}
-
-.meezan-logo:before {
-  display: inline
-}
-
-.demo-appheader-avatar {
-  width: 24px;
-  height: 24px
+  max-width: 250px;
+  width: 100%;
+  height: auto;
 }
 
 .nav-style {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 15px;
 }
 
-.demo-appheader-avatar:before {
-  content: url("images/avatar_24px.png")
+
+
+/* Responsive breakpoints */
+@media (max-width: 1024px) {
+  .primary-container {
+    max-width: 90%;
+    min-height: 500px;
+    margin-bottom: 80px;
+  }
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.5),
-(min-resolution: 144dpi),
-(min-resolution: 1.5dppx) {
-  .demo-appheader-avatar:before {
-    content: url("images/avatar_24px_2x.png");
-    -webkit-transform: translate(-25%, -25%) scale(0.5);
-    transform: translate(-25%, -25%) scale(0.5)
+@media (max-width: 768px) {
+  .primary-container {
+    max-width: 95%;
+    min-height: auto;
+    margin-bottom: 60px;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .meezan-logo {
+    max-width: 180px;
+    content: url("./images/Icons/meezan-logo.svg")
+  }
+}
+
+@media (max-width: 480px) {
+  .primary-container {
+    padding: 0.8rem;
+    margin-bottom: 40px;
+  }
+
+  .meezan-logo {
+    max-width: 150px;
+  }
+
+  footer {
+    font-size: 0.8rem;
   }
 }
