@@ -21,7 +21,6 @@ class LoginDetailsPage {
    * after being disconnected.
    */
   connected(): void {
-    AccUtils.announce("About page loaded.");
     document.title = "About";
     // implement further logic if needed
   }

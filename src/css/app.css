@@ -1,42 +1,48 @@
+/* ------------------------------
+   Layout Containers
+--------------------------------*/
 .secondary-container {
   position: relative;
   z-index: 2;
   padding: 1rem;
 }
 
-/* Primary content container */
 .primary-container {
-  max-width: 1200px;   /* limits size on large screens */
-  width: 100%;         /* full width on small screens */
-  min-height: 600px;   /* allows flexibility */
+  max-width: 1200px;
+  width: 100%;
+  min-height: 600px;
   border-radius: 12px;
-  margin: 20px auto 100px auto; /* centers and adds space */
+  margin: 20px auto 100px auto;
   background-color: #ffffff !important;
-  padding: 1rem;
+  padding: 2.5rem;
   box-sizing: border-box;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Background Image with Overlay */
+/* ------------------------------
+   Background Image + Overlay
+--------------------------------*/
 .image-background {
   background-image: url("./images/bank_background.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  min-height: 100vh; /* ensures full screen coverage */
+  min-height: 100vh;
   position: relative;
 }
 
 .image-background::after {
   content: "";
   position: absolute;
-  inset: 0; /* shorthand for top/right/bottom/left:0 */
+  inset: 0;
   background: purple;
   opacity: 0.4;
   pointer-events: none;
 }
 
-/* Responsive Meezan Logo */
+/* ------------------------------
+   Logo
+--------------------------------*/
 .meezan-logo {
   max-width: 250px;
   width: 100%;
@@ -50,9 +56,112 @@
   padding: 15px;
 }
 
+/* ------------------------------
+   Circle Step Number
+--------------------------------*/
+.circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #ccc; /* inactive */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
 
+/* Selected state for circle */
+#navTabBar .oj-selected .circle,
+#navDrawerList .oj-selected .circle {
+  background-color: #00c855 !important;
+  color: white;
+}
 
-/* Responsive breakpoints */
+/* ------------------------------
+   JET Variables (Safe Overrides)
+--------------------------------*/
+:root {
+  /* Active tab underline */
+  --oj-tab-bar-item-border-color-selected: #ffffff;
+  --oj-tab-bar-item-border-width: 2px;
+
+  /* Text colors */
+  --oj-core-text-color: #666;             /* inactive gray */
+  --oj-core-selected-text-color: #00c855; /* active green */
+
+  /* Typography (bold active items) */
+  --oj-typography-body-md-font-weight-selected: 700;
+}
+
+/* Tab underline refinement */
+.oj-tabbar-horizontal .oj-tab-bar-item.oj-selected {
+  border-bottom: var(--oj-tab-bar-item-border-width) solid var(--oj-tab-bar-item-border-color-selected) !important;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.heading-page{
+  font-size: xx-large;
+  font-weight: 500;
+}
+
+.oj-tab-bar-item-title{
+  color: #00c855;
+}
+
+.form-container {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-content {
+  padding-right: 40px;
+}
+
+.help-section {
+  padding: 20px;
+  border-left: 1px solid #ddd;
+  text-align: center;
+}
+
+.help-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.help-section h4 {
+  color: #6a0dad; /* Purple color */
+}
+
+.custom-tab-bar {
+  --oj-c-tab-bar-item-color: #7b7b7b;
+  --oj-c-tab-bar-item-background-color: #f0f0f0;
+  --oj-c-tab-bar-item-selected-color: white;
+  --oj-c-tab-bar-item-selected-background-color: #6a0dad; /* Purple color */
+  --oj-c-tab-bar-item-border-color: transparent;
+  --oj-c-tab-bar-border-color: #ccc;
+}
+
+/* Updated button styling to avoid overriding core classes */
+.back-button {
+  background-color: #f0f0f0 !important;
+  border-color: #f0f0f0 !important;
+  color: #6a0dad !important;
+}
+
+.next-button {
+  background-color: #6a0dad !important;
+  border-color: #6a0dad !important;
+  color: white !important;
+}
+/* ------------------------------
+   Responsive Breakpoints
+--------------------------------*/
 @media (max-width: 1024px) {
   .primary-container {
     max-width: 90%;
@@ -72,7 +181,7 @@
 
   .meezan-logo {
     max-width: 180px;
-    content: url("./images/Icons/meezan-logo.svg")
+    content: url("./images/Icons/meezan-logo.svg");
   }
 }
 

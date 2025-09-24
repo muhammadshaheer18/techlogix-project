@@ -24,6 +24,7 @@ import "ojs/ojdrawerpopup";
 interface CoreRouterDetail {
   label: string;
   iconClass: string;
+  value: string;
 };
 
 class RootViewModel {
@@ -61,12 +62,10 @@ class RootViewModel {
 
     const navData = [
       { path: "", redirect: "AccountTypePage" },
-      { path: "AccountTypePage", detail: { label: "Account Type", iconClass: "oj-ux-ico-bar-chart" } },
-      { path: "AccountDetailsPage", detail: { label: "Account Detail", iconClass: "oj-ux-ico-fire" } },
-      { path: "VerificationPage", detail: { label: "Verification", iconClass: "oj-ux-ico-contact-group" } },
-      { path: "LoginDetailsPage", detail: { label: "Login Details", iconClass: "oj-ux-ico-information-s" } },
-      { path: "TermsConditionsPage", detail: { label: "Terms & Conditions", iconClass: "oj-ux-ico-information-s" } },
-      { path: "SuccessOnboardPage", detail: { label: "Success Onboard!", iconClass: "oj-ux-ico-information-s" } }
+      { path: "AccountTypePage", detail: { label: "Account Type", iconClass: "circle", value: "1" } },
+      { path: "AccountDetailsPage", detail: { label: "Account Detail", iconClass: "circle", value: "2" } },
+      { path: "VerificationPage", detail: { label: "Verification", iconClass: "circle", value: "3" } },
+      { path: "LoginDetailsPage", detail: { label: "Login Details", iconClass: "circle", value: "4" } }
     ];
     // router setup
     const router = new CoreRouter(navData, {

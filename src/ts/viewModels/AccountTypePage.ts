@@ -21,7 +21,7 @@ class AccountTypePage {
    * after being disconnected.
    */
   connected(): void {
-    AccUtils.announce("Account Type page loaded.");
+
     document.title = "AccountTypePage";
     // implement further logic if needed
   }

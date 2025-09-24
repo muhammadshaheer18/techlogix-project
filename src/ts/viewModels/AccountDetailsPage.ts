@@ -21,7 +21,6 @@ class AccountDetailsPage {
    * after being disconnected.
    */
   connected(): void {
-    AccUtils.announce("Customers page loaded.");
     document.title = "Customers";
     // implement further logic if needed
   }
