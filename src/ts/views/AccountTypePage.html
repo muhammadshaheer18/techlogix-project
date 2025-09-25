@@ -3,33 +3,42 @@
 
     <!-- Left Section - Form -->
     <div class="left-section">
-      
+
       <!-- Header -->
       <div class="header">
-        <h1>Enter Account Details</h1>
+        <h1>Select Account Type</h1>
       </div>
 
       <!-- Tab Navigation -->
       <div class="tab-navigation">
-        <div class="tab-item" 
-             data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, 
-                        click: function() { switchTab('account') }">
-          Account Number
+        <div class="tab-item-p1 active">
+          <img src="css/images/Icons/Individual-Icon-Filled.svg" alt="">
+          Individual
         </div>
-        <div class="tab-item" 
-             data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, 
-                        click: function() { switchTab('iban') }">
-          IBAN
+        <div class="tab-item-p1">
+          <img src="" alt="">
+          Sole Propertier
+        </div>
+        <div class="tab-item-p1">
+          <img src="" alt="">
+          Credit Card
+        </div>
+        <div class="tab-item-p1">
+          <img src="" alt="">
+          Smart Wallet
+        </div>
+        <div class="tab-item-p1">
+          <img src="/css/images/Icons/Foreign-National-Icon-Unfilled.svg" alt="">
+          Foreign National
         </div>
       </div>
 
       <!-- Account Number Form -->
-      <div class="form-section" data-bind="if: activeTab() === 'account'">
+      <div class="form-section">
         <div class="form-group">
-          <label class="form-label">Account Number</label>
-          <input type="text" class="form-input" placeholder="XXXXX XXXXXXXXX"
-                 data-bind="textInput: accountNumber, event: { focus: onInputFocus }" />
-          <div class="help-text">Please enter your 14 digit Account Number</div>
+          <label class="form-label">CNIC Number</label>
+          <input type="text" class="form-input" placeholder="XXXXX XXXXXXX X">
+          <div class="help-text">Please enter your 13-digit CNIC Number</div>
         </div>
 
         <div class="button-group">
@@ -39,29 +48,16 @@
       </div>
 
       <!-- IBAN Form -->
-      <div class="form-section" data-bind="if: activeTab() === 'iban'">
-        <div class="form-group">
-          <label class="form-label">IBAN</label>
-          <input type="text" class="form-input" placeholder="XXXX XXXX XXXX XXXX"
-                 data-bind="textInput: ibanNumber, event: { focus: onInputFocus }" />
-          <div class="help-text">Please enter your IBAN number</div>
-        </div>
-
-        <div class="button-group">
-          <button class="btn-back" data-bind="click: goBack">Back</button>
-          <button class="btn-next" data-bind="click: goNext">Next</button>
-        </div>
-      </div>
 
     </div>
 
     <!-- Right Section - Help -->
     <div class="help-section">
-      <img class="cheque-image" src="/src/css/images/Icons/cheque.png" title="Cheque" alt="Cheque" />
+      <img class="cheque-image" src="/css/images/Icons/nic.svg" title="Cheque" alt="Cheque" />
 
       <div class="help-content">
-        <h3>How to find your Account Number?</h3>
-        <p>The simplest way of finding your Account Number is to look for it on your cheque book.</p>
+        <h3>Find your CNIC Identity Number</h3>
+        <p>Permenant Citizens of Pakistan can find their CNIC Identity number on their Identity Card issued by NADRA</p>
       </div>
 
       <div class="progress-indicator">

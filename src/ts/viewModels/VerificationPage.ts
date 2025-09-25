@@ -21,7 +21,6 @@ class VerificationPage {
    * after being disconnected.
    */
   connected(): void {
-    AccUtils.announce("Incidents page loaded.");
     document.title = "Incidents";
     // implement further logic if needed
   }

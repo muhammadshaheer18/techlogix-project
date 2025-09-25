@@ -1,11 +1,76 @@
-<!--
- Copyright (c) 2014, 2025, Oracle and/or its affiliates.
- Licensed under The Universal Permissive License (UPL), Version 1.0
- as shown at https://oss.oracle.com/licenses/upl/
- -->
 <div class="oj-hybrid-padding">
-  <h1>Accounts Detail Page</h1>
-  <div>
-      To change the content of this section, you will make edits to the customers.html file located in the /ts/views folder.
+  <div class="account-details-container">
+
+    <!-- Left Section - Form -->
+    <div class="left-section">
+      
+      <!-- Header -->
+      <div class="header">
+        <h1>Enter Account Details</h1>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="tab-navigation">
+        <div class="tab-item" 
+             data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, 
+                        click: function() { switchTab('account') }">
+          Account Number
+        </div>
+        <div class="tab-item" 
+             data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, 
+                        click: function() { switchTab('iban') }">
+          IBAN
+        </div>
+      </div>
+
+      <!-- Account Number Form -->
+      <div class="form-section" data-bind="if: activeTab() === 'account'">
+        <div class="form-group">
+          <label class="form-label">Account Number</label>
+          <input type="text" class="form-input" placeholder="XXXXX XXXXXXXXX"
+                 data-bind="textInput: accountNumber, event: { focus: onInputFocus }" />
+          <div class="help-text">Please enter your 14 digit Account Number</div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn-back" data-bind="click: goBack">Back</button>
+          <button class="btn-next" data-bind="click: goNext">Next</button>
+        </div>
+      </div>
+
+      <!-- IBAN Form -->
+      <div class="form-section" data-bind="if: activeTab() === 'iban'">
+        <div class="form-group">
+          <label class="form-label">IBAN</label>
+          <input type="text" class="form-input" placeholder="XXXX XXXX XXXX XXXX"
+                 data-bind="textInput: ibanNumber, event: { focus: onInputFocus }" />
+          <div class="help-text">Please enter your IBAN number</div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn-back" data-bind="click: goBack">Back</button>
+          <button class="btn-next" data-bind="click: goNext">Next</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Section - Help -->
+    <div class="help-section">
+      <img class="cheque-image" src="/css/images/Icons/cheque.png" title="Cheque" alt="Cheque" />
+
+      <div class="help-content">
+        <h3>How to find your Account Number?</h3>
+        <p>The simplest way of finding your Account Number is to look for it on your cheque book.</p>
+      </div>
+
+      <div class="progress-indicator">
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+    </div>
+
   </div>
 </div>
