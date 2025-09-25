@@ -1,3 +1,10 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
 /* ------------------------------
    Layout Containers
 --------------------------------*/
@@ -9,14 +16,14 @@
 
 .primary-container {
   max-width: 1200px;
-  width: 100%;
-  min-height: 600px;
+  width: 90%;
+  min-height: 500px;
   border-radius: 12px;
-  margin: 20px auto 100px auto;
-  background-color: #ffffff !important;
-  padding: 2.5rem;
+  margin: 2rem auto 5rem auto;
+  background-color: #ffffff;
+  padding: 2rem;
   box-sizing: border-box;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 /* ------------------------------
@@ -35,8 +42,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: purple;
-  opacity: 0.4;
+  background: rgba(128, 0, 128, 0.25);
   pointer-events: none;
 }
 
@@ -44,7 +50,7 @@
    Logo
 --------------------------------*/
 .meezan-logo {
-  max-width: 250px;
+  max-width: 200px;
   width: 100%;
   height: auto;
 }
@@ -53,114 +59,268 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px;
+  padding: 1rem;
 }
 
 /* ------------------------------
-   Circle Step Number
+   Stepper Navigation Styles
 --------------------------------*/
+
+/* Tab Bar Container */
+#navTabBar {
+  background: transparent !important;
+  border: none !important;
+  margin-bottom: 4rem;
+  position: relative;
+  padding: 1rem 0;
+}
+
+/* Tab Bar Item Styling */
+#navTabBar .oj-tab-bar-item {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* Tab Bar Item Link */
+#navTabBar .oj-tab-bar-item > a {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  padding: 1rem 0.5rem !important;
+  width: 100% !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Circle Step Number */
 .circle {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: #ccc; /* inactive */
-  color: white;
+  background-color: #d1d5db;
+  color: #6b7280;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 12px;
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 3;
+  border: 2px solid transparent;
 }
 
-/* Selected state for circle */
+/* Step Labels */
+#navTabBar .oj-tab-bar-item a .oj-bind-text:last-child,
+#navDrawerList .oj-navigation-list-item a .oj-bind-text:last-child {
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+/* Active/Selected State - More Specific Selectors */
+#navTabBar .oj-tab-bar-item.oj-selected .circle,
 #navTabBar .oj-selected .circle,
+.oj-tab-bar .oj-selected .circle {
+  background-color: #00c855 !important;
+  color: white !important;
+  border: none !important;
+}
+
+#navTabBar .oj-tab-bar-item.oj-selected a .oj-bind-text:last-child,
+#navTabBar .oj-selected a .oj-bind-text:last-child,
+.oj-tab-bar .oj-selected a .oj-bind-text:last-child {
+  color: #00c855 !important;
+  font-weight: 600 !important;
+}
+
+/* Additional fallback selectors for active state */
+.oj-tab-bar-item.oj-selected .circle {
+  background-color: #00c855 !important;
+  color: white !important;
+}
+
+.oj-navigation-list-item.oj-selected .circle {
+  background-color: #00c855 !important;
+  color: white !important;
+}
+
+/* Connecting Lines Between Steps */
+#navTabBar .oj-tab-bar-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  left: calc(50% + 20px);
+  right: calc(-50% + 20px);
+  height: 2px;
+  background-color: #d1d5db;
+  z-index: 1;
+}
+
+/* Active connecting line (for completed steps) */
+#navTabBar .oj-tab-bar-item.oj-selected:not(:last-child)::after {
+  background-color: #00c855 !important;
+}
+
+/* Green underline for active tab - Positioned below the tab */
+#navTabBar .oj-tab-bar-item.oj-selected::before,
+#navTabBar .oj-selected::before,
+.oj-tab-bar .oj-selected::before {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: #00c855 !important;
+  border-radius: 1px;
+  z-index: 10;
+}
+
+/* Navigation Drawer Styles (Mobile) */
+#navDrawerList .oj-navigation-list-item {
+  background: transparent !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+}
+
+#navDrawerList .oj-navigation-list-item a {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  width: 100% !important;
+  text-decoration: none !important;
+  padding: 0.5rem 0 !important;
+}
+
+#navDrawerList .circle {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
 #navDrawerList .oj-selected .circle {
   background-color: #00c855 !important;
-  color: white;
+  color: white !important;
+}
+
+#navDrawerList .oj-selected a .oj-bind-text:last-child {
+  color: #00c855 !important;
+  font-weight: 600 !important;
+}
+
+/* Remove default JET tab styling */
+#navTabBar .oj-tab-bar-item.oj-selected {
+  border-bottom: none !important;
 }
 
 /* ------------------------------
-   JET Variables (Safe Overrides)
+   JET Variables Override - Force Green Colors
 --------------------------------*/
 :root {
-  /* Active tab underline */
-  --oj-tab-bar-item-border-color-selected: #ffffff;
-  --oj-tab-bar-item-border-width: 2px;
-
-  /* Text colors */
-  --oj-core-text-color: #666;             /* inactive gray */
-  --oj-core-selected-text-color: #00c855; /* active green */
-
-  /* Typography (bold active items) */
-  --oj-typography-body-md-font-weight-selected: 700;
+  --oj-tab-bar-item-border-color-selected: transparent !important;
+  --oj-tab-bar-item-border-width: 0px !important;
+  --oj-core-text-color: #6b7280 !important;
+  --oj-core-selected-text-color: #00c855 !important;
+  --oj-typography-body-md-font-weight-selected: 600 !important;
 }
 
-/* Tab underline refinement */
-.oj-tabbar-horizontal .oj-tab-bar-item.oj-selected {
-  border-bottom: var(--oj-tab-bar-item-border-width) solid var(--oj-tab-bar-item-border-color-selected) !important;
-  width: fit-content;
-  margin: 0 auto;
+/* Override any JET default circle colors */
+.circle {
+  background-color: #d1d5db !important;
+  color: #6b7280 !important;
 }
 
-.heading-page{
-  font-size: xx-large;
-  font-weight: 500;
+/* Force green for selected states with highest specificity */
+[class*="oj-selected"] .circle,
+.oj-selected .circle,
+#navTabBar .oj-selected .circle,
+#navDrawerList .oj-selected .circle {
+  background-color: #00c855 !important;
+  color: white !important;
+  border: none !important;
 }
 
-.oj-tab-bar-item-title{
-  color: #00c855;
+/* Force green text for selected labels */
+[class*="oj-selected"] .oj-bind-text:last-child,
+.oj-selected .oj-bind-text:last-child {
+  color: #00c855 !important;
 }
 
-.account-details-container {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #ffffff;
-}
-
-/* Header */
+/* ------------------------------
+   Page Heading
+--------------------------------*/
 .header h1 {
-  font-size: 28px;
-  font-weight: 600;
-  color: #333333;
-  margin: 0 0 30px 0;
+  font-size: 2rem;
+  font-weight: 650;
+  color: #333;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
 }
 
-/* Tab Navigation */
+/* ------------------------------
+   Tab Navigation (Legacy - if still used)
+--------------------------------*/
 .tab-navigation {
   display: flex;
-  margin-bottom: 40px;
+  margin-bottom: 2rem;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .tab-item {
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 500;
+  display: flex;             
+  justify-content: center;    
+  align-items: center;        
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  position: relative;
   border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+  width: 20rem;
+  height: 3rem;
+  box-sizing: border-box;     
 }
+
 
 .tab-item.active {
   color: #7A147A;
   border-bottom-color: #7A147A;
-  background: linear-gradient(to right, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+  background: #ffecfd;
 }
 
 .tab-item.inactive {
-  color: #666666;
+  color: #666;
+  background: #f1f1f1;
 }
 
 .tab-item:hover:not(.active) {
-  color: #999999;
+  color: #999;
 }
 
-/* Main Content Layout */
+/* ------------------------------
+   Main Content Layout
+--------------------------------*/
 .main-content {
   display: flex;
-  gap: 60px;
+  gap: 2rem;
   align-items: flex-start;
 }
 
@@ -171,24 +331,24 @@
 }
 
 .form-group {
-  margin-bottom: 40px;
+  margin-bottom: 2rem;
 }
 
 .form-label {
   display: block;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 500;
-  color: #333333;
-  margin-bottom: 8px;
+  color: #333;
+  margin-bottom: 0.5rem;
 }
 
 .form-input {
   width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e0e0e0;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e0e0e0;
   border-radius: 4px;
-  font-size: 16px;
-  background-color: #ffffff;
+  font-size: 1rem;
+  background-color: #fff;
   transition: border-color 0.3s ease;
   box-sizing: border-box;
 }
@@ -199,129 +359,109 @@
 }
 
 .form-input::placeholder {
-  color: #999999;
+  color: #999;
 }
 
 .help-text {
-  font-size: 14px;
-  color: #666666;
-  margin-top: 8px;
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 0.5rem;
 }
 
 /* Button Group */
 .button-group {
   display: flex;
-  gap: 16px;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .btn-back {
-  padding: 12px 32px;
-  border: 2px solid #e0e0e0;
-  background-color: #ccc;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #ccc;
+  background-color: #eee;
   color: #7A147A;
   border-radius: 4px;
-  width: 200px;
-  height: 50px;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-width: 190px;
 }
 
 .btn-back:hover {
-  border-color: #cccccc;
-  color: #333333;
+  border-color: #999;
+  color: #333;
 }
 
 .btn-next {
-  padding: 12px 32px;
+  padding: 0.75rem 1.5rem;
   border: none;
   background: #7A147A;
-  color: #ffffff;
+  color: #fff;
   border-radius: 4px;
-  font-size: 16px;
-  width: 200px;
-  height: 50px;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 100px;
+  min-width: 190px;
 }
 
 .btn-next:hover {
-  background: #7A147A;
   transform: translateY(-1px);
 }
 
-
-/* Help Section */
+/* ------------------------------
+   Help Section
+--------------------------------*/
 .help-section {
-  flex: 1;
-  margin-top: 0px;
-  max-width: 350px;
-  margin-left: 180px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px;
+  flex-shrink: 0;
+  max-width: 18.75rem;   /* same as height, keeps it balanced */
+  margin-left: auto;     /* push to the right in flex layout */
+  margin-top: 2rem;      /* smaller top margin for responsiveness */
+  height: auto;          /* let content define the height */
+  box-sizing: border-box;
   border: 1px solid #ccc;
-  border-radius: 2%;
-}
-
-/* Account Number Pointer */
-.account-number-pointer {
-  position: absolute;
-  bottom: -25px;
-  left: 50%;
-  transform: translateX(-50%);
+  border-radius: 6px;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: centerlll;
 }
 
-.pointer-line {
-  width: 2px;
-  height: 15px;
-  background-color: #7A147A;
-  margin-bottom: 3px;
+.help-section img.cheque-image {
+  max-width: 100%;   /* make sure it never overflows parent */
+  height: auto;
+  display: block;
 }
 
-.pointer-label {
-  background-color: #7A147A;
-  color: #ffffff;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 500;
-  white-space: nowrap;
+.cheque-image{
+  content: url("./images/Icons/cheque.png");
 }
 
-/* Help Content */
+
 .help-content {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 1.5rem;
 }
 
 .help-content h3 {
-  font-size: 18px;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #7A147A;
-  margin: 0 0 10px 0;
+  margin-bottom: 0.5rem;
 }
 
 .help-content p {
-  font-size: 14px;
-  font-weight: bold;
-  color: #666666;
-  line-height: 1.5;
-  margin: 0;
-  max-width: 280px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #666;
+  line-height: 1.4;
 }
 
 /* Progress Indicator */
 .progress-indicator {
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .progress-dot {
@@ -336,94 +476,78 @@
   background-color: #7A147A;
 }
 
-.cheque-image {
-    max-width: 180px;
-    content: url("./images/Icons/cheque.png");
-  }
-
-
-/* Responsive Design */
-@media (max-width: 768px) {
+.account-details-container{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+/* ------------------------------
+   Responsive Design
+--------------------------------*/
+@media (max-width: 1024px) {
   .main-content {
     flex-direction: column;
-    gap: 30px;
+    gap: 1.5rem;
   }
-  
+
+  .help-section {
+    width: 100%;
+    margin-left: 0;
+  }
+
   .form-section {
-    max-width: none;
+    max-width: 100%;
   }
-  
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .tab-navigation {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tab-item {
+    text-align: center;
+    padding: 0.5rem 1rem;
+  }
+
   .button-group {
     justify-content: center;
   }
-  
-  .check-image {
-    width: 250px;
-  }
-  
-  .help-content p {
-    max-width: none;
+
+  /* Make connecting lines smaller on mobile */
+  #navTabBar .oj-tab-bar-item:not(:last-child)::after {
+    width: 80%;
+    right: -40%;
   }
 }
 
 @media (max-width: 480px) {
-  .account-details-container {
-    padding: 15px;
-  }
-  
-  .header h1 {
-    font-size: 24px;
-  }
-  
-  .tab-navigation {
-    flex-direction: column;
-  }
-  
-  .tab-item {
-    text-align: center;
-  }
-  
-  .check-image {
-    width: 220px;
-  }
-}
-/* ------------------------------
-   Responsive Breakpoints
---------------------------------*/
-@media (max-width: 1024px) {
   .primary-container {
-    max-width: 90%;
-    min-height: 500px;
-    margin-bottom: 80px;
-  }
-}
-
-@media (max-width: 768px) {
-  .primary-container {
-    max-width: 95%;
-    min-height: auto;
-    margin-bottom: 60px;
-    border-radius: 8px;
     padding: 1rem;
+    margin-bottom: 2rem;
   }
 
-  .meezan-logo {
-    max-width: 180px;
-    content: url("./images/Icons/meezan-logo.svg");
-  }
-}
-
-@media (max-width: 480px) {
-  .primary-container {
-    padding: 0.8rem;
-    margin-bottom: 40px;
+  .help-content p {
+    max-width: 100%;
   }
 
-  .meezan-logo {
-    max-width: 150px;
+  .help-section img.cheque-image {
+    max-width: 140px;
   }
 
-  footer {
-    font-size: 0.8rem;
+  /* Stack navigation vertically on very small screens */
+  #navTabBar .oj-tab-bar-item:not(:last-child)::after {
+    display: none;
+  }
+
+  .circle {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
   }
 }
