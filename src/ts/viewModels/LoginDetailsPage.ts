@@ -1,6 +1,9 @@
 import * as ko from "knockout";
 import "ojs/ojknockout";
 import { ojButton } from "ojs/ojbutton";
+import * as Router from "ojs/ojrouter";
+import appViewModel from "../appController";
+
 //import { ojInputPassword } from "ojs/ojinputpassword";
 
 interface PasswordRequirements {
@@ -34,11 +37,10 @@ class LoginDetailsPage {
     this.confirmPasswordStatus = ko.observable("");
     this.confirmPasswordStatusClass = ko.observable("");
     this.requirements = ko.observable<PasswordRequirements>({
-  minLength: false,
-  hasUpper: false,
-  hasSpecial: false
-});
-
+      minLength: false,
+      hasUpper: false,
+      hasSpecial: false,
+    });
 
     // Computed for next button state
     this.isNextButtonEnabled = ko.computed(() => {
@@ -62,13 +64,13 @@ class LoginDetailsPage {
     const requirements: PasswordRequirements = {
       minLength: password.length >= 8,
       hasUpper: /[A-Z]/.test(password),
-      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password),
     };
 
     this.requirements(requirements);
 
-    const validCount = Object.values(requirements).filter(req => req).length;
-    
+    const validCount = Object.values(requirements).filter((req) => req).length;
+
     // Update password strength
     if (validCount === 3) {
       this.passwordStrength("Strong");
@@ -103,7 +105,9 @@ class LoginDetailsPage {
       this.confirmPasswordStatusClass("error");
       this.isConfirmPasswordValid(false);
     } else {
-      this.confirmPasswordStatus("Please ensure password meets all requirements");
+      this.confirmPasswordStatus(
+        "Please ensure password meets all requirements"
+      );
       this.confirmPasswordStatusClass("error");
       this.isConfirmPasswordValid(false);
     }
@@ -148,13 +152,17 @@ class LoginDetailsPage {
   // Get CSS class for confirm password input
   getConfirmPasswordInputClass = (): string => {
     if (this.confirmPassword() === "") return "form-input";
-    return this.isConfirmPasswordValid() ? "form-input valid" : "form-input invalid";
+    return this.isConfirmPasswordValid()
+      ? "form-input valid"
+      : "form-input invalid";
   };
 
   // Get CSS class for requirement items
   getRequirementClass = (requirement: keyof PasswordRequirements): string => {
     const reqs = this.requirements();
-    return reqs[requirement] ? "requirement-item valid" : "requirement-item invalid";
+    return reqs[requirement]
+      ? "requirement-item valid"
+      : "requirement-item invalid";
   };
 
   // Handle back button click
@@ -168,15 +176,9 @@ class LoginDetailsPage {
   // Handle form submission
   handleSubmit = (): void => {
     if (this.isNextButtonEnabled()) {
-      // Process form submission
-      console.log("Form submitted successfully");
-      console.log("Password:", this.password());
-      
-      // You can add your API call or navigation logic here
-      alert("Login details created successfully!");
-      
-      // Navigate to next page or complete the flow
-      // Example: Router navigation would go here
+     if (appViewModel.router) {
+      appViewModel.router.go({ path: "terms" });
+    }
     }
   };
 

@@ -268,11 +268,11 @@
    Page Heading
 --------------------------------*/
 .header h1 {
-  font-size: 1.8rem;
-  font-weight: 650;
-  color: #333;
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
+   font-family: Arial, Helvetica, sans-serif; /* clean sans-serif look */
+  font-size: 1.7rem;                          /* medium size */
+  font-weight: bold;                        /* bold text */
+  color: #333;                           /* gray tone */
+  margin-bottom: 10px;        
 }
 
 .sub-header{
@@ -417,14 +417,14 @@
   border: 2px solid #ccc;
   background-color: #eee;
   color: #7A147A;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 190px;
+  height: 55px;
 }
-
 .btn-back:hover {
   border-color: #999;
   color: #333;
@@ -435,14 +435,14 @@
   border: none;
   background: #7A147A;
   color: #fff;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 190px;
+  height: 55px;
 }
-
 .btn-next:hover {
   transform: translateY(-1px);
 }
@@ -591,7 +591,7 @@
 .verification-container{
   display: flex;
   flex-direction: column;
-  width: 46%;
+  width: 40%;
 }
 .label {
   font-size: 17px;
@@ -643,8 +643,8 @@ span{
 .login-details-card {
   background: white;
   border-radius: 16px;
-  padding: 40px;
-  width: 100%;
+  padding: 0px;
+  width: 83%;
   max-width: 480px;
   position: relative;
 }
@@ -681,6 +681,7 @@ span{
 
 .input-container {
   position: relative;
+  width: 400px;
 }
 
 .form-input {
@@ -694,18 +695,18 @@ span{
   font-family: monospace;
   letter-spacing: 2px;
   box-sizing: border-box;
+  padding-right: 60px;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #28a745;
+  border-color: #00c855;
   background: white;
   box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
 }
 
 .form-input.valid {
-  border-color: #28a745;
-  background: #f0f9f4;
+  border-color: #00c855;
 }
 
 .form-input.invalid {
@@ -716,14 +717,15 @@ span{
 /* Show/Hide Button */
 .show-hide-btn {
   position: absolute;
-  right: 16px;
+  right: 1px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   color: #7a147a;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
+  margin-left: 0;
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -732,30 +734,37 @@ span{
   transition: all 0.2s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
-
-.show-hide-btn:hover {
-  background: rgba(159, 64, 186, 0.1);
-}
-
 /* Password Strength */
 .password-strength {
   margin-top: 12px;
 }
 
 .strength-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
-  color: #28a745;
+  color: black;
   margin-bottom: 8px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
-
+.strength-label span{
+  color: #00b067;
+  font-size: 14px;
+}
 .strength-requirements {
   list-style: none;
-  font-size: 12px;
-  color: #4a5568;
+  font-size: 13px;
+  color: black;
   padding: 0;
   margin: 0;
+}
+
+li::marker{
+  color: #7A147A;
+}
+
+.strength-requirements li::marker {
+  color: #7A147A;
+  font-weight: bold; /* optional */
 }
 
 .requirement-item {
@@ -775,11 +784,11 @@ span{
 }
 
 .requirement-item.valid {
-  color: #28a745;
+  color: #00b067;
 }
 
 .requirement-item.valid:before {
-  color: #28a745;
+  color: #00b067;
 }
 
 .requirement-item.invalid {
@@ -795,67 +804,16 @@ span{
   margin-top: 8px;
   font-size: 12px;
   font-weight: 500;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe U#pass', Roboto, sans-serif;
   animation: slideIn 0.3s ease;
 }
 
 .status-message.success {
-  color: #28a745;
+  color: #00b067;
 }
 
 .status-message.error {
   color: #e53e3e;
-}
-
-/* Buttons */
-.button-group {
-  display: flex;
-  gap: 16px;
-  margin-top: 40px;
-}
-
-.btn {
-  flex: 1;
-  padding: 16px 24px;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  box-sizing: border-box;
-}
-
-.btn-back {
-  background: #f7fafc;
-  color: #4a5568;
-  border: 2px solid #e2e8f0;
-}
-
-.btn-back:hover {
-  background: #edf2f7;
-  border-color: #cbd5e0;
-}
-
-.btn-next {
-  background: #7a147a;
-  color: white;
-  box-shadow: 0 4px 12px rgba(159, 64, 186, 0.3);
-}
-
-.btn-next:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(159, 64, 186, 0.4);
-}
-
-.btn-next:disabled {
-  background: #a0aec0;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-  opacity: 0.6;
 }
 
 /* Animations */
@@ -899,8 +857,7 @@ span{
 
 /* Focus Management */
 .form-input:focus-visible {
-  outline: 2px solid #28a745;
-  outline-offset: 2px;
+  outline: 1px solid #00c855;
 }
 
 .btn:focus-visible {
@@ -911,4 +868,40 @@ span{
 .show-hide-btn:focus-visible {
   outline: 2px solid #7a147a;
   outline-offset: 2px;
+}
+
+h6{
+  font-size: 15px;
+  font-weight: 600;
+}
+.terms-container {
+  font-family: Arial, sans-serif;
+  line-height: 1.2;
+  max-width: 100%;
+  margin: 0px 5px; 
+  background: #fff;
+  color: #333;
+}
+
+.terms-container h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.terms-container h3 {
+  margin-top: 5px;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #444;
+}
+
+.terms-container p {
+  margin-bottom: 5px;
+}
+
+.terms-container .important {
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: red;
 }

@@ -1,33 +1,26 @@
 <div class="login-details-container">
   <div class="login-details-card">
-    <h1 class="page-title">Create Login Details</h1>
-    <p class="page-subtitle">(2/2)</p>
+    <div class="header">
+      <h1>Create Login Details <span>(2/3)</span></h1>
+    </div>
 
     <form data-bind="submit: handleSubmit" novalidate>
       <!-- Password Field -->
       <div class="form-group">
-        <label for="password" class="form-label">Password</label>
+        <label for="password">
+          <h6 class="sub-header">Password</h6>
+        </label>
         <div class="input-container">
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            data-bind="
+          <input type="password" id="password" name="password" data-bind="
               value: password, 
               attr: { type: getPasswordInputType() },
               css: getPasswordInputClass()
-            "
-            class="form-input" 
-            placeholder="••••••••••••••••••••"
-            autocomplete="new-password"
-          >
-          <button 
-            type="button" 
-            class="show-hide-btn" 
+            " class="form-input" placeholder="••••••••••" autocomplete="new-password">
+          <button type="button" class="show-hide-btn"
             data-bind="click: togglePasswordVisibility, text: getPasswordToggleText()">
           </button>
         </div>
-        
+
         <div class="password-strength">
           <div class="strength-label">
             Password Strength: <span data-bind="text: passwordStrength"></span>
@@ -48,30 +41,20 @@
 
       <!-- Re-enter Password Field -->
       <div class="form-group">
-        <label for="confirmPassword" class="form-label">Re-enter Password</label>
+        <label for="confirmPassword">
+          <h6 class="sub-header">Re-enter Password</h6>
+        </label>
         <div class="input-container">
-          <input 
-            type="password" 
-            id="confirmPassword" 
-            name="confirmPassword" 
-            data-bind="
+          <input type="password" id="confirmPassword" name="confirmPassword" data-bind="
               value: confirmPassword, 
               attr: { type: getConfirmPasswordInputType() },
               css: getConfirmPasswordInputClass()
-            "
-            class="form-input" 
-            placeholder="••••••••••••••••••••"
-            autocomplete="new-password"
-          >
-          <button 
-            type="button" 
-            class="show-hide-btn" 
+            " class="form-input" placeholder="••••••••••" autocomplete="new-password">
+          <button type="button" class="show-hide-btn"
             data-bind="click: toggleConfirmPasswordVisibility, text: getConfirmPasswordToggleText()">
           </button>
         </div>
-        <div 
-          class="status-message" 
-          data-bind="
+        <div class="status-message" data-bind="
             text: confirmPasswordStatus,
             css: confirmPasswordStatusClass,
             visible: confirmPasswordStatus() !== ''
@@ -81,16 +64,10 @@
 
       <!-- Buttons -->
       <div class="button-group">
-        <button 
-          type="button" 
-          class="btn btn-back" 
-          data-bind="click: handleBack">
+        <button type="button" class="btn btn-back" data-bind="click: handleBack">
           Back
         </button>
-        <button 
-          type="submit" 
-          class="btn btn-next" 
-          data-bind="enable: isNextButtonEnabled">
+        <button type="submit" class="btn btn-next" data-bind="enable: isNextButtonEnabled">
           Next
         </button>
       </div>
