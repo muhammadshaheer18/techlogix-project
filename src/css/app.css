@@ -905,3 +905,158 @@ h6{
   margin-bottom: 10px;
   color: red;
 }
+
+/* success-page */
+.success-container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px 40px;
+            max-width: 100%;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            margin-top: 30px;
+        }
+
+        .checkmark-container {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .checkmark-icon {
+            /* Placeholder for your green checkmark icon */
+            width: 32px;
+            height: 32px;
+            background: white;
+            /* You can replace this with your actual checkmark icon */
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"></polyline></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #8B4A9C;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .success-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.4;
+        }
+
+        .account-details {
+            margin-bottom: 40px;
+        }
+
+        .detail-item {
+            margin-bottom: 25px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #8B4A9C;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, #8B4A9C 0%, #6B2C7A 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: none;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 74, 156, 0.3);
+        }
+
+        .continue-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            .success-container {
+                padding: 50px 30px 30px;
+                margin: 20px;
+            }
+
+            .success-title {
+                font-size: 20px;
+            }
+
+            .checkmark-container {
+                width: 50px;
+                height: 50px;
+                top: -25px;
+            }
+
+            .checkmark-icon {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* Animation for entrance */
+        .success-container {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .checkmark-container {
+            animation: bounceIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(-50%) scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(-50%) scale(1);
+            }
+        }
