@@ -119,8 +119,9 @@ class AccountDetailsPage {
    */
   public goBack = (): void => {
     console.log('Going back to previous step');
-    // Add navigation logic here
-    // Example: Router.go('previous-page');
+    if (appViewModel.router) {
+                appViewModel.router.go({ path: "AccountTypePage" });
+              }
   };
 
   /**
@@ -147,9 +148,6 @@ class AccountDetailsPage {
           if (this.validateAccountNumber(cleanAccountNumber)) {
             console.log('Account number validated:', cleanAccountNumber);
             // Navigate to next step
-             if (appViewModel.router) {
-                appViewModel.router.go({ path: "VerificationPage" });
-              }
           } else {
             this.showError('Invalid account number. Please check and try again.');
           }
@@ -168,6 +166,9 @@ class AccountDetailsPage {
         this.showError('An error occurred. Please try again.');
       } finally {
         this.isLoading(false);
+        if (appViewModel.router) {
+                appViewModel.router.go({ path: "VerificationPage" });
+              }
        
       }
     }, 1000);

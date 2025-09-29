@@ -1,5 +1,5 @@
 <div class="oj-hybrid-padding">
-  <div class="account-details-container">
+  <div class="account-type-container">
 
     <!-- Left Section - Form -->
     <div class="left-section">
@@ -9,55 +9,72 @@
         <h1>Select Account Type</h1>
       </div>
 
-      <!-- Tab Navigation -->
-      <div class="tab-navigation">
-        <div class="tab-item-p1 active">
-          <img src="css/images/Icons/Individual-Icon-Filled.svg" alt="">
-          Individual
-        </div>
-        <div class="tab-item-p1">
-          <img src="" alt="">
-          Sole Propertier
-        </div>
-        <div class="tab-item-p1">
-          <img src="" alt="">
-          Credit Card
-        </div>
-        <div class="tab-item-p1">
-          <img src="" alt="">
-          Smart Wallet
-        </div>
-        <div class="tab-item-p1">
-          <img src="/css/images/Icons/Foreign-National-Icon-Unfilled.svg" alt="">
-          Foreign National
+      <!-- Account Type Selection Tabs -->
+      <div class="account-type-tabs">
+        <div class="tabs-container" data-bind="foreach: accountTypes">
+          <div class="tab-item" 
+               data-bind="click: $parent.selectAccountType,
+                         css: { 
+                           'active': $parent.selectedAccountType() === $data,
+                           'inactive': $parent.selectedAccountType() !== $data 
+                         }">
+            <div class="tab-icon">
+              <!-- ko if: $data === 'Individual' -->👤<!-- /ko -->
+              <!-- ko if: $data === 'Sole Proprietor' -->👥<!-- /ko -->
+              <!-- ko if: $data === 'Credit Card' -->💳<!-- /ko -->
+              <!-- ko if: $data === 'Smart Wallet' -->💼<!-- /ko -->
+              <!-- ko if: $data === 'Foreign National' -->🌐<!-- /ko -->
+            </div>
+            <div class="tab-label" data-bind="text: $data"></div>
+          </div>
         </div>
       </div>
 
-      <!-- Account Number Form -->
+      <!-- CNIC Form Section -->
       <div class="form-section">
         <div class="form-group">
           <label class="form-label">CNIC Number</label>
-          <input type="text" class="form-input" placeholder="XXXXX XXXXXXX X">
+          <input type="text" 
+                 class="cnic-input" 
+                 placeholder="XXXXX-XXXXXXX-X"
+                 maxlength="15"
+                 data-bind="textInput: cnicNumber, 
+                           event: { focus: onCnicFocus }" />
           <div class="help-text">Please enter your 13-digit CNIC Number</div>
+          
+          <!-- Error Message -->
+          <div class="error-message" data-bind="visible: cnicError, text: cnicError"></div>
+        </div>
+
+        <div class="selected-type-display">
+          <strong>Selected Account Type:</strong> 
+          <span class="selected-type" data-bind="text: selectedAccountType"></span>
         </div>
 
         <div class="button-group">
-          <button class="btn-back" data-bind="click: goBack">Back</button>
-          <button class="btn-next" data-bind="click: goNext">Next</button>
+          <button class="btn-back" 
+                  data-bind="click: goBack, enable: !isLoading()">
+            Back
+          </button>
+          <button class="btn-next" 
+                  data-bind="click: goNext, 
+                            enable: isFormValid(),
+                            css: { 'btn-loading': isLoading() }">
+            <span data-bind="if: !isLoading()">Next</span>
+            <span data-bind="if: isLoading()">Processing...</span>
+          </button>
         </div>
       </div>
 
-      <!-- IBAN Form -->
-
     </div>
 
-    <!-- Right Section - Help -->
-    <div class="help-section">
+    <!-- Right Section - Help Card -->
+   <div class="help-section">
       <img class="cheque-image" src="/css/images/Icons/nic.svg" title="Cheque" alt="Cheque" />
 
       <div class="help-content">
-        <h3>Find your CNIC Identity Number</h3>
-        <p>Permenant Citizens of Pakistan can find their CNIC Identity number on their Identity Card issued by NADRA</p>
+        <h3>Find your CNIC Identity Number.</h3>
+        <p>Permenant Citizens of Pakistan can find their CNIC Identity number on their Identity card issues by NADRA</p>
       </div>
 
       <div class="progress-indicator">
@@ -70,3 +87,231 @@
 
   </div>
 </div>
+
+<style>
+/* Main Container */
+.account-type-container {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  gap: 3rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 2rem 1rem;
+}
+
+.left-section {
+  flex: 1;
+  max-width: 500px;
+}
+
+/* Header */
+.header h1 {
+   font-family: Arial, Helvetica, sans-serif; /* clean sans-serif look */
+  font-size: 1.7rem;                          /* medium size */
+  font-weight: bold;                        /* bold text */
+  color: #333;                           /* gray tone */
+  margin-bottom: 10px; 
+}
+
+/* Account Type Tabs */
+.account-type-tabs {
+  margin-bottom: 2.5rem;
+}
+
+.tabs-container {
+  display: flex;
+  gap: 0;
+  background-color: white;
+}
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.5rem 1.2rem 1.5rem;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  width: 130px;
+  height: 100px;
+  position: relative;
+  border-radius: 5px;
+
+}
+
+.selected-type-display strong{
+  color: #7a147a;
+}
+.tab-item.active {
+  border-bottom-color: #7a147a;
+  background-color: #ffecfd;
+}
+
+.tab-item.active .tab-icon {
+  color: #7a147a;
+}
+
+.tab-item.active .tab-label {
+  color: #7a147a;
+  font-weight: 600;
+}
+
+.tab-item.inactive:hover {
+  background-color: rgba(139, 74, 232, 0.05);
+}
+
+
+.tab-icon {
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+  transition: color 0.2s ease;
+}
+
+.tab-label {
+  font-size: 1rem;
+  text-align: center;
+  line-height: 1.2;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Form Section */
+.form-section {
+  background: white;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.cnic-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 1.5px solid #ccc;
+  border-radius: 12px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.cnic-input:focus {
+  outline: none;
+  border-color: #00c855;
+  box-shadow: 0 0 0 3px rgba(139, 74, 232, 0.1);
+}
+
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.btn-loading {
+  position: relative;
+}
+
+/* Help Card Styles */
+.cnic-card-image {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.cnic-sample {
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.cnic-highlight {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+
+.highlight-box {
+  width: 80px;
+  height: 15px;
+  border: 2px solid #7a147a;
+  border-radius: 3px;
+  background: rgba(139, 74, 232, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .account-type-container {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+  }
+  
+  .help-card {
+    flex: none;
+    order: -1;
+  }
+  
+  .tabs-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .tabs-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .tab-item {
+    min-width: 70px;
+    padding: 0.8rem 1rem 1rem 1rem;
+  }
+  
+  .tab-label {
+    font-size: 0.7rem;
+  }
+  
+  .cnic-input {
+    max-width: 100%;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .btn-back {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .tab-item {
+    min-width: 60px;
+    padding: 0.7rem 0.5rem 0.9rem 0.5rem;
+  }
+  
+  .tab-icon {
+    font-size: 1.2rem;
+  }
+  
+  .tab-label {
+    font-size: 0.65rem;
+  }
+}
+</style>

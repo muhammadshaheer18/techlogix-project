@@ -72,11 +72,15 @@
               selection="{{selection.path}}">
             </oj-navigation-list>
           </oj-drawer-popup>
-
+          <oj-navigation data-provider="[[navDataProvider]]" selection="{{selection}}"></oj-navigation>
           <!-- Page Content pushed down -->
           <oj-module role="main" class="oj-web-applayout-max-width oj-web-applayout-content oj-sm-margin-20"
             config="[[moduleAdapter.koObservableConfig]]">
           </oj-module>
+
+          <div class="oj-flex-bar-middle">
+
+          </div>
 
         </div>
       </div>

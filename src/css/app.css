@@ -284,74 +284,7 @@
 /* ------------------------------
    Tab Navigation (Legacy - if still used)
 --------------------------------*/
-.tab-navigation {
-  display: flex;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #e0e0e0;
-}
 
-.tab-item {
-  display: flex;             
-  justify-content: center;    
-  align-items: center;        
-  padding: 0.5rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.3s ease;
-  width: 20rem;
-  height: 3rem;
-  box-sizing: border-box;     
-}
-
-
-.tab-item.active {
-  color: #7A147A;
-  border-bottom-color: #7A147A;
-  background: #ffecfd;
-}
-
-.tab-item.inactive {
-  color: #666;
-  background: #f1f1f1;
-}
-
-.tab-item:hover:not(.active) {
-  color: #999;
-}
-
-.tab-item-p1{
-  display: flex;             
-  justify-content: center;    
-  align-items: center;   
-  flex-direction: column;     
-  text-align: center;
-  padding: 0.5rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 650;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.3s ease;
-  width: 8rem;
-  height: 5rem;
-  box-sizing: border-box;
-  color: #666;
-}
-.tab-item-p1.active {
-  color: #7A147A;
-  border-bottom-color: #7A147A;
-  background: #ffecfd;
-}
-
-.tab-item-p1.inactive {
-  color: #666;
-  background: #f1f1f1;
-}
-
-.tab-item-p1:hover:not(.active) {
-  color: #999;
-}
 /* ------------------------------
    Main Content Layout
 --------------------------------*/
@@ -447,6 +380,16 @@
   transform: translateY(-1px);
 }
 
+.account-type-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.account-type-selection{
+  display: flex;
+  flex-direction: row;
+}
 /* ------------------------------
    Help Section
 --------------------------------*/
@@ -541,7 +484,7 @@
   }
 
   .tab-navigation {
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5rem;
   }
 
@@ -622,7 +565,7 @@ span{
 }
 .conditions {
   margin: 15px 0;
-  font-size: 17px;
+  font-size: 13px;
   color: #333;
    width: 80%;
 }
@@ -630,14 +573,17 @@ span{
   margin: 8px 0 0 20px;
 }
 .username-input{
-  width: 78%;
-  padding: 1rem 1.25rem;
-  border: 1.5px solid #00c855;
+  width: 90%;
+  padding: 16px;
+  border: 2px solid #00c855;
   border-radius: 12px;
-  font-size: 1rem;
-  background-color: #fff;
-  transition: border-color 0.3s ease;
+  font-size: 16px;
+  background: #f7fafc;
+  transition: all 0.3s ease;
+  font-family: monospace;
+  letter-spacing: 2px;
   box-sizing: border-box;
+  padding-right: 60px;
 }
 
 .login-details-card {
@@ -1060,3 +1006,5 @@ h6{
                 transform: translateX(-50%) scale(1);
             }
         }
+
+/* account-type-bar-css */
