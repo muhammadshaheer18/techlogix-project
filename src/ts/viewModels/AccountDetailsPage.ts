@@ -127,51 +127,47 @@ class AccountDetailsPage {
   /**
    * Handle next button click
    */
-  public goNext = (): void => {
+   public goNext = (): void => {
+    this.hasError(false);
+    this.errorMessage('');
+
     if (!this.canProceed()) {
-      const errorMsg = this.activeTab() === 'account' ? 
-        'Please enter a valid 14-digit account number' : 
-        'Please enter a valid IBAN';
-      this.showError(errorMsg);
+      const msg = this.activeTab() === 'account'
+        ? 'Please enter a valid 14-digit account number'
+        : 'Please enter a valid IBAN';
+      this.showError(msg);
       return;
     }
 
     this.isLoading(true);
-    this.hasError(false);
 
-    // Simulate API call or validation
     setTimeout(() => {
       try {
         if (this.activeTab() === 'account') {
-          const cleanAccountNumber = this.accountNumber().replace(/\s+/g, '');
-          
-          if (this.validateAccountNumber(cleanAccountNumber)) {
-            console.log('Account number validated:', cleanAccountNumber);
-            // Navigate to next step
-          } else {
+          const cleanAcc = this.accountNumber().replace(/\s+/g, '');
+          if (!this.validateAccountNumber(cleanAcc)) {
             this.showError('Invalid account number. Please check and try again.');
+            return;
           }
         } else {
           const cleanIban = this.ibanNumber().replace(/\s+/g, '').toUpperCase();
-          
-          if (this.validateIban(cleanIban)) {
-            console.log('IBAN validated:', cleanIban);
-            // Navigate to next step
-          } else {
+          if (!this.validateIban(cleanIban)) {
             this.showError('Invalid IBAN. Please check and try again.');
+            return;
           }
         }
-      } catch (error) {
-        console.error('Error validating input:', error);
-        this.showError('An error occurred. Please try again.');
+
+        // Navigate only if validation passes
+        if (appViewModel.router) {
+          appViewModel.router.go({ path: "VerificationPage" });
+        }
+      } catch (err) {
+        console.error(err);
+        this.showError('An unexpected error occurred. Please try again.');
       } finally {
         this.isLoading(false);
-        if (appViewModel.router) {
-                appViewModel.router.go({ path: "VerificationPage" });
-              }
-       
       }
-    }, 1000);
+    }, 500); // simulate async call
   };
 
   /**

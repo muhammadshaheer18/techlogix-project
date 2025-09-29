@@ -3,7 +3,7 @@
 
     <!-- Left Section - Form -->
     <div class="left-section">
-      
+
       <!-- Header -->
       <div class="header">
         <h1>Enter Account Details</h1>
@@ -11,13 +11,11 @@
 
       <!-- Tab Navigation -->
       <div class="tab-navigation">
-        <div class="tab-item" 
-             data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, 
+        <div class="tab-item" data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, 
                         click: function() { switchTab('account') }">
           Account Number
         </div>
-        <div class="tab-item" 
-             data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, 
+        <div class="tab-item" data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, 
                         click: function() { switchTab('iban') }">
           IBAN
         </div>
@@ -28,7 +26,7 @@
         <div class="form-group">
           <label class="form-label">Account Number</label>
           <input type="text" class="form-input" placeholder="XXXXX XXXXXXXXX"
-                 data-bind="textInput: accountNumber, event: { focus: onInputFocus }" />
+            data-bind="textInput: accountNumber, event: { focus: onInputFocus }" />
           <div class="help-text">Please enter your 14 digit Account Number</div>
         </div>
 
@@ -43,7 +41,7 @@
         <div class="form-group">
           <label class="form-label">IBAN</label>
           <input type="text" class="form-input" placeholder="XXXX XXXX XXXX XXXX"
-                 data-bind="textInput: ibanNumber, event: { focus: onInputFocus }" />
+            data-bind="textInput: ibanNumber, event: { focus: onInputFocus }" />
           <div class="help-text">Please enter your IBAN number</div>
         </div>
 
@@ -74,3 +72,57 @@
 
   </div>
 </div>
+<style>
+  .account-details-container{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .tab-navigation {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+  }
+  .tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 1.5rem 1.2rem 1.5rem;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    width: 100%;
+    height: 60px;
+    position: relative;
+    border-radius: 4px;
+    color: #ccc;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .tab-item.active {
+    border-bottom-color: #7a147a;
+    background-color: #ffecfd;
+    color: #7a147a;
+  }
+
+  .tab-item.active{
+    color: #7a147a;
+    font-weight: 600;
+  }
+
+  .tab-item.inactive{
+    color: #333;
+    background-color: #ccc;
+  }
+
+  .tab-item.active{
+    fill: #7a147a;
+  }
+
+  .left-section{
+    width: 700px;
+  }
+
+  .form-label{
+    font-size: 17px;
+  }
+</style>
