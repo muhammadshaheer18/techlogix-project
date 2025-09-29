@@ -12,18 +12,51 @@
       <!-- Account Type Selection Tabs -->
       <div class="account-type-tabs">
         <div class="tabs-container" data-bind="foreach: accountTypes">
-          <div class="tab-item" 
-               data-bind="click: $parent.selectAccountType,
-                         css: { 
-                           'active': $parent.selectedAccountType() === $data,
-                           'inactive': $parent.selectedAccountType() !== $data 
-                         }">
+          <div class="tab-item" data-bind="click: $parent.selectAccountType,
+                    css: { 
+                      'active': $parent.selectedAccountType() === $data,
+                      'inactive': $parent.selectedAccountType() !== $data 
+                    }">
             <div class="tab-icon">
-              <!-- ko if: $data === 'Individual' -->👤<!-- /ko -->
-              <!-- ko if: $data === 'Sole Proprietor' -->👥<!-- /ko -->
-              <!-- ko if: $data === 'Credit Card' -->💳<!-- /ko -->
-              <!-- ko if: $data === 'Smart Wallet' -->💼<!-- /ko -->
-              <!-- ko if: $data === 'Foreign National' -->🌐<!-- /ko -->
+              <!-- ko if: $data === 'Individual' -->
+              <svg class="icon-svg" viewBox="0 0 24 24">
+                <path
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                  fill="currentColor" />
+              </svg>
+              <!-- /ko -->
+
+              <!-- ko if: $data === 'Sole Proprietor' -->
+              <svg class="icon-svg" viewBox="0 0 24 24">
+                <path
+                  d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+                  fill="currentColor" />
+              </svg>
+              <!-- /ko -->
+
+              <!-- ko if: $data === 'Credit Card' -->
+              <svg class="icon-svg" viewBox="0 0 24 24">
+                <path
+                  d="M20 4H4c-1.1 0-2 .9-2 2v3h20V6c0-1.1-.9-2-2-2zm0 5H2v9c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-9zm-3 7H5v-2h12v2z"
+                  fill="currentColor" />
+              </svg>
+              <!-- /ko -->
+
+              <!-- ko if: $data === 'Smart Wallet' -->
+              <svg class="icon-svg" viewBox="0 0 24 24">
+                <path
+                  d="M21 7H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2zm0 10H3v-8h18v8zm-3-4H6v2h12v-2z"
+                  fill="currentColor" />
+              </svg>
+              <!-- /ko -->
+
+              <!-- ko if: $data === 'Foreign National' -->
+              <svg class="icon-svg" viewBox="0 0 24 24">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-2.83-.48-5-2.94-5-5.93 0-.62.1-1.21.27-1.77l7.46 7.46c-.56.17-1.15.27-1.73.24zM17.73 13.2l-7.46-7.46c.56-.17 1.15-.27 1.73-.24 2.83.48 5 2.94 5 5.93 0 .62-.1 1.21-.27 1.77z"
+                  fill="currentColor" />
+              </svg>
+              <!-- /ko -->
             </div>
             <div class="tab-label" data-bind="text: $data"></div>
           </div>
@@ -34,30 +67,24 @@
       <div class="form-section">
         <div class="form-group">
           <label class="form-label">CNIC Number</label>
-          <input type="text" 
-                 class="cnic-input" 
-                 placeholder="XXXXX-XXXXXXX-X"
-                 maxlength="15"
-                 data-bind="textInput: cnicNumber, 
+          <input type="text" class="cnic-input" placeholder="XXXXX-XXXXXXX-X" maxlength="15" data-bind="textInput: cnicNumber, 
                            event: { focus: onCnicFocus }" />
           <div class="help-text">Please enter your 13-digit CNIC Number</div>
-          
+
           <!-- Error Message -->
           <div class="error-message" data-bind="visible: cnicError, text: cnicError"></div>
         </div>
 
         <div class="selected-type-display">
-          <strong>Selected Account Type:</strong> 
+          <strong>Selected Account Type:</strong>
           <span class="selected-type" data-bind="text: selectedAccountType"></span>
         </div>
 
         <div class="button-group">
-          <button class="btn-back" 
-                  data-bind="click: goBack, enable: !isLoading()">
+          <button class="btn-back" data-bind="click: goBack, enable: !isLoading()">
             Back
           </button>
-          <button class="btn-next" 
-                  data-bind="click: goNext, 
+          <button class="btn-next" data-bind="click: goNext, 
                             enable: isFormValid(),
                             css: { 'btn-loading': isLoading() }">
             <span data-bind="if: !isLoading()">Next</span>
@@ -69,12 +96,12 @@
     </div>
 
     <!-- Right Section - Help Card -->
-   <div class="help-section">
+    <div class="help-section">
       <img class="cheque-image" src="/css/images/Icons/nic.svg" title="Cheque" alt="Cheque" />
 
       <div class="help-content">
         <h3>Find your CNIC Identity Number.</h3>
-        <p>Permenant Citizens of Pakistan can find their CNIC Identity number on their Identity card issues by NADRA</p>
+        <p>Permanent Citizens of Pakistan can find their CNIC Identity number on their Identity card issued by NADRA</p>
       </div>
 
       <div class="progress-indicator">
@@ -89,229 +116,148 @@
 </div>
 
 <style>
-/* Main Container */
-.account-type-container {
-  display: flex;
-  width: 100%;
-  margin: 0 auto;
-  gap: 3rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  padding: 2rem 1rem;
-}
+  /* --- Account Tabs --- */
+  .selected-type-display strong {
+    color: #7a147a;
+  }
 
-.left-section {
-  flex: 1;
-  max-width: 500px;
-}
+  .account-type-tabs{
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 
-/* Header */
-.header h1 {
-   font-family: Arial, Helvetica, sans-serif; /* clean sans-serif look */
-  font-size: 1.7rem;                          /* medium size */
-  font-weight: bold;                        /* bold text */
-  color: #333;                           /* gray tone */
-  margin-bottom: 10px; 
-}
+  .tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 1.5rem 1.2rem 1.5rem;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    width: 130px;
+    height: 100px;
+    position: relative;
+    border-radius: 5px;
+    color: #ccc;
+    /* inactive gray */
+  }
 
-/* Account Type Tabs */
-.account-type-tabs {
-  margin-bottom: 2.5rem;
-}
+  .tab-item.active {
+    border-bottom-color: #7a147a;
+    background-color: #ffecfd;
+    color: #7a147a;
+    /* purple when active */
+  }
 
-.tabs-container {
-  display: flex;
-  gap: 0;
-  background-color: white;
-}
-
-.tab-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem 1.5rem 1.2rem 1.5rem;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s ease;
-  width: 130px;
-  height: 100px;
-  position: relative;
-  border-radius: 5px;
-
-}
-
-.selected-type-display strong{
-  color: #7a147a;
-}
-.tab-item.active {
-  border-bottom-color: #7a147a;
-  background-color: #ffecfd;
-}
-
-.tab-item.active .tab-icon {
-  color: #7a147a;
-}
-
-.tab-item.active .tab-label {
-  color: #7a147a;
-  font-weight: 600;
-}
-
-.tab-item.inactive:hover {
-  background-color: rgba(139, 74, 232, 0.05);
-}
+  .icon-svg {
+    width: 30px;
+    height: 30px;
+    transition: fill 0.3s ease;
+  }
 
 
-.tab-icon {
-  font-size: 1.4rem;
-  margin-bottom: 0.4rem;
-  transition: color 0.2s ease;
-}
+  .tab-item.active .tab-label {
+    color: #7a147a;
+    font-weight: 600;
+  }
 
-.tab-label {
-  font-size: 1rem;
-  text-align: center;
-  line-height: 1.2;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
+  .tab-item.inactive .tab-label {
+    color: #333;
+  }
 
-/* Form Section */
-.form-section {
-  background: white;
-}
+  .tab-item.active .icon-svg {
+    fill: #7a147a;
+    /* purple when active */
+  }
 
-.form-group {
-  margin-bottom: 2rem;
-}
-
-.form-label {
-  display: block;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.cnic-input {
-  width: 100%;
-  padding: 1rem 1.25rem;
-  border: 1.5px solid #ccc;
-  border-radius: 12px;
-  font-size: 1rem;
-  background-color: #fff;
-  transition: border-color 0.3s ease;
-  box-sizing: border-box;
-}
-
-.cnic-input:focus {
-  outline: none;
-  border-color: #00c855;
-  box-shadow: 0 0 0 3px rgba(139, 74, 232, 0.1);
-}
-
-
-.error-message {
-  color: #dc3545;
-  font-size: 0.8rem;
-  margin-top: 0.5rem;
-  font-weight: 500;
-}
-
-.btn-loading {
-  position: relative;
-}
-
-/* Help Card Styles */
-.cnic-card-image {
-  position: relative;
-  margin-bottom: 1rem;
-}
-
-.cnic-sample {
-  width: 100%;
-  max-width: 240px;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.cnic-highlight {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-}
-
-.highlight-box {
-  width: 80px;
-  height: 15px;
-  border: 2px solid #7a147a;
-  border-radius: 3px;
-  background: rgba(139, 74, 232, 0.2);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
+  /* --- Rest of your styles --- */
   .account-type-container {
-    flex-direction: column;
-    gap: 2rem;
-    padding: 1rem;
+    display: flex;
+    width: 100%;
+    gap: 3rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 2rem 1rem;
   }
-  
-  .help-card {
-    flex: none;
-    order: -1;
-  }
-  
-  .tabs-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  
-  .tabs-container::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .tab-item {
-    min-width: 70px;
-    padding: 0.8rem 1rem 1rem 1rem;
-  }
-  
-  .tab-label {
-    font-size: 0.7rem;
-  }
-  
-  .cnic-input {
-    max-width: 100%;
-  }
-  
-  .button-group {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .btn-back {
-    margin-right: 0;
-  }
-}
 
-@media (max-width: 480px) {
+  .left-section {
+    flex: 1;
+    max-width: 500px;
+  }
+
   .header h1 {
-    font-size: 1.3rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
   }
-  
-  .tab-item {
-    min-width: 60px;
-    padding: 0.7rem 0.5rem 0.9rem 0.5rem;
+
+  .tabs-container {
+    display: flex;
+    gap: 0;
+    background-color: white;
   }
-  
-  .tab-icon {
-    font-size: 1.2rem;
-  }
-  
+
   .tab-label {
-    font-size: 0.65rem;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.2;
+    transition: all 0.2s ease;
+    white-space: nowrap;
   }
-}
+
+  .form-section {
+    background: white;
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .cnic-input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 1.5px solid #ccc;
+    border-radius: 12px;
+    font-size: 1rem;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  .cnic-input:focus {
+    outline: none;
+    border-color: #00c855;
+    box-shadow: 0 0 0 3px rgba(139, 74, 232, 0.1);
+  }
+
+  .error-message {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .account-type-container {
+      flex-direction: column;
+      gap: 2rem;
+      padding: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .header h1 {
+      font-size: 1.3rem;
+    }
+  }
 </style>
