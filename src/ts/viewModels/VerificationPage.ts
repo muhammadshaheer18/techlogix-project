@@ -6,6 +6,7 @@
  * @ignore
  */
 import * as AccUtils from "../accUtils";
+import appViewModel from '../appController';
 class VerificationPage {
 
   constructor() {
@@ -38,6 +39,18 @@ class VerificationPage {
    */
   transitionCompleted(): void {
     // implement if needed
+  }
+
+  public goNext = (): void =>{
+     if (appViewModel.router) {
+                appViewModel.router.go({ path: "LoginDetailsPage" });
+              }
+  }
+
+  public goBack =(): void=>{
+     if (appViewModel.router) {
+                appViewModel.router.go({ path: "AccountDetailsPage" });
+              }
   }
 }
 

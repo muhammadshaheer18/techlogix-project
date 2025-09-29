@@ -4,7 +4,7 @@
       <h1>Create Login Details <span>(2/3)</span></h1>
     </div>
 
-    <form data-bind="submit: handleSubmit" novalidate>
+    <form novalidate>
       <!-- Password Field -->
       <div class="form-group">
         <label for="password">
@@ -64,10 +64,10 @@
 
       <!-- Buttons -->
       <div class="button-group">
-        <button type="button" class="btn btn-back" data-bind="click: handleBack">
+        <button type="button" class="btn btn-back" data-bind="click: goBack">
           Back
         </button>
-        <button type="submit" class="btn btn-next" data-bind="enable: isNextButtonEnabled">
+        <button type="submit" class="btn btn-next" data-bind="click: goNext,enable: isNextButtonEnabled">
           Next
         </button>
       </div>

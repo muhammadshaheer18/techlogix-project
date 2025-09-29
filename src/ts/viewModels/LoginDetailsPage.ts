@@ -166,15 +166,17 @@ class LoginDetailsPage {
   };
 
   // Handle back button click
-  handleBack = (): void => {
-    // Navigate to previous page
-    // You can implement your navigation logic here
-    console.log("Navigate back");
+ public goBack = (): void => {
+  if (appViewModel?.router) {
+    appViewModel.router.go({ path: "VerificationPage" });
+  } else {
     window.history.back();
-  };
+  }
+};
+
 
   // Handle form submission
-  handleSubmit = (): void => {
+  public goNext = (): void => {
     if (this.isNextButtonEnabled()) {
      if (appViewModel.router) {
       appViewModel.router.go({ path: "terms" });

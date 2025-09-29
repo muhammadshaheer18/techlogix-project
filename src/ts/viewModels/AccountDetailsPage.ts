@@ -3,7 +3,7 @@
 import * as ko from 'knockout';
 import Context = require('ojs/ojcontext');
 import ModuleElementUtils = require('ojs/ojmodule-element-utils');
-
+import appViewModel from "../appController";
 class AccountDetailsPage {
   // Observable properties
   public accountNumber: ko.Observable<string>;
@@ -147,6 +147,9 @@ class AccountDetailsPage {
           if (this.validateAccountNumber(cleanAccountNumber)) {
             console.log('Account number validated:', cleanAccountNumber);
             // Navigate to next step
+             if (appViewModel.router) {
+                appViewModel.router.go({ path: "VerificationPage" });
+              }
           } else {
             this.showError('Invalid account number. Please check and try again.');
           }
@@ -165,6 +168,7 @@ class AccountDetailsPage {
         this.showError('An error occurred. Please try again.');
       } finally {
         this.isLoading(false);
+       
       }
     }, 1000);
   };
