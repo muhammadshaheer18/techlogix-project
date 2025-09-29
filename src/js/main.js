@@ -50,7 +50,9 @@
         'proj4': 'libs/proj4js/dist/proj4-src',
         'touchr': 'libs/touchr/touchr'
         ,
-        'chai': 'libs/chai/chai-4.5.0'
+        'chai': 'libs/chai/chai-4.5.0',
+        'nav-bar': 'jet-composites/nav-bar/loader'
+
       }
       // endinjector
     }
@@ -61,3 +63,8 @@
  * Load the application's entry point file
  */
 require(['./root']);
+Composite.register("nav-bar", {
+  view: view,
+  viewModel: ViewModel,
+  metadata: JSON.parse(metadata)
+});

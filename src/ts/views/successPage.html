@@ -1,37 +1,13 @@
-  <div class="success-container">
-        <!-- Position for your green checkmark icon -->
-        <div class="checkmark-container">
-            <!-- Replace this div with your actual checkmark icon/image -->
-            <div class="checkmark-icon"></div>
-        </div>
-        
-        <h1 class="success-title">
-            You have successfully<br>
-            registered for online banking
-        </h1>
-        
-        <p class="success-subtitle">
-            Following are the details of your registered online banking account.
-        </p>
-        
-        <div class="account-details">
-            <div class="detail-item">
-                <div class="detail-label">USERNAME</div>
-                <div class="detail-value">03221234567</div>
-            </div>
-            
-            <div class="detail-item">
-                <div class="detail-label">ACCOUNT TITLE</div>
-                <div class="detail-value">ALI KHAN</div>
-            </div>
-            
-            <div class="detail-item">
-                <div class="detail-label">ACCOUNT NUMBER</div>
-                <div class="detail-value">01531400162290</div>
-            </div>
-        </div>
-        
-        <button class="continue-btn" onclick="handleContinue()">
-            Continue to Log In
-        </button>
-    </div>
+<!-- ko if: !showNavigation() -->
+<div class="success-container">
+  <div class="checkmark-container"><div class="checkmark-icon"></div></div>
+  <h1 class="success-title">You have successfully<br>registered for online banking</h1>
+  <p class="success-subtitle">Following are the details of your registered online banking account.</p>
+  <div class="account-details">
+      <div class="detail-item"><div class="detail-label">USERNAME</div><div class="detail-value">03221234567</div></div>
+      <div class="detail-item"><div class="detail-label">ACCOUNT TITLE</div><div class="detail-value">Muhammad Shaheer</div></div>
+      <div class="detail-item"><div class="detail-label">ACCOUNT NUMBER</div><div class="detail-value">01531400162290</div></div>
+  </div>
+  <button class="continue-btn" onclick="handleContinue()">Continue to Log In</button>
+</div>
+<!-- /ko -->

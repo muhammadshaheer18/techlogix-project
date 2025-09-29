@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!--
- Copyright (c) 2014, 2025, Oracle and/or its affiliates.
- Licensed under The Universal Permissive License (UPL), Version 1.0
- as shown at https://oss.oracle.com/licenses/upl/
--->
+  Copyright (c) 2014, 2025, Oracle and/or its affiliates.
+  Licensed under The Universal Permissive License (UPL), Version 1.0
+  as shown at https://oss.oracle.com/licenses/upl/
+  -->
 
 <html lang="en-us" class="image-background">
 
@@ -29,17 +29,17 @@
 <body class="oj-webs-applayout-body image-background">
   <!-- Template for rendering navigation items shared between nav bar and nav list -->
   <script type="text/html" id="navTemplate">
-    <li style="list-style: none;">
-      <a href="#" style="display: flex; flex-direction: row; align-items: center;justify-content: flex-start; gap: 12px; width: 100%;">
-        <!-- Circle with step number coming from navData.value -->
-        <span class="circle" style="display: inline-flex; align-items: center; justify-content: center;">
-          <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
-        </span>
-        <!-- Label -->
-        <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
-      </a>
-    </li>
-  </script>
+      <li style="list-style: none;">
+        <a href="#" style="display: flex; flex-direction: row; align-items: center;justify-content: flex-start; gap: 12px; width: 100%;">
+          <!-- Circle with step number coming from navData.value -->
+          <span class="circle" style="display: inline-flex; align-items: center; justify-content: center;">
+            <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
+          </span>
+          <!-- Label -->
+          <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
+        </a>
+      </li>
+    </script>
 
   <div id="globalBody">
 
@@ -56,15 +56,17 @@
         </div>
 
         <div class="primary-container">
-
-          <!-- Tab Bar with numbered circles -->
-          <oj-tab-bar id="navTabBar " class="oj-sm-only-hide oj-md-condense oj-md-justify-content-center"
+          <!-- Tab Bar -->
+          <!-- ko if: showNavigation -->
+          <oj-tab-bar id="navTabBar" class="oj-sm-only-hide oj-md-condense oj-md-justify-content-center"
             data="[[navDataProvider]]" edge="top"
             item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]"
             selection="{{selection.path}}">
           </oj-tab-bar>
+          <!-- /ko -->
 
-          <!-- Navigation Drawer with numbered circles -->
+          <!-- Drawer Navigation -->
+          <!-- ko if: showNavigation -->
           <oj-drawer-popup id="navDrawer" edge="start" opened="{{sideDrawerOn}}" modality="modeless" role="navigation"
             class="oj-bg-neutral-170 oj-color-invert oj-sm-margin-15" on-opened-changed="[[openedChangedHandler]]">
             <oj-navigation-list id="navDrawerList" data="[[navDataProvider]]"
@@ -72,10 +74,13 @@
               selection="{{selection.path}}">
             </oj-navigation-list>
           </oj-drawer-popup>
-          <oj-navigation data-provider="[[navDataProvider]]" selection="{{selection}}"></oj-navigation>
+          <!-- /ko -->
+
+
           <!-- Page Content pushed down -->
           <oj-module role="main" class="oj-web-applayout-max-width oj-web-applayout-content oj-sm-margin-20"
             config="[[moduleAdapter.koObservableConfig]]">
+
           </oj-module>
 
           <div class="oj-flex-bar-middle">
@@ -87,24 +92,24 @@
 
       <!-- Footer -->
       <!-- <footer class="oj-web-applayout-footer" role="contentinfo">
-        <div class="oj-web-applayout-footer-item oj-web-applayout-max-width">
-          <ul>
-            <oj-bind-for-each data="[[footerLinks]]">
-              <template>
-                <li>
-                  <a :id="[[$current.data.linkId]]" :href="[[$current.data.linkTarget]]">
-                    <oj-bind-text value="[[$current.data.name]]"></oj-bind-text>
-                  </a>
-                </li>
-              </template>
-            </oj-bind-for-each>
-          </ul>
-        </div>
-        <div
-          class="oj-web-applayout-footer-item oj-web-applayout-max-width oj-text-color-secondary oj-typography-body-sm">
-          Copyright © 2025, Meezan Bank Limited, All rights reserved.
-        </div>
-      </footer> -->
+          <div class="oj-web-applayout-footer-item oj-web-applayout-max-width">
+            <ul>
+              <oj-bind-for-each data="[[footerLinks]]">
+                <template>
+                  <li>
+                    <a :id="[[$current.data.linkId]]" :href="[[$current.data.linkTarget]]">
+                      <oj-bind-text value="[[$current.data.name]]"></oj-bind-text>
+                    </a>
+                  </li>
+                </template>
+              </oj-bind-for-each>
+            </ul>
+          </div>
+          <div
+            class="oj-web-applayout-footer-item oj-web-applayout-max-width oj-text-color-secondary oj-typography-body-sm">
+            Copyright © 2025, Meezan Bank Limited, All rights reserved.
+          </div>
+        </footer> -->
     </div>
   </div>
 
@@ -114,3 +119,5 @@
 </body>
 
 </html>
+
+<script src="js/main.js"></script> <!-- Oracle JET compiled JS -->

@@ -1,10 +1,12 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "module": "amd",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "target": "es6",
     "strict": true,
-    "module": "amd",
     "moduleResolution": "node",
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
@@ -29,6 +31,9 @@
       ],
       "preact": [
         "./node_modules/preact"
+      ],
+      "nav-bar/*": [
+        "./src/ts/jet-composites/nav-bar/*"
       ]
     },
     "declaration": true,

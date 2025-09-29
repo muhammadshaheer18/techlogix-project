@@ -5,11 +5,12 @@ class Terms {
   accepted: ko.Observable<boolean>;
 
   constructor() {
+    // User must accept terms to proceed
     this.accepted = ko.observable(true);
   }
 
   handleBack = (): void => {
-    // Use the router consistently - replace the old router reference
+    // Navigate back to previous page
     if (appViewModel.router) {
       appViewModel.router.go({ path: "LoginDetailsPage" });
     }

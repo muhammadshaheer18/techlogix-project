@@ -43,7 +43,8 @@ class RootViewModel {
   appName: ko.Observable<string>;
   userLogin: ko.Observable<string>;
   footerLinks: Array<object>;
-  selection: KnockoutRouterAdapter<CoreRouterDetail>;
+  showNavigation: ko.Computed<boolean>;
+  selection: KnockoutRouterAdapter<any>;
 
   constructor() {
     // handle announcements sent when pages change, for Accessibility.
@@ -130,6 +131,10 @@ class RootViewModel {
 
     this.navDataProvider = new ArrayDataProvider(navItemsForNavigation, {
       keyAttributes: "path",
+    });
+
+    this.showNavigation = ko.pureComputed(() => {
+      return this.selection.path() !== "successPage";
     });
 
     // drawer
