@@ -1,33 +1,35 @@
 <script type="text/html" id="navTemplate">
-      <li style="list-style: none;">
-        <a href="#" style="display: flex; flex-direction: row; align-items: center;justify-content: flex-start; gap: 12px; width: 100%;">
-          <!-- Circle with step number coming from navData.value -->
-          <span class="circle" style="display: inline-flex; align-items: center; justify-content: center;">
-            <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
-          </span>
-          <!-- Label -->
-          <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
-        </a>
-      </li>
-    </script>
+  <li style="list-style: none;">
+    <a href="#" style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 12px; width: 100%;">
+      <!-- Circle with step number -->
+      <span class="circle" style="display: inline-flex; align-items: center; justify-content: center;">
+        <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
+      </span>
+      <!-- Label -->
+      <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
+    </a>
+  </li>
+</script>
 
-<!-- Tab Bar -->
+<!-- Tab Bar - Only show when navigation should be visible -->
 <!-- ko if: properties.showNavigation -->
 <oj-tab-bar 
   data="[[properties.data]]"
   edge="top"
   selection="{{properties.selection}}"
-  on-selection-changed="[[onSelectionChanged]]"
   item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
 </oj-tab-bar>
-
 <!-- /ko -->
 
-
 <!-- Drawer Navigation -->
-<oj-drawer-popup edge="start" opened="{{parent.sideDrawerOn}}" on-click="[[properties.toggleDrawer]]">
-  <oj-navigation-list data="[[properties.data]]"
+<oj-drawer-popup 
+  edge="start" 
+  opened="{{properties.sideDrawerOn}}" 
+  modality="modeless">
+  <oj-navigation-list 
+    data="[[properties.data]]"
     selection="{{properties.selection}}"
+    on-click="[[properties.toggleDrawer]]"
     item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
   </oj-navigation-list>
 </oj-drawer-popup>
