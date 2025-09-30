@@ -1,19 +1,32 @@
 {
   "name": "nav-bar",
   "version": "1.0.0",
-  "jetVersion": "^19.0.0",
-  "displayName": "A user friendly, translatable name of the component.",
-  "description": "A translatable high-level description for the component.",
+  "jetVersion": "^14.0.0",
+  "displayName": "Navigation Bar",
+  "description": "Step-based navigation bar component",
   "properties": {
-
-  },
-  "methods": {
-
-  }, 
-  "events": {
-
-  }, 
-  "slots": {
-
+    "data": {
+      "type": "object",
+      "description": "Navigation data provider"
+    },
+    "selection": {
+      "type": "string",
+      "description": "Currently selected path",
+      "writeback": true
+    },
+    "currentStep": {
+      "type": "string",
+      "description": "Current step path",
+      "writeback": true
+    },
+    "completedSteps": {
+      "type": "array",
+      "description": "Array of completed step paths",
+      "writeback": true
+    },
+    "showNavigation": {
+      "type": "boolean",
+      "description": "Whether to show navigation"
+    }
   }
 }

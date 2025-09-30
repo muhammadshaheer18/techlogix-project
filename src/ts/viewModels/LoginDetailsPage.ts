@@ -178,8 +178,8 @@ class LoginDetailsPage {
   // Handle form submission
   public goNext = (): void => {
     if (this.isNextButtonEnabled()) {
-     if (appViewModel.router) {
-      appViewModel.router.go({ path: "terms" });
+     if (appViewModel) {
+      appViewModel.goToNextStep("LoginDetailsPage", "terms");
     }
     }
   };

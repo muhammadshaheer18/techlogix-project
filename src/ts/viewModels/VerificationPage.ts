@@ -42,8 +42,8 @@ class VerificationPage {
   }
 
   public goNext = (): void =>{
-     if (appViewModel.router) {
-                appViewModel.router.go({ path: "LoginDetailsPage" });
+     if (appViewModel) {
+               appViewModel.goToNextStep("VerificationPage", "LoginDetailsPage");
               }
   }
 

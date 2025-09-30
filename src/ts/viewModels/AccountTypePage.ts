@@ -45,7 +45,10 @@ class AccountTypePage {
       this.isLoading(false);
       
       if (appViewModel?.router) {
-        appViewModel.router.go({ path: 'AccountDetailsPage' });
+        // ✅ Mark current step as completed and navigate to next
+        appViewModel.goToNextStep('AccountTypePage', 'AccountDetailsPage');
+        
+        console.log('Completed steps:', appViewModel.completedSteps());
       } else {
         alert(
           `Navigation successful!\nCNIC: ${this.cnicNumber()}\nAccount Type: ${this.selectedAccountType()}`

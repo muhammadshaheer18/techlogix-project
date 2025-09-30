@@ -1,12 +1,9 @@
 /**
  * @license
- * Copyright (c) 2014, 2025, Oracle and/or its affiliates.
+ * Copyright (c) 2014, 2025
  * Licensed under The Universal Permissive License (UPL), Version 1.0
- * as shown at https://oss.oracle.com/licenses/upl/
- * @ignore
  */
 import * as ko from "knockout";
-import * as ModuleUtils from "ojs/ojmodule-element-utils";
 import * as ResponsiveUtils from "ojs/ojresponsiveutils";
 import * as ResponsiveKnockoutUtils from "ojs/ojresponsiveknockoututils";
 import CoreRouter = require("ojs/ojcorerouter");
@@ -17,10 +14,15 @@ import ArrayDataProvider = require("ojs/ojarraydataprovider");
 import "ojs/ojknockout";
 import "ojs/ojmodule-element";
 import { ojNavigationList } from "ojs/ojnavigationlist";
-import { ojModule } from "ojs/ojmodule-element";
 import Context = require("ojs/ojcontext");
-import "ojs/ojdrawerpopup";
-import * as Router from "ojs/ojrouter";
+
+// Extend Window interface
+declare global {
+  interface Window {
+    appRouter: CoreRouter<any>;
+    appViewModel: RootViewModel;
+  }
+}
 
 interface CoreRouterDetail {
   label: string;
@@ -28,37 +30,41 @@ interface CoreRouterDetail {
   value: string;
 }
 
-// Extend Window interface to include router
-declare global {
-  interface Window {
-    appRouter: CoreRouter<CoreRouterDetail>;
-  }
-}
-
 class RootViewModel {
-  manner: ko.Observable<string>;
-  message: ko.Observable<string | undefined>;
+  manner = ko.observable("polite");
+  message = ko.observable<string | undefined>();
   smScreen: ko.Observable<boolean> | undefined;
   mdScreen: ko.Observable<boolean> | undefined;
-  router: CoreRouter<CoreRouterDetail> | undefined;
+  router: CoreRouter<CoreRouterDetail>;
   moduleAdapter: ModuleRouterAdapter<CoreRouterDetail>;
-  sideDrawerOn: ko.Observable<boolean>;
+  sideDrawerOn = ko.observable(false);
   navDataProvider: ojNavigationList<
     string,
     CoreRouter.CoreRouterState<CoreRouterDetail>
   >["data"];
-  appName: ko.Observable<string>;
-  userLogin: ko.Observable<string>;
-  footerLinks: Array<object>;
+  appName = ko.observable("Meezan Bank Limited");
+  userLogin = ko.observable("");
+  footerLinks: Array<object> = [];
   showNavigation: ko.Computed<boolean>;
   selection: KnockoutRouterAdapter<any>;
 
-  constructor() {
-    // handle announcements sent when pages change, for Accessibility.
-    this.manner = ko.observable("polite");
-    this.message = ko.observable();
+  // ✅ Step tracking
+  completedSteps = ko.observableArray<string>([]);
+  currentStep = ko.observable<string>("AccountTypePage");
 
-    let globalBodyElement: HTMLElement = document.getElementById(
+  // Define step order
+  private navOrder = [
+    "AccountTypePage",
+    "AccountDetailsPage",
+    "VerificationPage",
+    "LoginDetailsPage",
+    "terms",
+    "successPage",
+  ];
+
+  constructor() {
+    // Announcements
+    const globalBodyElement = document.getElementById(
       "globalBody"
     ) as HTMLElement;
     globalBodyElement.addEventListener(
@@ -67,19 +73,18 @@ class RootViewModel {
       false
     );
 
-    // media queries for responsive layouts
-    let smQuery: string | null = ResponsiveUtils.getFrameworkQuery("sm-only");
+    // Responsive breakpoints
+    const smQuery = ResponsiveUtils.getFrameworkQuery("sm-only");
     if (smQuery) {
-      this.smScreen =
-        ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
+      this.smScreen = ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
     }
 
-    let mdQuery: string | null = ResponsiveUtils.getFrameworkQuery("md-up");
+    const mdQuery = ResponsiveUtils.getFrameworkQuery("md-up");
     if (mdQuery) {
-      this.mdScreen =
-        ResponsiveKnockoutUtils.createMediaQueryObservable(mdQuery);
+      this.mdScreen = ResponsiveKnockoutUtils.createMediaQueryObservable(mdQuery);
     }
 
+    // Router + nav items
     const navData = [
       { path: "", redirect: "AccountTypePage" },
       {
@@ -100,65 +105,62 @@ class RootViewModel {
       },
       {
         path: "terms",
-        detail: {
-          label: "Terms & Conditions",
-          iconClass: "circle",
-          value: "5",
-        },
+        detail: { label: "Terms & Conditions", iconClass: "circle", value: "5" },
       },
       {
         path: "successPage",
-        detail: {
-          label: "Success Page",
-          iconClass: "circle",
-          value: "6",
-        },
+        detail: { label: "Success Page", iconClass: "circle", value: "6" },
       },
     ];
-    
-    // router setup
-    const router = new CoreRouter(navData, {
+
+    this.router = new CoreRouter(navData, {
       urlAdapter: new UrlParamAdapter(),
     });
-    router.sync();
+    this.router.sync();
 
-    this.router = router;
-    
-    // ✅ CRITICAL: Expose router globally for composite components
-    window.appRouter = router;
-    
-    this.moduleAdapter = new ModuleRouterAdapter(router);
-    this.selection = new KnockoutRouterAdapter(router);
+    // Expose globally
+    window.appRouter = this.router;
+    window.appViewModel = this;
 
+    this.moduleAdapter = new ModuleRouterAdapter(this.router);
+    this.selection = new KnockoutRouterAdapter(this.router);
+
+    // Only show navigation on main flow
     const hiddenPages = ["terms", "successPage", ""];
     const navItemsForNavigation = navData.filter(
       (item) => !hiddenPages.includes(item.path)
     );
-
     this.navDataProvider = new ArrayDataProvider(navItemsForNavigation, {
       keyAttributes: "path",
     });
 
-    this.showNavigation = ko.pureComputed(() => {
-      return this.selection.path() !== "successPage";
+    this.showNavigation = ko.pureComputed(
+      () => this.selection.path() !== "successPage"
+    );
+
+    // ✅ Keep currentStep in sync with router
+    this.selection.path.subscribe((newPath: string) => {
+      if (newPath) {
+        this.currentStep(newPath);
+
+        const idx = this.navOrder.indexOf(newPath);
+        if (idx > 0) {
+          // ✅ Mark all PREVIOUS steps as completed (not including current)
+          const completed = this.navOrder.slice(0, idx);
+          this.completedSteps(completed);
+          console.log("➡️ Root currentStep:", newPath);
+          console.log("✅ Root completedSteps:", this.completedSteps());
+        } else if (idx === 0) {
+          // First step - no completed steps yet
+          this.completedSteps([]);
+        }
+      }
     });
 
-    // drawer
-    this.sideDrawerOn = ko.observable(false);
+    // auto-close drawer on md+
+    this.mdScreen?.subscribe(() => this.sideDrawerOn(false));
 
-    // close drawer on medium and larger screens
-    this.mdScreen?.subscribe(() => {
-      this.sideDrawerOn(false);
-    });
-
-    // header
-    this.appName = ko.observable("Meezan Bank Limited");
-    this.userLogin = ko.observable("");
-    
-    // footer
-    this.footerLinks = [];
-    
-    // release the application bootstrap busy state
+    // release bootstrap busy state
     Context.getPageContext().getBusyContext().applicationBootstrapComplete();
   }
 
@@ -179,6 +181,14 @@ class RootViewModel {
       drawerToggleButtonElement.focus();
     }
   };
+
+  // ✅ Go to next step (mark current as complete and navigate)
+  goToNextStep(currentPath: string, nextPath: string): void {
+    console.log(`🚀 Going from ${currentPath} to ${nextPath}`);
+    
+    // Just navigate - the router subscription will handle completion
+    this.router.go({ path: nextPath });
+  }
 }
 
 export default new RootViewModel();

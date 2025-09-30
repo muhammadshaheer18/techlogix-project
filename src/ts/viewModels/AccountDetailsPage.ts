@@ -119,8 +119,8 @@ class AccountDetailsPage {
    */
   public goBack = (): void => {
     console.log('Going back to previous step');
-    if (appViewModel.router) {
-                appViewModel.router.go({ path: "AccountTypePage" });
+    if (appViewModel) {
+                appViewModel.goToNextStep("AccountDetailsPage", "VerificationPage");
               }
   };
 

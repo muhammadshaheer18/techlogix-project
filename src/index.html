@@ -43,9 +43,10 @@
         </div>
 
         <div class="primary-container">
-          <nav-bar data="[[navDataProvider]]" selection="{{selection.path}}" show-navigation="[[showNavigation]]"
-            toggle-drawer="[[toggleDrawer]]">
+          <nav-bar data="[[navDataProvider]]" selection="{{selection.path}}" current-step="{{currentStep}}"
+            completed-steps="{{completedSteps}}" show-navigation="[[showNavigation]]">
           </nav-bar>
+
 
           <!-- Page Content pushed down -->
           <oj-module role="main" class="oj-web-applayout-max-width oj-web-applayout-content oj-sm-margin-20"

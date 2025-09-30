@@ -1,19 +1,29 @@
 <script type="text/html" id="navTemplate">
-  <li style="list-style: none;">
-    <a href="#" style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 12px; width: 100%;">
-      <!-- Circle with step number -->
-      <span class="circle" style="display: inline-flex; align-items: center; justify-content: center;">
+  <li style="list-style: none; display: flex; align-items: center;">
+    <!-- Step Circle + Label -->
+    <a href="#" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+      <!-- Circle -->
+      <span data-bind="css: 'circle ' + $parent.getStepStatus($data.path)">
         <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
       </span>
+      
       <!-- Label -->
-      <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
+      <span data-bind="css: 'step-label ' + $parent.getStepStatus($data.path)">
+        <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
+      </span>
     </a>
+    
+    <!-- Connector line (except last step) -->
+    <!-- ko if: !$parent.isLastStep($data.path) -->
+    <span data-bind="css: 'connector ' + $parent.getConnectorStatus($data.path)"></span>
+    <!-- /ko -->
   </li>
 </script>
 
-<!-- Tab Bar - Only show when navigation should be visible -->
+<!-- Top navigation -->
 <!-- ko if: properties.showNavigation -->
-<oj-tab-bar 
+<oj-tab-bar
+  class="tab-bar"
   data="[[properties.data]]"
   edge="top"
   selection="{{properties.selection}}"
@@ -22,14 +32,100 @@
 <!-- /ko -->
 
 <!-- Drawer Navigation -->
-<oj-drawer-popup 
-  edge="start" 
-  opened="{{properties.sideDrawerOn}}" 
-  modality="modeless">
-  <oj-navigation-list 
+<oj-drawer-popup edge="start" opened="{{properties.sideDrawerOn}}" modality="modeless">
+  <oj-navigation-list
     data="[[properties.data]]"
     selection="{{properties.selection}}"
     on-click="[[properties.toggleDrawer]]"
     item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
   </oj-navigation-list>
 </oj-drawer-popup>
+
+<style>
+  /* Circle base */
+  .circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid #d0d0d0;
+    background-color: #fff;
+    color: #999;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+  
+  /* Current step (highlighted green) */
+  .circle.active {
+    border-color: #00c853;
+    background-color: #00c853;
+    color: #fff;
+  }
+  
+  /* Completed steps (past steps) */
+  .circle.completed {
+    border-color: #00c853 !important;
+    background-color: #00c853 !important;
+    color: #fff !important;
+  }
+  
+  /* Not reached yet */
+  .circle.incomplete {
+    border-color: #d0d0d0;
+    background-color: #fff;
+    color: #999;
+  }
+  
+  /* Labels */
+  .step-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+  }
+  
+  .step-label.active {
+    color: #00c853;
+    font-weight: 600;
+  }
+  
+  .step-label.completed {
+    color: #00c853;
+  }
+  
+  .step-label.incomplete {
+    color: #999;
+  }
+  
+  /* Connector line */
+  .connector {
+    flex: 1;
+    height: 2px;
+    min-width: 40px;
+    margin: 0 12px;
+    background-color: #d0d0d0;
+    transition: background-color 0.3s ease;
+  }
+  
+  .connector.completed {
+    background-color: #00c853;
+  }
+  
+  .connector.incomplete {
+    background-color: #d0d0d0;
+  }
+  
+  /* Tab bar styling */
+  .tab-bar ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    margin: 0;
+  }
+</style>
