@@ -975,7 +975,7 @@ h6 {
 
 .continue-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(139, 74, 156, 0.3);
+  box-shadow: 0 8px 25px rgba(53, 36, 57, 0.3);
 }
 
 .continue-btn:active {

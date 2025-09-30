@@ -1,0 +1,22 @@
+/* This file is where css selectors for the component go.
+   There will be hard coded properties and properties controlled by variables, for example
+
+   nav-bar .nav-bar-value-text {
+   color: var(--nav-bar-value-text-color);
+   display: inline-block;
+	 }
+*/
+
+nav-bar:not(.oj-complete){
+  visibility: hidden;
+}
+
+nav-bar{
+	min-height: 50px;
+	width: 50px;
+}
+
+nav-bar[hidden]
+{
+  display: none;
+}

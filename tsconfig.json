@@ -1,11 +1,13 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "module": "amd",
+    "outDir": "src/js",   
+    "rootDir": "src/ts",               
+    "module": "amd",                    
+    "target": "es5",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
-    "target": "es6",
     "strict": true,
     "moduleResolution": "node",
     "jsx": "react-jsx",
@@ -43,6 +45,6 @@
     "removeComments": true
   },
   "include": [
-    "./src/ts/**/*"
+    "./src/ts/**/*","./src/js/**/*"
   ]
 }

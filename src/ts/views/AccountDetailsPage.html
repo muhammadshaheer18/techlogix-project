@@ -3,12 +3,11 @@
 
     <!-- Left Section - Form -->
     <div class="left-section">
-
       <!-- Header -->
       <div class="header">
         <h1>Enter Account Details</h1>
       </div>
-
+      <div><nav-bar></nav-bar></div>
       <!-- Tab Navigation -->
       <div class="tab-navigation">
         <div class="tab-item" data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, 
@@ -73,15 +72,17 @@
   </div>
 </div>
 <style>
-  .account-details-container{
+  .account-details-container {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     margin-top: 0px;
   }
+
   .tab-navigation {
     display: flex;
     flex-direction: row;
     margin-bottom: 20px;
   }
+
   .tab-item {
     display: flex;
     flex-direction: column;
@@ -105,25 +106,25 @@
     color: #7a147a;
   }
 
-  .tab-item.active{
+  .tab-item.active {
     color: #7a147a;
     font-weight: 600;
   }
 
-  .tab-item.inactive{
+  .tab-item.inactive {
     color: #333;
     background-color: #ccc;
   }
 
-  .tab-item.active{
+  .tab-item.active {
     fill: #7a147a;
   }
 
-  .left-section{
+  .left-section {
     width: 700px;
   }
 
-  .form-label{
+  .form-label {
     font-size: 17px;
   }
 </style>

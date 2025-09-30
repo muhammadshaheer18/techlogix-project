@@ -1,9 +1,9 @@
 // account-details.ts
-
 import * as ko from 'knockout';
 import Context = require('ojs/ojcontext');
 import ModuleElementUtils = require('ojs/ojmodule-element-utils');
 import appViewModel from "../appController";
+
 class AccountDetailsPage {
   // Observable properties
   public accountNumber: ko.Observable<string>;
