@@ -1,9 +1,9 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "outDir": "src/js",   
-    "rootDir": "src/ts",               
-    "module": "amd",                    
+    "outDir": "src/js",
+    "rootDir": "src/ts",
+    "module": "amd",
     "target": "es5",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -36,6 +36,9 @@
       ],
       "nav-bar/*": [
         "./src/ts/jet-composites/nav-bar/*"
+      ],
+      "help-card/*": [
+        "./src/ts/jet-composites/help-card/*"
       ]
     },
     "declaration": true,
@@ -45,6 +48,7 @@
     "removeComments": true
   },
   "include": [
-    "./src/ts/**/*","./src/js/**/*"
+    "./src/ts/**/*",
+    "./src/js/**/*"
   ]
 }

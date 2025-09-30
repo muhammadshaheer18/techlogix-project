@@ -120,7 +120,7 @@ class AccountDetailsPage {
   public goBack = (): void => {
     console.log('Going back to previous step');
     if (appViewModel) {
-                appViewModel.goToNextStep("AccountDetailsPage", "VerificationPage");
+                appViewModel.goToNextStep("accountDetailsPage", "verificationPage");
               }
   };
 
@@ -159,7 +159,7 @@ class AccountDetailsPage {
 
         // Navigate only if validation passes
         if (appViewModel.router) {
-          appViewModel.router.go({ path: "VerificationPage" });
+          appViewModel.router.go({ path: "verificationPage" });
         }
       } catch (err) {
         console.error(err);

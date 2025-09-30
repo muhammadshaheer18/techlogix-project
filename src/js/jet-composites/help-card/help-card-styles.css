@@ -1,0 +1,65 @@
+.help-section {
+  flex-shrink: 0;
+  max-width: 18.75rem;
+  /* same as height, keeps it balanced */
+  margin-left: auto;
+  /* push to the right in flex layout */
+  margin-top: 2rem;
+  /* smaller top margin for responsiveness */
+  height: auto;
+  /* let content define the height */
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: centerlll;
+}
+
+.help-section img.cheque-image {
+  max-width: 100%;
+  /* make sure it never overflows parent */
+  height: auto;
+  display: block;
+}
+
+
+
+.help-content {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.help-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #7A147A;
+  margin-bottom: 0.5rem;
+}
+
+.help-content p {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* Progress Indicator */
+.progress-indicator {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  transition: background-color 0.3s ease;
+}
+
+.progress-dot.active {
+  background-color: #7A147A;
+}

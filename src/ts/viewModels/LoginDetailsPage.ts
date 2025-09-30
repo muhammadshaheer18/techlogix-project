@@ -179,7 +179,7 @@ class LoginDetailsPage {
   public goNext = (): void => {
     if (this.isNextButtonEnabled()) {
      if (appViewModel) {
-      appViewModel.goToNextStep("LoginDetailsPage", "terms");
+      appViewModel.goToNextStep("LoginDetailsPage", "termsPage");
     }
     }
   };

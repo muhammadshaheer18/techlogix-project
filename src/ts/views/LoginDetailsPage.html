@@ -74,3 +74,167 @@
     </form>
   </div>
 </div>
+<style>
+.login-details-card {
+  background: white;
+  border-radius: 16px;
+  padding: 0px;
+  width: 83%;
+  max-width: 480px;
+  position: relative;
+}
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: block;
+  color: #2d3748;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.input-container {
+  position: relative;
+  width: 400px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 16px;
+  background: #f7fafc;
+  transition: all 0.3s ease;
+  font-family: monospace;
+  letter-spacing: 2px;
+  box-sizing: border-box;
+  padding-right: 60px;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #00c855;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+.form-input.valid {
+  border-color: #00c855;
+}
+
+.form-input.invalid {
+  border-color: #e53e3e;
+  background: #fef5f5;
+}
+
+/* Show/Hide Button */
+.show-hide-btn {
+  position: absolute;
+  right: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #7a147a;
+  font-size: 14px;
+  font-weight: 700;
+  margin-left: 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Password Strength */
+.password-strength {
+  margin-top: 12px;
+}
+
+.strength-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.strength-label span {
+  color: #00b067;
+  font-size: 14px;
+}
+
+.strength-requirements {
+  list-style: none;
+  font-size: 13px;
+  color: black;
+  padding: 0;
+  margin: 0;
+}
+
+li::marker {
+  color: #7A147A;
+}
+
+.strength-requirements li::marker {
+  color: #7A147A;
+  font-weight: bold;
+  /* optional */
+}
+
+.requirement-item {
+  margin-bottom: 4px;
+  position: relative;
+  padding-left: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: color 0.3s ease;
+}
+
+.requirement-item:before {
+  content: "•";
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  transition: color 0.3s ease;
+}
+
+.requirement-item.valid {
+  color: #00b067;
+}
+
+.requirement-item.valid:before {
+  color: #00b067;
+}
+
+.requirement-item.invalid {
+  color: #4a5568;
+}
+
+.requirement-item.invalid:before {
+  color: #e53e3e;
+}
+
+/* Status Messages */
+.status-message {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe U#pass', Roboto, sans-serif;
+  animation: slideIn 0.3s ease;
+}
+
+.status-message.success {
+  color: #00b067;
+}
+
+.status-message.error {
+  color: #e53e3e;
+}
+
+</style>

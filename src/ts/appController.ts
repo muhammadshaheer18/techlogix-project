@@ -50,15 +50,15 @@ class RootViewModel {
 
   // ✅ Step tracking
   completedSteps = ko.observableArray<string>([]);
-  currentStep = ko.observable<string>("AccountTypePage");
+  currentStep = ko.observable<string>("accountTypePage");
 
   // Define step order
   private navOrder = [
-    "AccountTypePage",
-    "AccountDetailsPage",
-    "VerificationPage",
-    "LoginDetailsPage",
-    "terms",
+    "accountTypePage",
+    "accountDetailsPage",
+    "verificationPage",
+    "loginDetailsPage",
+    "termsPage",
     "successPage",
   ];
 
@@ -86,25 +86,25 @@ class RootViewModel {
 
     // Router + nav items
     const navData = [
-      { path: "", redirect: "AccountTypePage" },
+      { path: "", redirect: "accountTypePage" },
       {
-        path: "AccountTypePage",
+        path: "accountTypePage",
         detail: { label: "Account Type", iconClass: "circle", value: "1" },
       },
       {
-        path: "AccountDetailsPage",
+        path: "accountDetailsPage",
         detail: { label: "Account Detail", iconClass: "circle", value: "2" },
       },
       {
-        path: "VerificationPage",
+        path: "verificationPage",
         detail: { label: "Verification", iconClass: "circle", value: "3" },
       },
       {
-        path: "LoginDetailsPage",
+        path: "loginDetailsPage",
         detail: { label: "Login Details", iconClass: "circle", value: "4" },
       },
       {
-        path: "terms",
+        path: "termsPage",
         detail: { label: "Terms & Conditions", iconClass: "circle", value: "5" },
       },
       {
@@ -126,7 +126,7 @@ class RootViewModel {
     this.selection = new KnockoutRouterAdapter(this.router);
 
     // Only show navigation on main flow
-    const hiddenPages = ["terms", "successPage", ""];
+    const hiddenPages = ["termsPage", "successPage", ""];
     const navItemsForNavigation = navData.filter(
       (item) => !hiddenPages.includes(item.path)
     );

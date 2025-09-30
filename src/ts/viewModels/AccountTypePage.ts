@@ -46,7 +46,7 @@ class AccountTypePage {
       
       if (appViewModel?.router) {
         // ✅ Mark current step as completed and navigate to next
-        appViewModel.goToNextStep('AccountTypePage', 'AccountDetailsPage');
+        appViewModel.goToNextStep('accountTypePage', 'accountDetailsPage');
         
         console.log('Completed steps:', appViewModel.completedSteps());
       } else {
@@ -121,11 +121,11 @@ class AccountTypePage {
 
   // Component lifecycle methods
   connected = (): void => {
-    console.log('AccountTypePage connected');
+    console.log('accountTypePage connected');
   };
 
   disconnected = (): void => {
-    console.log('AccountTypePage disconnected');
+    console.log('accountTypePage disconnected');
   };
 }
 

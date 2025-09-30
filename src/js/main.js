@@ -62,5 +62,6 @@
  * Load the application's entry point file
  */
 require(['./root',
-  'jet-composites/nav-bar/loader'
+  'jet-composites/nav-bar/loader',
+  'jet-composites/help-card/loader'
 ]);

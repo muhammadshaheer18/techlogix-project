@@ -79,6 +79,11 @@
     background-color: #fff;
     color: #999;
   }
+
+  .circle {
+  background-color: #d1d5db !important;
+  color: #6b7280 !important;
+}
   
   /* Labels */
   .step-label {
@@ -128,4 +133,272 @@
     padding: 20px 0;
     margin: 0;
   }
+  #navTabBar {
+  background: transparent !important;
+  border: none !important;
+  margin-bottom: 1rem;
+  position: relative;
+  padding: 1rem 0;
+}
+
+/* Tab Bar Item Styling */
+#navTabBar .oj-tab-bar-item {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* Tab Bar Item Link */
+#navTabBar .oj-tab-bar-item > a {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  padding: 1rem 0.5rem !important;
+  width: 100% !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* ========================================
+   CIRCLE STYLES - Step Status Based
+========================================= */
+
+/* Base Circle */
+.circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 3;
+  border: 2px solid transparent;
+}
+
+/* Pending Step - Gray */
+.circle-pending {
+  background-color: #ccc !important;
+  color: #666 !important;
+  border-color: #ccc !important;
+}
+
+/* Current Step - Highlighted (Teal/Blue) */
+.circle-current {
+  background-color: #7A147A !important;
+  color: white !important;
+  border-color: #7A147A !important;
+  box-shadow: 0 0 0 4px rgba(122, 20, 122, 0.2);
+}
+
+/* Completed Step - Green */
+.circle-completed {
+  background-color: #00c855 !important;
+  color: white !important;
+  border-color: #00c855 !important;
+}
+
+/* ========================================
+   LABEL STYLES - Step Status Based
+========================================= */
+
+/* Base Label Styling */
+#navTabBar .oj-tab-bar-item a span:last-child,
+#navDrawerList .oj-navigation-list-item a span:last-child {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 4px;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+/* Pending Label - Gray */
+.label-pending {
+  color: #999 !important;
+  font-weight: 500 !important;
+}
+
+/* Current Label - Purple/Brand Color */
+.label-current {
+  color: #7A147A !important;
+  font-weight: 600 !important;
+}
+
+/* Completed Label - Green */
+.label-completed {
+  color: #00c855 !important;
+  font-weight: 600 !important;
+}
+
+/* ========================================
+   CONNECTING LINES (Progress Bars)
+========================================= */
+
+/* Base connecting line - Gray for incomplete */
+#navTabBar .oj-tab-bar-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  left: calc(50% + 20px);
+  right: calc(-50% + 20px);
+  height: 2px;
+  background-color: #ccc;
+  z-index: 1;
+  transition: background-color 0.3s ease;
+}
+
+/* Green line for completed steps */
+#navTabBar .oj-tab-bar-item.step-completed:not(:last-child)::after {
+  background-color: #00c855 !important;
+}
+
+/* ========================================
+   SELECTION UNDERLINE (Active Page Indicator)
+========================================= */
+
+/* Underline for selected/active tab */
+#navTabBar .oj-tab-bar-item.oj-selected::before,
+#navTabBar .oj-selected::before {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: #7A147A !important;
+  border-radius: 1px;
+  z-index: 10;
+}
+
+/* ========================================
+   OVERRIDE JET DEFAULT SELECTED STYLES
+========================================= */
+
+/* Remove default JET selected styles */
+#navTabBar .oj-tab-bar-item.oj-selected {
+  border-bottom: none !important;
+  background: transparent !important;
+}
+
+/* Make sure selected state doesn't override our custom colors */
+#navTabBar .oj-selected .circle {
+  /* Use the step status classes instead */
+}
+
+/* ========================================
+   NAVIGATION DRAWER STYLES (Mobile)
+========================================= */
+
+#navDrawerList .oj-navigation-list-item {
+  background: transparent !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+}
+
+#navDrawerList .oj-navigation-list-item a {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  width: 100% !important;
+  text-decoration: none !important;
+  padding: 0.5rem 0 !important;
+}
+
+#navDrawerList .circle {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+/* Apply step status styles to drawer as well */
+#navDrawerList .circle-pending {
+  background-color: #ccc !important;
+  color: #666 !important;
+}
+
+#navDrawerList .circle-current {
+  background-color: #7A147A !important;
+  color: white !important;
+}
+
+#navDrawerList .circle-completed {
+  background-color: #00c855 !important;
+  color: white !important;
+}
+
+#navDrawerList .label-pending {
+  color: #999 !important;
+}
+
+#navDrawerList .label-current {
+  color: #7A147A !important;
+  font-weight: 600 !important;
+}
+
+#navDrawerList .label-completed {
+  color: #00c855 !important;
+  font-weight: 600 !important;
+}
+.circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ccc;
+  background: #fff;
+  color: #ccc;
+  transition: all 0.3s ease;
+}
+
+.step-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #999;
+}
+
+.connector {
+  flex: 1;
+  height: 2px;
+  margin: 0 8px;
+  background-color: #ccc;
+  transition: all 0.3s ease;
+}
+
+/* ✅ Completed state */
+.circle.completed, .circle.current {
+  background-color: #00c853;  /* Green */
+  border-color: #00c853;
+  color: white;
+}
+
+.step-label.completed, .step-label.current {
+  color: #00c853;
+}
+
+.connector.completed {
+  background-color: #00c853;
+}
+
+
 </style>

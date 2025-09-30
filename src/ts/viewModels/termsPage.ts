@@ -12,7 +12,7 @@ class Terms {
   handleBack = (): void => {
     // Navigate back to previous page
     if (appViewModel.router) {
-      appViewModel.router.go({ path: "LoginDetailsPage" });
+      appViewModel.router.go({ path: "loginDetailsPage" });
     }
   };
 

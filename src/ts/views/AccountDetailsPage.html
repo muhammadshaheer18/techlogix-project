@@ -1,21 +1,22 @@
 <div class="oj-hybrid-padding">
   <div class="account-details-container">
 
-    <!-- Left Section - Form -->
+    <!-- Left Section -->
     <div class="left-section">
-      <!-- Header -->
       <div class="header">
         <h1>Enter Account Details</h1>
       </div>
-      <div><nav-bar></nav-bar></div>
-      <!-- Tab Navigation -->
+
+      <nav-bar></nav-bar>
+
+      <!-- Tabs -->
       <div class="tab-navigation">
-        <div class="tab-item" data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, 
-                        click: function() { switchTab('account') }">
+        <div class="tab-item"
+          data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, click: function() { switchTab('account') }">
           Account Number
         </div>
-        <div class="tab-item" data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, 
-                        click: function() { switchTab('iban') }">
+        <div class="tab-item"
+          data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, click: function() { switchTab('iban') }">
           IBAN
         </div>
       </div>
@@ -49,13 +50,11 @@
           <button class="btn-next" data-bind="click: goNext">Next</button>
         </div>
       </div>
-
     </div>
 
-    <!-- Right Section - Help -->
+    <!-- Help Section -->
     <div class="help-section">
-      <img class="cheque-image" src="/css/images/Icons/cheque.png" title="Cheque" alt="Cheque" />
-
+      <img class="cheque-image" src="/css/images/Icons/cheque.png" alt="Cheque" />
       <div class="help-content">
         <h3>How to find your Account Number?</h3>
         <p>The simplest way of finding your Account Number is to look for it on your cheque book.</p>
@@ -71,10 +70,17 @@
 
   </div>
 </div>
+
 <style>
   .account-details-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    margin-top: 0px;
+  }
+
+  .left-section {
+    width: 700px;
   }
 
   .tab-navigation {
@@ -85,43 +91,29 @@
 
   .tab-item {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 1rem 1.5rem 1.2rem 1.5rem;
+    justify-content: center;
+    padding: 1rem;
     cursor: pointer;
     border-bottom: 3px solid transparent;
-    transition: all 0.2s ease;
     width: 100%;
     height: 60px;
-    position: relative;
     border-radius: 4px;
-    color: #ccc;
+    transition: all 0.2s ease;
     font-size: 18px;
     font-weight: 600;
+    color: #ccc;
   }
 
   .tab-item.active {
-    border-bottom-color: #7a147a;
     background-color: #ffecfd;
+    border-bottom-color: #7a147a;
     color: #7a147a;
-  }
-
-  .tab-item.active {
-    color: #7a147a;
-    font-weight: 600;
   }
 
   .tab-item.inactive {
-    color: #333;
     background-color: #ccc;
-  }
-
-  .tab-item.active {
-    fill: #7a147a;
-  }
-
-  .left-section {
-    width: 700px;
+    color: #333;
   }
 
   .form-label {

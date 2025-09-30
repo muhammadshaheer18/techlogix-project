@@ -43,13 +43,13 @@ class VerificationPage {
 
   public goNext = (): void =>{
      if (appViewModel) {
-               appViewModel.goToNextStep("VerificationPage", "LoginDetailsPage");
+               appViewModel.goToNextStep("verificationPage", "loginDetailsPage");
               }
   }
 
   public goBack =(): void=>{
      if (appViewModel.router) {
-                appViewModel.router.go({ path: "AccountDetailsPage" });
+                appViewModel.router.go({ path: "accountDetailsPage" });
               }
   }
 }
