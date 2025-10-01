@@ -11,23 +11,34 @@
           <h6 class="sub-header">Password</h6>
         </label>
         <div class="input-container">
-          <input type="password" id="password" name="password" data-bind="
+          <input
+            type="password"
+            id="password"
+            name="password"
+            data-bind="
               value: password, 
               attr: { type: getPasswordInputType() },
               css: getPasswordInputClass()
-            " class="form-input" placeholder="••••••••••" autocomplete="new-password">
-          <button type="button" class="show-hide-btn"
-            data-bind="click: togglePasswordVisibility, text: getPasswordToggleText()">
-          </button>
+            "
+            class="form-input"
+            placeholder="••••••••••"
+            autocomplete="new-password"
+          />
+          <button
+            type="button"
+            class="show-hide-btn"
+            data-bind="click: togglePasswordVisibility, text: getPasswordToggleText()"
+          ></button>
         </div>
         <!-- Password Strength Meter Bar -->
         <div class="strength-bar-container">
           <div class="strength-bar">
-            <div class="strength-fill" data-bind="style: { width: strengthBarWidth(), background: strengthBarColor() }">
-            </div>
+            <div
+              class="strength-fill"
+              data-bind="style: { width: strengthBarWidth(), background: strengthBarColor() }"
+            ></div>
           </div>
         </div>
-
 
         <div class="password-strength">
           <div class="strength-label">
@@ -53,21 +64,33 @@
           <h6 class="sub-header">Re-enter Password</h6>
         </label>
         <div class="input-container">
-          <input type="password" id="confirmPassword" name="confirmPassword" data-bind="
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            data-bind="
               value: confirmPassword, 
               attr: { type: getConfirmPasswordInputType() },
               css: getConfirmPasswordInputClass()
-            " class="form-input" placeholder="••••••••••" autocomplete="new-password">
-          <button type="button" class="show-hide-btn"
-            data-bind="click: toggleConfirmPasswordVisibility, text: getConfirmPasswordToggleText()">
-          </button>
+            "
+            class="form-input"
+            placeholder="••••••••••"
+            autocomplete="new-password"
+          />
+          <button
+            type="button"
+            class="show-hide-btn"
+            data-bind="click: toggleConfirmPasswordVisibility, text: getConfirmPasswordToggleText()"
+          ></button>
         </div>
-        <div class="status-message" data-bind="
+        <div
+          class="status-message"
+          data-bind="
             text: confirmPasswordStatus,
             css: confirmPasswordStatusClass,
             visible: confirmPasswordStatus() !== ''
-          ">
-        </div>
+          "
+        ></div>
       </div>
 
       <!-- Buttons -->
@@ -75,7 +98,11 @@
         <button type="button" class="btn btn-back" data-bind="click: goBack">
           Back
         </button>
-        <button type="submit" class="btn btn-next" data-bind="click: goNext,enable: isNextButtonEnabled">
+        <button
+          type="submit"
+          class="btn btn-next"
+          data-bind="click: goNext,enable: isNextButtonEnabled"
+        >
           Next
         </button>
       </div>
@@ -95,7 +122,7 @@
     margin-top: 20px;
     margin-left: 18px;
   }
-  .left-section{
+  .left-section {
     margin-right: 50px;
   }
   .form-section {
@@ -103,12 +130,6 @@
     display: flex;
     justify-content: center;
   }
-
-  /* .help-section {
-    flex-shrink: 0;
-    width: 350px;
-    /* Matches your help-card size */
-  /* } */
 
   .login-details-card {
     background: white;
@@ -128,7 +149,8 @@
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 8px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      sans-serif;
   }
 
   .input-container {
@@ -184,7 +206,8 @@
     padding: 4px 8px;
     border-radius: 4px;
     transition: all 0.2s ease;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      sans-serif;
   }
 
   /* Password Strength */
@@ -197,7 +220,8 @@
     font-weight: 600;
     color: black;
     margin-bottom: 8px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      sans-serif;
   }
 
   .strength-label span {
@@ -214,11 +238,11 @@
   }
 
   li::marker {
-    color: #7A147A;
+    color: #7a147a;
   }
 
   .strength-requirements li::marker {
-    color: #7A147A;
+    color: #7a147a;
     font-weight: bold;
     /* optional */
   }
@@ -227,7 +251,8 @@
     margin-bottom: 4px;
     position: relative;
     padding-left: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      sans-serif;
     transition: color 0.3s ease;
   }
 
@@ -260,7 +285,8 @@
     margin-top: 8px;
     font-size: 12px;
     font-weight: 500;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe U#pass', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe U#pass", Roboto,
+      sans-serif;
     animation: slideIn 0.3s ease;
   }
 
@@ -272,23 +298,22 @@
     color: #e53e3e;
   }
   .strength-bar-container {
-  width: 400px;
-  margin-top: 8px;
-}
+    width: 400px;
+    margin-top: 8px;
+  }
 
-.strength-bar {
-  width: 100%;
-  height: 6px;
-  background: #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
-}
+  .strength-bar {
+    width: 100%;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
 
-.strength-fill {
-  height: 100%;
-  width: 0%;
-  background: red;
-  transition: width 0.3s ease, background 0.3s ease;
-}
-
+  .strength-fill {
+    height: 100%;
+    width: 0%;
+    background: red;
+    transition: width 0.3s ease, background 0.3s ease;
+  }
 </style>

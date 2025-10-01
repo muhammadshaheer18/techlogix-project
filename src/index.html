@@ -1,89 +1,89 @@
 <!DOCTYPE html>
-<!--
-  Copyright (c) 2014, 2025, Oracle and/or its affiliates.
-  Licensed under The Universal Permissive License (UPL), Version 1.0
-  as shown at https://oss.oracle.com/licenses/upl/
-  -->
-
 <html lang="en-us" class="image-background">
+  <head>
+    <title>Meezan Bank Limited</title>
 
-<head>
-  <title>Meezan Bank Limited</title>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1"
+    />
+    <link
+      rel="icon"
+      href="css/images/JET-Favicon-Red-32x32.png"
+      type="image/x-icon"
+    />
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
-  <link rel="icon" href="css/images/JET-Favicon-Red-32x32.png" type="image/x-icon" />
+    <!-- This is the main css file for the default theme -->
+    <!-- injector:theme -->
+    <!-- endinjector -->
 
-  <!-- This is the main css file for the default theme -->
-  <!-- injector:theme -->
-  <!-- endinjector -->
+    <!-- This contains icon fonts used by the starter template -->
+    <!-- injector:font -->
+    <!-- endinjector:font -->
 
-  <!-- This contains icon fonts used by the starter template -->
-  <!-- injector:font -->
-  <!-- endinjector:font -->
+    <!-- This is where you would add any app specific styling -->
+    <link rel="stylesheet" href="css/app.css" type="text/css" />
+  </head>
 
-  <!-- This is where you would add any app specific styling -->
-  <link rel="stylesheet" href="css/app.css" type="text/css" />
-</head>
-
-<body class="oj-webs-applayout-body image-background">
-  <!-- Template for rendering navigation items shared between nav bar and nav list -->
-  <div id="globalBody">
-
-    <div id="announce" tabindex="-1" class="send-off-screen" :aria-live="[[manner]]" aria-atomic="true">
-      <p id="ariaLiveMessage"><oj-bind-text value="[[message]]"></oj-bind-text></p>
-    </div>
-
-    <div id="pageContent" class="oj-web-applayout-page">
-      <div class="secondary-container">
-        <!-- Logo -->
-        <div class="oj-web-applayout-max-width nav-style" style="display: flex; justify-content: center;">
-          <img class="meezan-logo" src="css/images/Icons/meezan-logo.svg" title="Meezan Bank Limited"
-            alt="Meezan Bank Logo" style="max-width:300px; width:100%; height:auto;">
-        </div>
-
-        <div class="primary-container">
-          <nav-bar data="[[navDataProvider]]" selection="{{selection.path}}" current-step="{{currentStep}}"
-            completed-steps="{{completedSteps}}" show-navigation="[[showNavigation]]">
-          </nav-bar>
-
-          <!-- Page Content pushed down -->
-          <oj-module role="main" class="oj-web-applayout-max-width oj-web-applayout-content oj-sm-margin-20"
-            config="[[moduleAdapter.koObservableConfig]]">
-
-          </oj-module>
-
-        </div>
+  <body class="oj-webs-applayout-body image-background">
+    <!-- Template for rendering navigation items shared between nav bar and nav list -->
+    <div id="globalBody">
+      <div
+        id="announce"
+        tabindex="-1"
+        class="send-off-screen"
+        :aria-live="[[manner]]"
+        aria-atomic="true"
+      >
+        <p id="ariaLiveMessage">
+          <oj-bind-text value="[[message]]"></oj-bind-text>
+        </p>
       </div>
 
-      <!-- Footer -->
-      <!-- <footer class="oj-web-applayout-footer" role="contentinfo">
-          <div class="oj-web-applayout-footer-item oj-web-applayout-max-width">
-            <ul>
-              <oj-bind-for-each data="[[footerLinks]]">
-                <template>
-                  <li>
-                    <a :id="[[$current.data.linkId]]" :href="[[$current.data.linkTarget]]">
-                      <oj-bind-text value="[[$current.data.name]]"></oj-bind-text>
-                    </a>
-                  </li>
-                </template>
-              </oj-bind-for-each>
-            </ul>
-          </div>
+      <div id="pageContent" class="oj-web-applayout-page">
+        <div class="secondary-container">
+          <!-- Logo -->
           <div
-            class="oj-web-applayout-footer-item oj-web-applayout-max-width oj-text-color-secondary oj-typography-body-sm">
-            Copyright © 2025, Meezan Bank Limited, All rights reserved.
+            class="oj-web-applayout-max-width nav-style"
+            style="display: flex; justify-content: center"
+          >
+            <img
+              class="meezan-logo"
+              src="css/images/Icons/meezan-logo.svg"
+              title="Meezan Bank Limited"
+              alt="Meezan Bank Logo"
+              style="max-width: 300px; width: 100%; height: auto"
+            />
           </div>
-        </footer> -->
+
+          <div class="primary-container">
+            <nav-bar
+              data="[[navDataProvider]]"
+              selection="{{selection.path}}"
+              current-step="{{currentStep}}"
+              completed-steps="{{completedSteps}}"
+              show-navigation="[[showNavigation]]"
+            >
+            </nav-bar>
+
+            <!-- Page Content pushed down -->
+            <oj-module
+              role="main"
+              class="oj-web-applayout-max-width oj-web-applayout-content oj-sm-margin-20"
+              config="[[moduleAdapter.koObservableConfig]]"
+            >
+            </oj-module>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- This injects script tags for the main javascript files -->
-  <!-- injector:scripts -->
-  <!-- endinjector -->
-</body>
-
+    <!-- This injects script tags for the main javascript files -->
+    <!-- injector:scripts -->
+    <!-- endinjector -->
+  </body>
 </html>
 
-<script src="./js/main.js"></script> <!-- Oracle JET compiled JS -->
+<script src="./js/main.js"></script>
+<!-- Oracle JET compiled JS -->

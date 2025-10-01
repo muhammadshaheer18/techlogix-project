@@ -1,8 +1,3 @@
-/**
- * @license
- * Copyright (c) 2014, 2025
- * Licensed under The Universal Permissive License (UPL), Version 1.0
- */
 import * as ko from "knockout";
 import * as ResponsiveUtils from "ojs/ojresponsiveutils";
 import * as ResponsiveKnockoutUtils from "ojs/ojresponsiveknockoututils";
@@ -76,12 +71,14 @@ class RootViewModel {
     // Responsive breakpoints
     const smQuery = ResponsiveUtils.getFrameworkQuery("sm-only");
     if (smQuery) {
-      this.smScreen = ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
+      this.smScreen =
+        ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
     }
 
     const mdQuery = ResponsiveUtils.getFrameworkQuery("md-up");
     if (mdQuery) {
-      this.mdScreen = ResponsiveKnockoutUtils.createMediaQueryObservable(mdQuery);
+      this.mdScreen =
+        ResponsiveKnockoutUtils.createMediaQueryObservable(mdQuery);
     }
 
     // Router + nav items
@@ -105,7 +102,11 @@ class RootViewModel {
       },
       {
         path: "termsPage",
-        detail: { label: "Terms & Conditions", iconClass: "circle", value: "5" },
+        detail: {
+          label: "Terms & Conditions",
+          iconClass: "circle",
+          value: "5",
+        },
       },
       {
         path: "successPage",
@@ -145,11 +146,9 @@ class RootViewModel {
 
         const idx = this.navOrder.indexOf(newPath);
         if (idx > 0) {
-          // ✅ Mark all PREVIOUS steps as completed (not including current)
+          // Mark all PREVIOUS steps as completed (not including current)
           const completed = this.navOrder.slice(0, idx);
           this.completedSteps(completed);
-          console.log("➡️ Root currentStep:", newPath);
-          console.log("✅ Root completedSteps:", this.completedSteps());
         } else if (idx === 0) {
           // First step - no completed steps yet
           this.completedSteps([]);
@@ -184,8 +183,6 @@ class RootViewModel {
 
   // ✅ Go to next step (mark current as complete and navigate)
   goToNextStep(currentPath: string, nextPath: string): void {
-    console.log(`🚀 Going from ${currentPath} to ${nextPath}`);
-    
     // Just navigate - the router subscription will handle completion
     this.router.go({ path: nextPath });
   }

@@ -22,7 +22,6 @@ class AccountTypePage {
   // ----- UI actions -----
   selectAccountType = (type: string) => {
     this.selectedAccountType(type);
-    console.log("Selected account type:", type);
   };
 
   goBack = () => {
@@ -40,7 +39,6 @@ class AccountTypePage {
       this.isLoading(false);
       if (appViewModel?.router) {
         appViewModel.goToNextStep("accountTypePage", "accountDetailsPage");
-        // console.log('Completed steps:', appViewModel.completedSteps());
       } else {
         alert(
           `Navigation successful!\nCNIC: ${this.cnicNumber()}\nAccount Type: ${this.selectedAccountType()}`
@@ -115,10 +113,6 @@ class AccountTypePage {
   // Component lifecycle methods
   connected = (): void => {
     document.title = "MBL | Account Type";
-  };
-
-  disconnected = (): void => {
-    console.log("accountTypePage disconnected");
   };
 }
 
