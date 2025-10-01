@@ -71,7 +71,10 @@ define(["knockout"], function (ko) {
 
     // ✅ Connector should be green if the step BEFORE it is completed OR current
     self.getConnectorStatus = function (stepPath) {
-      if (self.isStepCompleted(stepPath) || self.isStepCurrent(stepPath)) {
+      if(self.isStepCurrent(stepPath)){
+        return "active";
+      }
+      else if (self.isStepCompleted(stepPath)) {
         return "completed";
       }
       return "incomplete";
