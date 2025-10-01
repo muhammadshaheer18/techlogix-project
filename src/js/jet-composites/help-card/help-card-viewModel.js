@@ -1,15 +1,39 @@
-define(["knockout"], function(ko) {
-  function ViewModel(context) {
+define(['knockout'], function (ko) {
+  function HelpViewModel(context) {
+
     var self = this;
 
-    // ✅ Always define properties like this:
-    self.properties = context.properties || {};
+    self.helpPages = ko.observableArray([
+      {
+        image: "/css/images/Icons/nic.svg",
+        title: "Find your CNIC Identity Number",
+        text: "Permanent citizens of Pakistan can find their CNIC number on their NADRA-issued identity card."
+      },
+      {
+        image: "/css/images/Icons/cheque.png",
+        title: "Locate Your Cheque Number",
+        text: "The cheque number is printed at the top-right corner of your bank cheque."
+      },
+    ]);
 
-    // ❌ Wrong: self.properties['help-card'] (if 'help-card' isn't passed)
-    // ✅ Safe access:
-    self.helpCard = self.properties.helpCard || self.properties['help-card'] || null;
+    self.currentIndex = ko.observable(0);
 
-    console.log("Help Card Value:", self.helpCard);
+    self.currentPage = ko.computed(() => {
+      return self.helpPages()[self.currentIndex()];
+    });
+
+    self.nextPage = function () {
+      if (self.currentIndex() < self.helpPages().length - 1) {
+        self.currentIndex(self.currentIndex() + 1);
+      }
+    };
+
+    self.prevPage = function () {
+      if (self.currentIndex() > 0) {
+        self.currentIndex(self.currentIndex() - 1);
+      }
+    };
   }
-  return ViewModel;
+
+  return HelpViewModel;
 });

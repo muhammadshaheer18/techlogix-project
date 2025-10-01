@@ -1,22 +1,26 @@
 <div class="oj-hybrid-padding">
   <div class="account-details-container">
-
     <!-- Left Section -->
     <div class="left-section">
       <div class="header">
         <h1>Enter Account Details</h1>
       </div>
 
+      <!-- Nav-Bar component -->
       <nav-bar></nav-bar>
 
       <!-- Tabs -->
       <div class="tab-navigation">
-        <div class="tab-item"
-          data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, click: function() { switchTab('account') }">
+        <div
+          class="tab-item"
+          data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, click: function() { switchTab('account') }"
+        >
           Account Number
         </div>
-        <div class="tab-item"
-          data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, click: function() { switchTab('iban') }">
+        <div
+          class="tab-item"
+          data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, click: function() { switchTab('iban') }"
+        >
           IBAN
         </div>
       </div>
@@ -25,8 +29,12 @@
       <div class="form-section" data-bind="if: activeTab() === 'account'">
         <div class="form-group">
           <label class="form-label">Account Number</label>
-          <input type="text" class="form-input" placeholder="XXXXX XXXXXXXXX"
-            data-bind="textInput: accountNumber, event: { focus: onInputFocus }" />
+          <input
+            type="text"
+            class="form-input"
+            placeholder="XXXXX XXXXXXXXX"
+            data-bind="textInput: accountNumber, event: { focus: onInputFocus }"
+          />
           <div class="help-text">Please enter your 14 digit Account Number</div>
         </div>
 
@@ -40,8 +48,12 @@
       <div class="form-section" data-bind="if: activeTab() === 'iban'">
         <div class="form-group">
           <label class="form-label">IBAN</label>
-          <input type="text" class="form-input" placeholder="XXXX XXXX XXXX XXXX"
-            data-bind="textInput: ibanNumber, event: { focus: onInputFocus }" />
+          <input
+            type="text"
+            class="form-input"
+            placeholder="XXXX XXXX XXXX XXXX"
+            data-bind="textInput: ibanNumber, event: { focus: onInputFocus }"
+          />
           <div class="help-text">Please enter your IBAN number</div>
         </div>
 
@@ -52,22 +64,10 @@
       </div>
     </div>
 
-    <!-- Help Section -->
-    <div class="help-section">
-      <img class="cheque-image" src="/css/images/Icons/cheque.png" alt="Cheque" />
-      <div class="help-content">
-        <h3>How to find your Account Number?</h3>
-        <p>The simplest way of finding your Account Number is to look for it on your cheque book.</p>
-      </div>
-
-      <div class="progress-indicator">
-        <div class="progress-dot active"></div>
-        <div class="progress-dot"></div>
-        <div class="progress-dot"></div>
-        <div class="progress-dot"></div>
-      </div>
+    <!-- Help Section Component -->
+    <div class="right-section">
+      <help-card></help-card>
     </div>
-
   </div>
 </div>
 
@@ -76,17 +76,25 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      sans-serif;
+  }
+  .button-group{
+    margin-top: 96px;
   }
 
   .left-section {
     width: 700px;
+  }
+  .right-section{
+    margin-right:30px;
   }
 
   .tab-navigation {
     display: flex;
     flex-direction: row;
     margin-bottom: 20px;
+    width: 90%;
   }
 
   .tab-item {
@@ -97,7 +105,7 @@
     cursor: pointer;
     border-bottom: 3px solid transparent;
     width: 100%;
-    height: 60px;
+    height: 48px;
     border-radius: 4px;
     transition: all 0.2s ease;
     font-size: 18px;
@@ -112,11 +120,20 @@
   }
 
   .tab-item.inactive {
-    background-color: #ccc;
-    color: #333;
+    background-color: #ebe8e8;
+    color: #999;
   }
 
   .form-label {
     font-size: 17px;
+    margin-top: 80px;
+  }
+
+  .form-input{
+    width: 100%;
+    height: 55px;
+  }
+  .form-input:focus{
+    border: 1px solid white;
   }
 </style>

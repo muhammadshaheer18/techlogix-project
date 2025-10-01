@@ -1,27 +1,38 @@
 <script type="text/html" id="navTemplate">
   <li style="list-style: none; display: flex; align-items: center;">
     <!-- Step Circle + Label -->
-    <a href="#" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+    <a
+      href="#"
+      style="display: flex; align-items: center; gap: 8px; text-decoration: none;"
+    >
       <!-- Circle -->
-       <div class="label-class">
-        <span data-bind="css: 'circle ' + $parent.getStepStatus($data.path)">
-        <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
-      </span>
-      
-      <!-- Label -->
-      <span data-bind="css: 'step-label ' + $parent.getStepStatus($data.path)">
-        <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
-      </span>
-      <span data-bind="css: 'under-label ' + $parent.getStepStatus($data.path)">
-        <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
-      </span>
-       </div>
-      
+      <div class="nav-items">
+        <div class="label-class">
+          <span data-bind="css: 'circle ' + $parent.getStepStatus($data.path)">
+            <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
+          </span>
+          <!-- Label -->
+          <span
+            data-bind="css: 'step-label ' + $parent.getStepStatus($data.path)"
+          >
+            <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
+          </span>
+        </div>
+        <div>
+          <span
+            data-bind="css: 'under-label ' + $parent.getStepStatus($data.path)"
+          >
+            <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
+          </span>
+        </div>
+      </div>
     </a>
-    
+
     <!-- Connector line (except last step) -->
     <!-- ko if: !$parent.isLastStep($data.path) -->
-    <span data-bind="css: 'connector ' + $parent.getConnectorStatus($data.path)"></span>
+    <span
+      data-bind="css: 'connector ' + $parent.getConnectorStatus($data.path)"
+    ></span>
     <!-- /ko -->
   </li>
 </script>
@@ -42,12 +53,20 @@
 </oj-drawer-popup>
 
 <style>
-  .label-class{
+  .label-class {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 50px;
   }
+
   /* Circle base */
   .circle {
     width: 40px;
@@ -59,10 +78,10 @@
     font-size: 14px;
     font-weight: 600;
     border: 2px solid #d0d0d0;
-    background-color: #fff;
-    color: #999;
     transition: all 0.3s ease;
     flex-shrink: 0;
+    background-color: #d1d5db !important;
+    color: #6b7280 !important;
   }
 
   /* Current step (highlighted green) */
@@ -88,14 +107,9 @@
     color: #999;
   }
 
-  .circle {
-    background-color: #d1d5db !important;
-    color: #6b7280 !important;
-  }
-
   /* Labels */
   .step-label {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     color: #d0d0d0;
     white-space: nowrap;
@@ -113,33 +127,33 @@
   .step-label.incomplete {
     color: #999;
   }
-/* Under-label Classes */
 
-  .under-label{
-    height: 3px;
-    min-width: 60px;
-    background-color: white;
-    color: white;
-    font-size: 0px;
-  }
+  /* Under-label Classes */
 
-  .under-label.active{
-    height: 3px;
-    min-width: 60px;
-    background-color: #00c853;
-  }
+ .under-label {
+  background-color: transparent;
+  display: block;
+  margin-top: 4px;
+  font-size: 0px;
+}
 
+.under-label.active {
+  background-color: #00c853;
+  height: 5px;
+  width: 40px;
+  border-radius: 5px;
+}
   /* Connector line */
   .connector {
     flex: 1;
-    height: 2.5px;
-    min-width: 130px;
+    height: 3px;
+    min-width: 100px;
     margin: 0 0;
     background-color: #d0d0d0;
     transition: background-color 0.3s ease;
   }
 
-  .connector.active{
+  .connector.active {
     background-color: #d0d0d0 !important;
   }
 
@@ -162,7 +176,7 @@
     background: transparent !important;
     border: none !important;
     position: relative;
-    padding: 1rem 0;
+    padding: 0 0;
   }
 
   /* Tab Bar Item Styling */
@@ -171,7 +185,6 @@
     border: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    flex: 1;
     display: flex;
     justify-content: center;
     position: relative;
@@ -184,7 +197,7 @@
     align-items: center !important;
     justify-content: center !important;
     text-decoration: none !important;
-    padding: 1rem 0.5rem !important;
+    /* padding: 1rem 0.5rem !important; */
     width: 100% !important;
     position: relative;
     /* z-index: 2; */

@@ -4,8 +4,6 @@ import { ojButton } from "ojs/ojbutton";
 import * as Router from "ojs/ojrouter";
 import appViewModel from "../appController";
 
-//import { ojInputPassword } from "ojs/ojinputpassword";
-
 interface PasswordRequirements {
   minLength: boolean;
   hasUpper: boolean;
@@ -25,8 +23,11 @@ class LoginDetailsPage {
   requirements: ko.Observable<PasswordRequirements>;
   isNextButtonEnabled: ko.Computed<boolean>;
 
+  // ✅ Corrected typings here
+  strengthBarWidth: ko.Computed<string>;
+  strengthBarColor: ko.Computed<string>;
+
   constructor() {
-    // Initialize observables
     this.password = ko.observable("");
     this.confirmPassword = ko.observable("");
     this.showPassword = ko.observable(false);
@@ -42,24 +43,42 @@ class LoginDetailsPage {
       hasSpecial: false,
     });
 
-    // Computed for next button state
+    this.strengthBarWidth = ko.computed<string>(() => {
+      switch (this.passwordStrength()) {
+        case "Strong":
+          return "100%" as string;
+        case "Medium":
+          return "60%" as string;
+        default:
+          return "30%" as string;
+      }
+    });
+
+    this.strengthBarColor = ko.computed<string>(() => {
+      switch (this.passwordStrength()) {
+        case "Strong":
+          return "#00c855" as string;
+        case "Medium":
+          return "#ffb400" as string;
+        default:
+          return "#e53e3e" as string;
+      }
+    });
+
     this.isNextButtonEnabled = ko.computed(() => {
       return this.isPasswordValid() && this.isConfirmPasswordValid();
     });
 
-    // Subscribe to password changes
     this.password.subscribe((newValue) => {
       this.validatePassword(newValue);
       this.validateConfirmPassword();
     });
 
-    // Subscribe to confirm password changes
     this.confirmPassword.subscribe(() => {
       this.validateConfirmPassword();
     });
   }
 
-  // Password validation method
   validatePassword = (password: string): void => {
     const requirements: PasswordRequirements = {
       minLength: password.length >= 8,
@@ -71,7 +90,6 @@ class LoginDetailsPage {
 
     const validCount = Object.values(requirements).filter((req) => req).length;
 
-    // Update password strength
     if (validCount === 3) {
       this.passwordStrength("Strong");
       this.isPasswordValid(true);
@@ -84,7 +102,6 @@ class LoginDetailsPage {
     }
   };
 
-  // Confirm password validation
   validateConfirmPassword = (): void => {
     const password = this.password();
     const confirmPassword = this.confirmPassword();
@@ -113,43 +130,35 @@ class LoginDetailsPage {
     }
   };
 
-  // Toggle password visibility
   togglePasswordVisibility = (): void => {
     this.showPassword(!this.showPassword());
   };
 
-  // Toggle confirm password visibility
   toggleConfirmPasswordVisibility = (): void => {
     this.showConfirmPassword(!this.showConfirmPassword());
   };
 
-  // Get password input type
   getPasswordInputType = (): string => {
     return this.showPassword() ? "text" : "password";
   };
 
-  // Get confirm password input type
   getConfirmPasswordInputType = (): string => {
     return this.showConfirmPassword() ? "text" : "password";
   };
 
-  // Get password toggle button text
   getPasswordToggleText = (): string => {
     return this.showPassword() ? "HIDE" : "SHOW";
   };
 
-  // Get confirm password toggle button text
   getConfirmPasswordToggleText = (): string => {
     return this.showConfirmPassword() ? "HIDE" : "SHOW";
   };
 
-  // Get CSS class for password input
   getPasswordInputClass = (): string => {
     if (this.password() === "") return "form-input";
     return this.isPasswordValid() ? "form-input valid" : "form-input invalid";
   };
 
-  // Get CSS class for confirm password input
   getConfirmPasswordInputClass = (): string => {
     if (this.confirmPassword() === "") return "form-input";
     return this.isConfirmPasswordValid()
@@ -157,7 +166,6 @@ class LoginDetailsPage {
       : "form-input invalid";
   };
 
-  // Get CSS class for requirement items
   getRequirementClass = (requirement: keyof PasswordRequirements): string => {
     const reqs = this.requirements();
     return reqs[requirement]
@@ -165,26 +173,22 @@ class LoginDetailsPage {
       : "requirement-item invalid";
   };
 
-  // Handle back button click
- public goBack = (): void => {
-  if (appViewModel?.router) {
-    appViewModel.router.go({ path: "VerificationPage" });
-  } else {
-    window.history.back();
-  }
-};
-
-
-  // Handle form submission
-  public goNext = (): void => {
-    if (this.isNextButtonEnabled()) {
-     if (appViewModel) {
-      appViewModel.goToNextStep("LoginDetailsPage", "termsPage");
-    }
+  goBack = (): void => {
+    if (appViewModel?.router) {
+      appViewModel.router.go({ path: "verificationPage" });
+    } else {
+      window.history.back();
     }
   };
 
-  // Handle form validation on submit
+  goNext = (): void => {
+    if (this.isNextButtonEnabled()) {
+      if (appViewModel) {
+        appViewModel.goToNextStep("loginDetailsPage", "termsPage");
+      }
+    }
+  };
+
   validateForm = (): boolean => {
     return this.isNextButtonEnabled();
   };

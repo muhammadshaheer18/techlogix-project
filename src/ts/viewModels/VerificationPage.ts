@@ -6,12 +6,12 @@
  * @ignore
  */
 import * as AccUtils from "../accUtils";
-import appViewModel from '../appController';
+import appViewModel from "../appController";
+import * as ko from "knockout";
 class VerificationPage {
+  public username = ko.observable("");
 
-  constructor() {
-
-  }
+  constructor() {}
 
   /**
    * Optional ViewModel method invoked after the View is inserted into the
@@ -25,6 +25,13 @@ class VerificationPage {
     document.title = "Incidents";
     // implement further logic if needed
   }
+
+  public usernameStatus = ko.computed(() => {
+    const value = this.username();
+    if (!value) return "idle"; // Neutral
+    if (value.length >= 8 && value.length <= 16) return "valid"; // Assuming available
+    return "invalid"; // Fails length rule
+  });
 
   /**
    * Optional ViewModel method invoked after the View is disconnected from the DOM.
@@ -41,17 +48,17 @@ class VerificationPage {
     // implement if needed
   }
 
-  public goNext = (): void =>{
-     if (appViewModel) {
-               appViewModel.goToNextStep("verificationPage", "loginDetailsPage");
-              }
-  }
+  public goNext = (): void => {
+    if (appViewModel) {
+      appViewModel.goToNextStep("verificationPage", "loginDetailsPage");
+    }
+  };
 
-  public goBack =(): void=>{
-     if (appViewModel.router) {
-                appViewModel.router.go({ path: "accountDetailsPage" });
-              }
-  }
+  public goBack = (): void => {
+    if (appViewModel.router) {
+      appViewModel.router.go({ path: "accountDetailsPage" });
+    }
+  };
 }
 
 export = VerificationPage;
