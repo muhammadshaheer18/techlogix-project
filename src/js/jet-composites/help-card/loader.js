@@ -5,7 +5,8 @@ define([
   "text!./component.json",
   "css!./help-card-styles.css"
 ], function (Composite, view, viewModel, metadata) {
-  
+
+
   Composite.register("help-card", {
   view,
   viewModel,

@@ -110,6 +110,7 @@ class AccountDetailsPage {
   };
 
   public goBack = (): void => {
+    console.log("Going back to previous step");
     if (appViewModel) {
       appViewModel.goToNextStep("accountDetailsPage", "accountTypePage");
     }
