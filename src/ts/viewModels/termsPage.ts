@@ -5,12 +5,10 @@ class Terms {
   accepted: ko.Observable<boolean>;
 
   constructor() {
-    // User must accept terms to proceed
     this.accepted = ko.observable(true);
   }
 
   handleBack = (): void => {
-    // Navigate back to previous page
     if (appViewModel.router) {
       appViewModel.router.go({ path: "loginDetailsPage" });
     }
@@ -24,6 +22,10 @@ class Terms {
     } else {
       alert("Please accept the terms and conditions to continue.");
     }
+  };
+
+  connected = (): void => {
+    document.title = "MBL | Terms";
   };
 }
 

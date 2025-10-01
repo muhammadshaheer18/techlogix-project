@@ -22,8 +22,6 @@ class LoginDetailsPage {
   confirmPasswordStatusClass: ko.Observable<string>;
   requirements: ko.Observable<PasswordRequirements>;
   isNextButtonEnabled: ko.Computed<boolean>;
-
-  // ✅ Corrected typings here
   strengthBarWidth: ko.Computed<string>;
   strengthBarColor: ko.Computed<string>;
 
@@ -187,6 +185,10 @@ class LoginDetailsPage {
         appViewModel.goToNextStep("loginDetailsPage", "termsPage");
       }
     }
+  };
+
+  connected = (): void => {
+    document.title = "MBL | Login Details";
   };
 
   validateForm = (): boolean => {
