@@ -22,7 +22,7 @@ class AccountDetailsPage {
     // Initialize observables
     this.accountNumber = ko.observable("");
     this.ibanNumber = ko.observable("");
-    this.activeTab = ko.observable("accountDetailsPage");
+    this.activeTab = ko.observable("account");
     this.isLoading = ko.observable(false);
     this.hasError = ko.observable(false);
     this.errorMessage = ko.observable("");
