@@ -129,7 +129,6 @@
   }
 
   /* Under-label Classes */
-
  .under-label {
   background-color: transparent;
   display: block;
@@ -201,5 +200,86 @@
     width: 100% !important;
     position: relative;
     /* z-index: 2; */
+  }
+
+  /* Media Queries for Responsiveness */
+  @media (max-width: 1024px) {
+    .nav-item {
+      gap: 30px; /* Reduce gap between items */
+    }
+
+    .circle {
+      width: 35px;
+      height: 35px;
+      font-size: 13px;
+    }
+
+    .step-label {
+      font-size: 14px;
+    }
+
+    .connector {
+      height: 2px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    /* For tablets and smaller devices */
+    .nav-item {
+      gap: 20px;
+    }
+
+    .circle {
+      width: 30px;
+      height: 30px;
+      font-size: 12px;
+    }
+
+    .step-label {
+      font-size: 13px;
+    }
+
+    .connector {
+      height: 2px;
+    }
+
+    /* For smaller screens, switch to drawer navigation */
+    .tab-bar {
+      display: block;
+    }
+
+    oj-drawer-popup {
+      display: block;
+    }
+  }
+
+  @media (max-width: 480px) {
+    /* For small mobile devices */
+    .nav-item {
+      gap: 15px; /* Further reduce gap */
+    }
+
+    .circle {
+      width: 25px;
+      height: 25px;
+      font-size: 10px;
+    }
+
+    .step-label {
+      font-size: 12px;
+    }
+
+    .connector {
+      height: 1px;
+    }
+
+    /* Keeping the drawer navigation visible */
+    oj-drawer-popup {
+      display: block;
+    }
+
+    .tab-bar {
+      display: block;
+    }
   }
 </style>

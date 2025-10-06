@@ -1,0 +1,162 @@
+/* Base styles (as you already have) */
+.label-class {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+.nav-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Circle etc. (unchanged) */
+/* ... (your existing styles) ... */
+
+/* Flex tab bar container */
+.tab-bar ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;       /* remove default margin */
+  gap: 10px;
+}
+
+.tab-bar li {
+  margin: 0;
+  padding: 0;
+}
+
+.tab-bar {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0;       /* ensure no default margin under navbar */
+  padding: 0;
+}
+
+/* Reset default list styling if any */
+.tab-bar ul li {
+  list-style: none;
+}
+
+/* Responsiveness */
+
+@media (max-width: 1024px) {
+  .circle {
+    width: 35px;
+    height: 35px;
+    font-size: 13px;
+  }
+
+  .step-label {
+    font-size: 14px;
+  }
+
+  .connector {
+    width: 60px;
+  }
+
+  .under-label.active {
+    width: 35px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tab-bar ul {
+    flex-direction: row;   /* keep row, allow wrapping */
+    gap: 12px;
+  }
+
+  .label-class {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .circle {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .step-label {
+    font-size: 13px;
+  }
+
+  .connector {
+    width: 40px;
+    height: 2px;
+  }
+
+  .under-label.active {
+    width: 30px;
+    height: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .circle {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .step-label {
+    font-size: 12px;
+  }
+
+  .connector {
+    width: 30px;
+    height: 1px;
+  }
+
+  .under-label.active {
+    width: 25px;
+    height: 2px;
+  }
+}
+
+/* Hide connectors at smaller width */
+@media (max-width: 780px) {
+  .connector {
+    display: none !important;
+  }
+
+  .step-label {
+    display: none !important;
+  }
+
+  .label-class {
+    flex-direction: column;  
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .tab-bar ul {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .oj-tab-bar-item {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+.account-details-container {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}

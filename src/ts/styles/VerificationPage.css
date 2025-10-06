@@ -1,0 +1,58 @@
+@media (max-width: 1024px) {
+  .verification-container {
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-left: 0;
+  }
+  
+  .left-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .verification-container {
+    padding: 0.5rem;
+    margin-top: 10px;
+  }
+  
+  .sub-header {
+    font-size: 18px;
+  }
+  
+  .username-input {
+    height: 48px;
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+  
+  .conditions {
+    font-size: 14px;
+    width: 100%;
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sub-header {
+    font-size: 16px;
+  }
+  
+  .username-input {
+    height: 45px;
+    font-size: 16px;
+  }
+  
+  .success-text,
+  .error-text,
+  .info-text {
+    font-size: 14px;
+  }
+  
+  .conditions {
+    font-size: 13px;
+  }
+  
+  .conditions ul {
+    margin-left: 15px;
+  }
+}
