@@ -1,162 +1,426 @@
-/* Base styles (as you already have) */
-.label-class {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
-}
-
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px;
-}
-
-.nav-items {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Circle etc. (unchanged) */
-/* ... (your existing styles) ... */
-
-/* Flex tab bar container */
-.tab-bar ul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  margin: 0;       /* remove default margin */
-  gap: 10px;
-}
-
-.tab-bar li {
-  margin: 0;
-  padding: 0;
-}
-
-.tab-bar {
-  width: 100%;
-  overflow-x: auto;
-  margin: 0;       /* ensure no default margin under navbar */
-  padding: 0;
-}
-
-/* Reset default list styling if any */
-.tab-bar ul li {
-  list-style: none;
-}
-
-/* Responsiveness */
-
-@media (max-width: 1024px) {
-  .circle {
-    width: 35px;
-    height: 35px;
-    font-size: 13px;
-  }
-
-  .step-label {
-    font-size: 14px;
-  }
-
-  .connector {
-    width: 60px;
-  }
-
-  .under-label.active {
-    width: 35px;
-  }
-}
-
-@media (max-width: 768px) {
-  .tab-bar ul {
-    flex-direction: row;   /* keep row, allow wrapping */
-    gap: 12px;
-  }
-
+/* ===========================================
+     BASE STYLES - CRITICAL: Zero out all margins/padding
+  =========================================== */
   .label-class {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-items {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    margin: 0;
+    padding: 0;
   }
 
+  /* ===========================================
+     CIRCLE STYLES
+  =========================================== */
   .circle {
-    width: 30px;
-    height: 30px;
-    font-size: 12px;
-  }
-
-  .step-label {
-    font-size: 13px;
-  }
-
-  .connector {
     width: 40px;
-    height: 2px;
-  }
-
-  .under-label.active {
-    width: 30px;
-    height: 3px;
-  }
-}
-
-@media (max-width: 480px) {
-  .circle {
-    width: 24px;
-    height: 24px;
-    font-size: 11px;
-  }
-
-  .step-label {
-    font-size: 12px;
-  }
-
-  .connector {
-    width: 30px;
-    height: 1px;
-  }
-
-  .under-label.active {
-    width: 25px;
-    height: 2px;
-  }
-}
-
-/* Hide connectors at smaller width */
-@media (max-width: 780px) {
-  .connector {
-    display: none !important;
-  }
-
-  .step-label {
-    display: none !important;
-  }
-
-  .label-class {
-    flex-direction: column;  
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid #d0d0d0;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    background-color: #d1d5db !important;
+    color: #6b7280 !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Current step (highlighted green) */
+  .circle.active {
+    border-color: #00c853;
+    background-color: #d1d5db !important;
+    color: #6b7280 !important;
+    height: 40px;
+    width: 40px;
+  }
+
+  /* Completed steps */
+  .circle.completed {
+    border-color: #00c853 !important;
+    background-color: #00c853 !important;
+    color: #fff !important;
+  }
+
+  /* Not reached yet */
+  .circle.incomplete {
+    border-color: #d0d0d0;
+    background-color: #fff;
+    color: #999;
+  }
+
+  /* ===========================================
+     STEP LABELS
+  =========================================== */
+  .step-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #d0d0d0;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    margin: 0;
+    padding: 0;
+  }
+
+  .step-label.active {
+    color: #999;
+  }
+
+  .step-label.completed {
+    color: #00c853;
+  }
+
+  .step-label.incomplete {
+    color: #999;
+  }
+
+  /* ===========================================
+     UNDER-LABEL (Active indicator bar)
+  =========================================== */
+  .under-label {
+    background-color: transparent;
+    display: block;
+    margin: 4px 0 0 0;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .under-label.active {
+    background-color: #00c853;
+    height: 5px;
+    width: 40px;
+    border-radius: 5px;
+  }
+
+  /* ===========================================
+     CONNECTOR LINE
+  =========================================== */
+  .connector {
+    flex: 1;
+    height: 3px;
+    min-width: 100px;
+    margin: 0;
+    background-color: #d0d0d0;
+    transition: background-color 0.3s ease;
+  }
+
+  .connector.active {
+    background-color: #d0d0d0 !important;
+  }
+
+  .connector.completed {
+    background-color: #00c853;
+  }
+
+  .connector.incomplete {
+    background-color: #d0d0d0;
+  }
+
+  /* ===========================================
+     TAB BAR CONTAINER - WITH BALANCED SPACING
+  =========================================== */
+  .tab-bar {
+    width: 100%;
+    overflow-x: auto;
+    margin: 0 !important;
+    padding: 0.5rem 0 !important;
   }
 
   .tab-bar ul {
-    flex-direction: row !important;
+    display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px;
+    align-items: center;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 10px;
+    list-style: none;
+  }
+
+  .tab-bar li {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+  }
+
+  #navTabBar {
+    background: transparent !important;
+    border: none !important;
+    position: relative;
+    padding: 0.5rem 0 !important;
+    margin: 0 0 0.5rem 0 !important;
+  }
+
+  #navTabBar .oj-tab-bar-item {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+
+  #navTabBar .oj-tab-bar-item > a {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    width: 100% !important;
+    position: relative;
+    padding: 0.25rem 0 !important;
+    margin: 0 !important;
+  }
+
+  /* ===========================================
+     RESPONSIVE BREAKPOINTS
+  =========================================== */
+
+  /* 1024px and below */
+  @media (max-width: 1024px) {
+    .circle {
+      width: 35px;
+      height: 35px;
+      font-size: 13px;
+    }
+
+    .circle.active {
+      width: 35px;
+      height: 35px;
+    }
+
+    .step-label {
+      font-size: 14px;
+    }
+
+    .connector {
+      min-width: 60px;
+      height: 2px;
+    }
+
+    .under-label.active {
+      width: 35px;
+      height: 4px;
+    }
+  }
+
+  /* 768px - CRITICAL BREAKPOINT */
+  @media (max-width: 768px) {
+    /* Balanced spacing - not too tight */
+    .tab-bar {
+      margin: 0 !important;
+      padding: 0.5rem 0 !important;
+    }
+
+    #navTabBar {
+      padding: 0.5rem 0 !important;
+      margin: 0 0 0.75rem 0 !important;
+    }
+
+    .tab-bar ul {
+      flex-direction: row;
+      gap: 12px;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .tab-bar li {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    #navTabBar .oj-tab-bar-item {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    #navTabBar .oj-tab-bar-item > a {
+      padding: 0.25rem 0 !important;
+      margin: 0 !important;
+    }
+
+    .label-class {
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .circle {
+      width: 32px;
+      height: 32px;
+      font-size: 12px;
+    }
+
+    .circle.active {
+      width: 32px;
+      height: 32px;
+    }
+
+    .step-label {
+      font-size: 13px;
+    }
+
+    .connector {
+      min-width: 40px;
+      height: 2px;
+    }
+
+    .under-label.active {
+      width: 32px;
+      height: 3px;
+    }
+  }
+
+  /* 780px - Hide connectors and labels */
+  @media (max-width: 780px) {
+    .connector {
+      display: none !important;
+    }
+
+    .step-label {
+      display: none !important;
+    }
+
+    .label-class {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .tab-bar ul {
+      flex-direction: row !important;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .oj-tab-bar-item {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
+
+  /* 480px - MOBILE PORTRAIT */
+  @media (max-width: 480px) {
+    /* Compact but not cramped */
+    .tab-bar {
+      margin: 0 !important;
+      padding: 0.4rem 0 !important;
+    }
+
+    #navTabBar {
+      padding: 0.4rem 0 !important;
+      margin: 0 0 0.5rem 0 !important;
+    }
+
+    .tab-bar ul {
+      gap: 8px;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    #navTabBar .oj-tab-bar-item > a {
+      padding: 0.2rem 0 !important;
+    }
+
+    .circle {
+      width: 30px;
+      height: 30px;
+      font-size: 11px;
+    }
+
+    .circle.active {
+      width: 30px;
+      height: 30px;
+    }
+
+    .step-label {
+      font-size: 12px;
+      display: none !important;
+    }
+
+    .connector {
+      display: none !important;
+    }
+
+    .under-label.active {
+      width: 30px;
+      height: 3px;
+    }
+  }
+
+  /* 360px - SMALL MOBILE */
+  @media (max-width: 360px) {
+    .tab-bar {
+      padding: 0.3rem 0 !important;
+    }
+
+    #navTabBar {
+      padding: 0.3rem 0 !important;
+      margin: 0 0 0.4rem 0 !important;
+    }
+
+    .circle {
+      width: 28px;
+      height: 28px;
+      font-size: 10px;
+    }
+
+    .circle.active {
+      width: 28px;
+      height: 28px;
+    }
+
+    .under-label.active {
+      width: 28px;
+      height: 2px;
+    }
+
+    .tab-bar ul {
+      gap: 8px;
+    }
+  }
+
+  /* ===========================================
+     ADDITIONAL ORACLE JET OVERRIDES
+  =========================================== */
+  .oj-tab-bar {
+    margin: 0 !important;
+  }
+
+  .oj-tab-bar-items {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .oj-tab-bar-item {
     margin: 0 !important;
     padding: 0 !important;
   }
-}
-.account-details-container {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
+
+  /* Balanced spacing on mobile */
+  @media (max-width: 768px) {
+    .oj-tab-bar,
+    .oj-tab-bar-items,
+    .oj-tab-bar-item {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }

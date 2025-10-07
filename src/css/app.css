@@ -4,49 +4,40 @@
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
+
 html, body {
   overflow-x: hidden;
   max-width: 100vw;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
+/* ------------------------------
+   Background Image + Overlay
+--------------------------------*/
 body.image-background {
+  background-image: url("./images/bank_background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   min-height: 100vh;
   width: 100%;
+  position: relative;
 }
 
-/* Fix primary container to prevent overflow */
-.primary-container {
-  max-width: 1200px;
-  width: 90%;
-  margin: 2rem auto 5rem auto;
-  padding: 2rem;
-  box-sizing: border-box;
-  overflow: visible;
-}
-
-/* All main page containers */
-.account-type-container,
-.account-details-container,
-.verification-container,
-.login-details-container,
-.terms-container {
-  display: flex;
+body.image-background::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow: hidden;
+  height: 100%;
+  background: rgba(128, 0, 128, 0.25);
+  pointer-events: none;
+  z-index: -1;
 }
 
-/* Section constraints */
-.left-section,
-.right-section {
-  box-sizing: border-box;
-  min-width: 0;
-}
-
-.right-section {
-  flex-shrink: 0;
-}
 /* ------------------------------
    Layout Containers
 --------------------------------*/
@@ -58,49 +49,16 @@ body.image-background {
 
 .primary-container {
   max-width: 1200px;
-  margin-bottom: 0px;
+  margin: 2rem auto 5rem auto;
   width: 90%;
   min-height: 500px;
   border-radius: 12px;
-  margin: 2rem auto 5rem auto;
   background-color: #ffffff;
   padding: 2rem;
   box-sizing: border-box;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
-/* ------------------------------
-   Background Image + Overlay
---------------------------------*/
-/* Apply background only on body, not html */
-body.image-background {
-  background-image: url("./images/bank_background.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  min-height: 100vh;
-  position: relative;
-}
 
-/* Overlay */
-body.image-background::after {
-  content: "";
-  position: fixed; /* Make it cover the entire viewport */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(128, 0, 128, 0.25);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Ensure HTML & body stretch fully */
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
 /* ------------------------------
    Logo
 --------------------------------*/
@@ -109,25 +67,41 @@ body {
   width: 100%;
   height: auto;
 }
+
 .nav-style {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
 }
+
 /* ------------------------------
-   Stepper Navigation Styles
+   Stepper Navigation Styles - OVERRIDE COMPONENT STYLES
 --------------------------------*/
-/* Tab Bar Container */
+nav-bar {
+  display: block;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 #navTabBar {
   background: transparent !important;
   border: none !important;
-  margin-bottom: 1rem;
+  margin: 0 !important;
+  padding: 1rem 0 !important;
   position: relative;
-  padding: 1rem 0;
 }
 
-/* Tab Bar Item Styling */
+.tab-bar {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.tab-bar ul {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 #navTabBar .oj-tab-bar-item {
   background: transparent !important;
   border: none !important;
@@ -139,22 +113,18 @@ body {
   position: relative;
 }
 
-/* Tab Bar Item Link */
 #navTabBar .oj-tab-bar-item > a {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   text-decoration: none !important;
-  padding: 1rem 0.5rem !important;
+  padding: 0.5rem 0.25rem !important;
   width: 100% !important;
   position: relative;
   z-index: 2;
 }
 
-/* Circle Step Number */
-
-/* Step Labels */
 #navTabBar .oj-tab-bar-item a .oj-bind-text:last-child,
 #navDrawerList .oj-navigation-list-item a .oj-bind-text:last-child {
   color: #6b7280;
@@ -165,7 +135,6 @@ body {
   white-space: nowrap;
 }
 
-/* Active/Selected State - More Specific Selectors */
 #navTabBar .oj-tab-bar-item.oj-selected .circle,
 #navTabBar .oj-selected .circle,
 .oj-tab-bar .oj-selected .circle {
@@ -181,7 +150,6 @@ body {
   font-weight: 600 !important;
 }
 
-/* Additional fallback selectors for active state */
 .oj-tab-bar-item.oj-selected .circle {
   background-color: #00c855 !important;
   color: white !important;
@@ -192,7 +160,6 @@ body {
   color: white !important;
 }
 
-/* Connecting Lines Between Steps */
 #navTabBar .oj-tab-bar-item:not(:last-child)::after {
   content: "";
   position: absolute;
@@ -204,12 +171,10 @@ body {
   z-index: 1;
 }
 
-/* Active connecting line (for completed steps) */
 #navTabBar .oj-tab-bar-item.oj-selected:not(:last-child)::after {
   background-color: #00c855 !important;
 }
 
-/* #00c855 underline for active tab - Positioned below the tab */
 #navTabBar .oj-tab-bar-item.oj-selected::before,
 #navTabBar .oj-selected::before,
 .oj-tab-bar .oj-selected::before {
@@ -225,7 +190,6 @@ body {
   z-index: 10;
 }
 
-/* Navigation Drawer Styles (Mobile) */
 #navDrawerList .oj-navigation-list-item {
   background: transparent !important;
   border: none !important;
@@ -253,13 +217,12 @@ body {
   font-weight: 600 !important;
 }
 
-/* Remove default JET tab styling */
 #navTabBar .oj-tab-bar-item.oj-selected {
   border-bottom: none !important;
 }
 
 /* ------------------------------
-   JET Variables Override - Force #00c855 Colors
+   JET Variables Override
 --------------------------------*/
 :root {
   --oj-tab-bar-item-border-color-selected: transparent !important;
@@ -269,7 +232,6 @@ body {
   --oj-typography-body-md-font-weight-selected: 600 !important;
 }
 
-/* Force #00c855 for selected states with highest specificity */
 [class*="oj-selected"] .circle,
 .oj-selected .circle,
 #navTabBar .oj-selected .circle,
@@ -279,7 +241,6 @@ body {
   border: none !important;
 }
 
-/* Force #00c855 text for selected labels */
 [class*="oj-selected"] .oj-bind-text:last-child,
 .oj-selected .oj-bind-text:last-child {
   color: #00c855 !important;
@@ -301,9 +262,7 @@ body {
   color: #333;
   font-size: 18px;
 }
-/* ------------------------------
-   Tab Navigation (Legacy - if still used)
---------------------------------*/
+
 /* ------------------------------
    Main Content Layout
 --------------------------------*/
@@ -313,7 +272,6 @@ body {
   align-items: flex-start;
 }
 
-/* Form Section */
 .form-section {
   flex: 1;
   max-width: 400px;
@@ -357,7 +315,6 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Button Group */
 .button-group {
   display: flex;
   gap: 1rem;
@@ -442,7 +399,6 @@ body {
   position: relative;
 }
 
-/* Typography */
 .page-title {
   color: #2d3748;
   font-size: 24px;
@@ -458,20 +414,17 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Animations */
 @keyframes slideIn {
   from {
     opacity: 0;
     transform: translateY(-10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Focus Management */
 .form-input:focus-visible {
   outline: 1px solid #00c855;
 }
@@ -491,8 +444,6 @@ h6 {
   font-weight: 600;
 }
 
-
-/* Animation for entrance */
 .success-container {
   animation: slideInUp 0.6s ease-out;
 }
@@ -506,7 +457,6 @@ h6 {
     opacity: 0;
     transform: translateY(50px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -518,55 +468,21 @@ h6 {
     opacity: 0;
     transform: translateX(-50%) scale(0.3);
   }
-
   50% {
     opacity: 1;
     transform: translateX(-50%) scale(1.1);
   }
-
   100% {
     opacity: 1;
     transform: translateX(-50%) scale(1);
   }
 }
 
-/* account-type-bar-css */
 #confirmPassword {
   margin-bottom: 20px;
 }
 
-
-/* ========================================
-   COMPREHENSIVE RESPONSIVE FIX
-   Add this to the END of your app.css
-========================================= */
-
-/* ========================================
-   CRITICAL CONTAINER FIXES
-========================================= */
-
-/* Prevent all horizontal overflow */
-html, body {
-  overflow-x: hidden;
-  max-width: 100vw;
-}
-
-body.image-background {
-  min-height: 100vh;
-  width: 100%;
-}
-
-/* Fix primary container to prevent overflow */
-.primary-container {
-  max-width: 1200px;
-  width: 90%;
-  margin: 2rem auto 5rem auto;
-  padding: 2rem;
-  box-sizing: border-box;
-  overflow: visible;
-}
-
-/* All main page containers */
+/* Container constraints */
 .account-type-container,
 .account-details-container,
 .verification-container,
@@ -577,9 +493,10 @@ body.image-background {
   max-width: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
-/* Section constraints */
 .left-section,
 .right-section {
   box-sizing: border-box;
@@ -589,10 +506,6 @@ body.image-background {
 .right-section {
   flex-shrink: 0;
 }
-
-/* ========================================
-   ACCOUNT TYPE PAGE FIXES
-========================================= */
 
 .account-type-container {
   gap: 2rem;
@@ -618,42 +531,51 @@ body.image-background {
   min-width: 120px;
 }
 
+/* Oracle JET layout overrides */
+.oj-hybrid-padding {
+  padding: 0 !important;
+}
+
+.oj-web-applayout-content {
+  padding: 0 !important;
+  margin-top: 0 !important;
+}
+
 /* ========================================
-   1200px - LARGE SCREENS
+   RESPONSIVE BREAKPOINTS
 ========================================= */
+
+/* 1200px - LARGE SCREENS */
 @media (max-width: 1200px) {
   .primary-container {
     width: 92%;
     padding: 1.75rem;
   }
-  
+
   .account-type-container,
   .account-details-container,
   .verification-container,
   .login-details-container {
     gap: 1.5rem;
   }
-  
+
   .tabs-container {
     gap: 0.4rem;
   }
-  
+
   .tab-item {
     min-width: 115px;
   }
 }
 
-/* ========================================
-   1024px - TABLETS (LANDSCAPE)
-========================================= */
+/* 1024px - TABLETS (LANDSCAPE) */
 @media (max-width: 1024px) {
   .primary-container {
     width: 95%;
     padding: 1.5rem;
     margin: 1.5rem auto 4rem auto;
   }
-  
-  /* STACK ALL LAYOUTS */
+
   .account-type-container,
   .account-details-container,
   .verification-container,
@@ -661,13 +583,13 @@ body.image-background {
     flex-direction: column;
     gap: 2rem;
   }
-  
+
   .left-section {
     max-width: 100% !important;
     width: 100% !important;
     margin-right: 0 !important;
   }
-  
+
   .right-section {
     width: 100%;
     max-width: 600px;
@@ -675,97 +597,121 @@ body.image-background {
     display: flex;
     justify-content: center;
   }
-  
-  /* Account type tabs - 3 columns on tablet */
+
   .tabs-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0.75rem;
   }
-  
+
   .tab-item {
     width: 100%;
     min-width: 0;
   }
-  
-  /* Account details tabs */
-  .account-details-container .left-section {
-    width: 100% !important;
-  }
-  
-  /* Username page */
+
   .verification-container {
     margin-left: 0 !important;
     gap: 2rem;
   }
-  
-  /* Password page */
+
   .login-details-container {
     margin-left: 0 !important;
-    margin-top: 1rem;
+    margin-top: 0 !important;
   }
-  
+
   .login-details-card {
     width: 100% !important;
     max-width: 600px !important;
   }
-  
+
   .input-container {
     width: 100% !important;
     max-width: 100%;
   }
-  
+
   .strength-bar-container {
     width: 100% !important;
   }
 }
 
-/* ========================================
-   768px - TABLETS (PORTRAIT) & LARGE MOBILE
-========================================= */
+/* 768px - CRITICAL BREAKPOINT FOR GAP FIX */
 @media (max-width: 768px) {
+  /* CRITICAL: Zero out all spacing that creates gaps */
+  .secondary-container {
+    padding: 0.25rem !important;
+  }
+
   .primary-container {
-    width: 98%;
-    padding: 1.25rem;
-    margin: 1rem auto 3rem auto;
+    width: 95%;
+    padding: 1rem !important;
+    margin: 0.5rem auto 2rem auto !important;
     border-radius: 8px;
   }
-  
-  .secondary-container {
-    padding: 0.75rem;
+
+  /* CRITICAL: Navigation bar spacing - THIS IS THE KEY FIX */
+  nav-bar {
+    margin: 0 !important;
+    padding: 0 !important;
   }
-  
-  /* Logo */
+
+  #navTabBar {
+    padding: 0.5rem 0 0.25rem 0 !important;
+    margin: 0 0 0.5rem 0 !important;
+  }
+
+  .tab-bar {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .tab-bar ul {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #navTabBar .oj-tab-bar-item > a {
+    padding: 0.25rem 0.15rem !important;
+  }
+
   .meezan-logo {
     max-width: 180px;
   }
-  
-  /* Headers */
+
+  .nav-style {
+    padding: 0.5rem !important;
+    margin: 0 !important;
+  }
+
   .header h1 {
     font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0 !important;
   }
-  
-  /* Account type - 2 columns */
+
+  .form-label {
+    margin-top: 1rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
   .tabs-container {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.6rem;
   }
-  
+
   .tab-item {
     padding: 0.75rem 0.5rem !important;
     height: 90px !important;
   }
-  
+
   .icon-svg {
     width: 26px !important;
     height: 26px !important;
   }
-  
+
   .tab-label {
     font-size: 0.9rem !important;
   }
-  
-  /* Form inputs - prevent iOS zoom */
+
   .form-input,
   .cnic-input,
   .username-input {
@@ -773,148 +719,187 @@ body.image-background {
     padding: 0.875rem 1rem !important;
     height: 50px;
   }
-  
-  /* Account details page */
-  .account-details-container .left-section {
-    width: 100% !important;
+
+  .form-group {
+    margin-bottom: 1.25rem !important;
   }
-  
+
   .tab-navigation {
     width: 100% !important;
+    margin-bottom: 1rem !important;
   }
-  
+
   .tab-navigation .tab-item {
     font-size: 16px !important;
     height: 45px !important;
   }
-  
-  /* Password page */
+
   .form-input {
     padding: 12px 60px 12px 12px !important;
   }
-  
+
   .show-hide-btn {
     font-size: 12px;
   }
-  
+
   .strength-requirements {
     font-size: 12px;
   }
-  
-  /* Success page */
+
   .success-container {
     padding: 50px 30px 30px;
     margin-top: 20px;
   }
-  
+
   .checkmark-container {
     width: 70px;
     height: 70px;
     top: -35px;
   }
-  
+
   .success-title {
     font-size: 28px;
   }
-  
-  /* Conditions text */
+
   .conditions {
     width: 100% !important;
     font-size: 14px;
+    margin-bottom: 40px !important;
   }
-  
-  /* Stepper adjustments */
+
   .circle {
     width: 35px !important;
     height: 35px !important;
     font-size: 14px !important;
   }
-  
+
   #navTabBar .oj-tab-bar-item a .oj-bind-text:last-child {
     font-size: 12px !important;
   }
+
+  /* CRITICAL: Remove all container gaps */
+  .account-type-container,
+  .account-details-container,
+  .verification-container,
+  .login-details-container {
+    gap: 0.75rem !important;
+    margin: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* CRITICAL: Override Oracle JET default margins */
+  .oj-web-applayout-content {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .oj-sm-margin-20 {
+    margin: 0 !important;
+  }
 }
 
-/* ========================================
-   600px - MOBILE LANDSCAPE
-========================================= */
+/* 600px - MOBILE LANDSCAPE */
 @media (max-width: 600px) {
   .primary-container {
-    width: 100%;
-    padding: 1rem;
+    width: 98%;
+    padding: 0.875rem !important;
     border-radius: 6px;
+    margin: 0.5rem auto 1.5rem auto !important;
   }
-  
-  /* Stack account details tabs */
+
   .tab-navigation {
     flex-direction: column !important;
     gap: 0.5rem;
   }
-  
+
   .tab-navigation .tab-item {
     width: 100% !important;
   }
 }
 
-
-/* ========================================
-   480px - MOBILE PORTRAIT
-========================================= */
+/* 480px - MOBILE PORTRAIT - MOST CRITICAL */
 @media (max-width: 480px) {
+  .secondary-container {
+    padding: 0.25rem !important;
+  }
+
   .primary-container {
     width: 100%;
-    padding: 1rem;
-    margin: 0.5rem auto 2rem auto;
+    padding: 0.75rem !important;
+    margin: 0.25rem auto 1.5rem auto !important;
     border-radius: 4px;
   }
-  
-  .secondary-container {
-    padding: 0.5rem;
+
+  /* CRITICAL: Ultra-compact stepper */
+  nav-bar {
+    margin: 0 !important;
+    padding: 0 !important;
   }
-  
-  /* Logo */
+
+  #navTabBar {
+    padding: 0.25rem 0 !important;
+    margin: 0 0 0.25rem 0 !important;
+  }
+
+  .tab-bar {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #navTabBar .oj-tab-bar-item > a {
+    padding: 0.2rem 0.1rem !important;
+  }
+
+  .nav-style {
+    padding: 0.4rem !important;
+    margin: 0 !important;
+  }
+
   .meezan-logo {
     max-width: 150px;
   }
-  
-  /* Headers */
+
   .header h1 {
     font-size: 1.3rem !important;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.4rem !important;
+    margin-top: 0 !important;
   }
-  
-  /* Account type tabs - 2 columns, compact */
+
+  .form-label {
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.35rem !important;
+    font-size: 15px !important;
+  }
+
+  .sub-header {
+    font-size: 15px !important;
+  }
+
   .tabs-container {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.5rem !important;
   }
-  
+
   .tab-item {
     padding: 0.6rem 0.4rem !important;
     height: 80px !important;
   }
-  
+
   .icon-svg {
     width: 22px !important;
     height: 22px !important;
   }
-  
+
   .tab-label {
     font-size: 0.8rem !important;
     white-space: normal !important;
     text-align: center;
   }
-  
-  /* Form elements */
+
   .form-group {
-    margin-bottom: 1.25rem !important;
+    margin-bottom: 1rem !important;
   }
-  
-  .form-label,
-  .sub-header {
-    font-size: 15px !important;
-  }
-  
+
   .form-input,
   .cnic-input,
   .username-input {
@@ -922,32 +907,30 @@ body.image-background {
     font-size: 16px !important;
     padding: 0.75rem !important;
   }
-  
+
   .help-text {
     font-size: 0.75rem !important;
   }
-  
-  /* Password page */
+
   .show-hide-btn {
     font-size: 11px !important;
     padding: 3px 5px;
   }
-  
+
   .strength-requirements {
     font-size: 11px !important;
   }
-  
+
   .strength-label {
     font-size: 13px !important;
   }
-  
-  /* Buttons - stack vertically */
+
   .button-group {
     flex-direction: column !important;
     gap: 0.75rem !important;
-    margin-top: 2rem !important;
+    margin-top: 1.5rem !important;
   }
-  
+
   .btn-back,
   .btn-next {
     width: 100% !important;
@@ -955,93 +938,99 @@ body.image-background {
     height: 46px !important;
     font-size: 15px !important;
   }
-  
-  /* Success page */
+
   .success-container {
     padding: 40px 20px 25px;
     margin: 10px;
   }
-  
+
   .checkmark-container {
     width: 60px;
     height: 60px;
     top: -30px;
   }
-  
+
   .success-title {
     font-size: 22px;
   }
-  
+
   .success-subtitle {
     font-size: 14px;
   }
-  
+
   .detail-label {
     font-size: 14px;
   }
-  
+
   .continue-btn {
     width: 100%;
     font-size: 14px;
   }
-  
-  /* Conditions */
+
   .conditions {
     font-size: 13px !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 25px !important;
   }
-  
+
   .conditions ul {
     margin-left: 15px;
   }
-  
-  /* Stepper - hide labels */
+
   #navTabBar .oj-tab-bar-item a .oj-bind-text:last-child {
     display: none !important;
   }
-  
+
   .circle {
     width: 30px !important;
     height: 30px !important;
     font-size: 13px !important;
   }
-  
+
   #navTabBar .oj-tab-bar-item:not(:last-child)::after {
     display: none !important;
   }
-  
+
   #navTabBar .oj-tab-bar-item.oj-selected::before {
     width: 40px !important;
     height: 2px !important;
   }
+
+  /* CRITICAL: Eliminate all gaps */
+  .account-type-container,
+  .account-details-container,
+  .verification-container,
+  .login-details-container {
+    gap: 0.5rem !important;
+    margin: 0 !important;
+    padding-top: 0 !important;
+  }
 }
 
-/* ========================================
-   360px - SMALL MOBILE
-========================================= */
+/* 360px - SMALL MOBILE */
 @media (max-width: 360px) {
   .primary-container {
-    padding: 0.75rem;
+    padding: 0.6rem !important;
+    margin: 0.2rem auto 1rem auto !important;
   }
-  
+
   .tab-item {
     padding: 0.5rem 0.3rem !important;
     height: 75px !important;
   }
-  
+
   .icon-svg {
     width: 20px !important;
     height: 20px !important;
   }
-  
+
   .tab-label {
     font-size: 0.7rem !important;
   }
-  
+
   .header h1 {
     font-size: 1.1rem !important;
   }
-  
+
   .btn-back,
   .btn-next {
     height: 44px !important;
@@ -1049,63 +1038,34 @@ body.image-background {
   }
 }
 
-/* ========================================
-   LANDSCAPE MODE OVERRIDES
-========================================= */
+/* LANDSCAPE MODE OVERRIDES */
 @media (max-width: 768px) and (orientation: landscape) {
   .primary-container {
-    margin: 0.5rem auto 1.5rem auto;
-    padding: 1rem;
+    margin: 0.5rem auto 1.5rem auto !important;
+    padding: 1rem !important;
   }
-  
-  /* Keep buttons side by side in landscape */
+
   .button-group {
     flex-direction: row !important;
     margin-top: 1.5rem !important;
   }
-  
+
   .btn-back,
   .btn-next {
     flex: 1;
   }
-  
-  /* 3 columns for tabs in landscape */
+
   .tabs-container {
     grid-template-columns: repeat(3, 1fr) !important;
   }
-  
+
   .tab-item {
     height: 70px !important;
   }
 }
 
-/* ========================================
-   ORACLE JET SPECIFIC FIXES
-========================================= */
-.oj-hybrid-padding {
-  padding: 0 !important;
-}
-
+/* TOUCH OPTIMIZATIONS */
 @media (max-width: 768px) {
-  .oj-sm-margin-20 {
-    margin: 10px !important;
-  }
-  
-  .oj-web-applayout-content {
-    padding: 0 !important;
-  }
-}
-
-/* ========================================
-   HELP CARD RESPONSIVE (if it's a component)
-========================================= */
-
-
-/* ========================================
-   TOUCH OPTIMIZATIONS
-========================================= */
-@media (max-width: 768px) {
-  /* Prevent text selection on interactive elements */
   .tab-item,
   button,
   .btn-back,
@@ -1114,109 +1074,14 @@ body.image-background {
     -webkit-user-select: none;
     user-select: none;
   }
-  
-  /* Smooth scrolling */
+
   * {
     -webkit-overflow-scrolling: touch;
   }
-  
-  /* Active state for touch */
+
   .tab-item:active,
   button:active {
     transform: scale(0.98);
     transition: transform 0.1s ease;
-  }
-}
-/* ========================================
-   FIX LARGE GAPS ON MOBILE - Add to app.css
-========================================= */
-
-/* Reduce stepper navigation spacing on mobile */
-@media (max-width: 768px) {
-  #navTabBar {
-    padding: 0.5rem 0 !important;
-    margin-bottom: 0.5rem !important;
-  }
-  
-  #navTabBar .oj-tab-bar-item a {
-    padding: 0.5rem 0.25rem !important;
-  }
-  
-  /* Reduce form label margin */
-  .form-label {
-    margin-top: 20px !important;
-  }
-  
-  /* Reduce header margin */
-  .header h1 {
-    margin-bottom: 0.5rem !important;
-  }
-  
-  /* Help component spacing */
-  .help-component {
-    margin: 1rem auto !important;
-  }
-}
-
-@media (max-width: 480px) {
-  #navTabBar {
-    padding: 0.25rem 0 !important;
-    margin-bottom: 0.25rem !important;
-  }
-  
-  #navTabBar .oj-tab-bar-item a {
-    padding: 0.5rem 0.15rem !important;
-  }
-  
-  /* Further reduce form label margin */
-  .form-label {
-    margin-top: 15px !important;
-  }
-  
-  /* Reduce space between sections */
-  .account-type-container,
-  .account-details-container,
-  .verification-container,
-  .login-details-container {
-    gap: 0rem !important;
-  }
-  
-  .header h1 {
-    margin-bottom: 0.5rem !important;
-  }
-  
-  /* Help component spacing */
-  .help-component {
-    margin: 0.75rem auto !important;
-  }
-  
-  /* Reduce button group margin */
-  .button-group {
-    margin-top: 1.5rem !important;
-  }
-}
-
-/* Fix for account details page specifically */
-@media (max-width: 768px) {
-  .account-details-container .form-label {
-    margin-top: 20px !important;
-  }
-  
-  .tab-navigation {
-    margin-bottom: 15px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .account-details-container .form-label {
-    margin-top: 15px !important;
-  }
-  
-  .tab-navigation {
-    margin-bottom: 10px !important;
-  }
-  
-  .account-details-container .button-group {
-    margin-top: 25px !important;
   }
 }

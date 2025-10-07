@@ -1,0 +1,642 @@
+/* ========================================
+   ACCOUNT TYPE PAGE - SPECIFIC STYLES
+========================================= */
+
+/* Main Container */
+.account-type-container {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Left Section */
+.left-section {
+  flex: 1;
+  max-width: 800px;
+  margin-top: 0px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Right Section */
+.right-section {
+  margin-right: 30px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Header */
+.header h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Account Type Tabs Section */
+.account-type-tabs {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.tabs-container {
+  display: flex;
+  gap: 0;
+  background-color: white;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Individual Tab Item */
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.5rem 1.2rem 1.5rem;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  width: 130px;
+  height: 100px;
+  position: relative;
+  border-radius: 5px;
+  color: #ccc;
+  box-sizing: border-box;
+  min-width: 120px;
+}
+
+.tab-item.active {
+  border-bottom-color: #7a147a;
+  background-color: #ffecfd;
+  color: #7a147a;
+}
+
+.tab-item.inactive .tab-label {
+  color: #333;
+}
+
+.tab-item.active .tab-label {
+  color: #7a147a;
+  font-weight: 600;
+}
+
+.tab-item.active .icon-svg {
+  fill: #7a147a;
+}
+
+/* Tab Icon */
+.tab-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-svg {
+  width: 30px;
+  height: 30px;
+  transition: fill 0.3s ease;
+}
+
+/* Tab Label */
+.tab-label {
+  font-size: 1rem;
+  text-align: center;
+  line-height: 1.2;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Account Type Content & Selection */
+.account-type-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.account-type-selection {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Form Section */
+.form-section {
+  background: white;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+/* CNIC Input */
+.cnic-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 1.5px solid #ccc;
+  border-radius: 12px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.cnic-input:focus {
+  outline: none;
+  border-color: #00c855;
+  box-shadow: 0 0 0 3px rgba(139, 74, 232, 0.1);
+}
+
+/* Help Text */
+.help-text {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+/* Error Message */
+.error-message {
+  color: #dc3545;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+/* Selected Type Display */
+.selected-type-display {
+  margin-bottom: 1rem;
+}
+
+.selected-type-display strong {
+  color: #7a147a;
+}
+
+.selected-type {
+  margin-left: 0.5rem;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 55px;
+}
+
+.btn-back {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #ccc;
+  background-color: #eee;
+  color: #7a147a;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 190px;
+  height: 55px;
+}
+
+.btn-back:hover {
+  border-color: #999;
+  color: #333;
+}
+
+.btn-next {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: #7a147a;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 190px;
+  height: 55px;
+}
+
+.btn-next:hover {
+  transform: translateY(-1px);
+}
+
+.btn-loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Oracle JET Overrides */
+.oj-hybrid-padding {
+  padding: 0 !important;
+}
+
+/* ========================================
+   RESPONSIVE STYLES FOR ACCOUNT TYPE PAGE
+========================================= */
+
+/* 1200px - Large Screens */
+@media (max-width: 1200px) {
+  .tabs-container {
+    gap: 0.4rem;
+  }
+
+  .tab-item {
+    min-width: 115px;
+  }
+}
+
+/* 1024px - Tablets (Landscape) - START CENTERING */
+@media (max-width: 1024px) {
+  .account-type-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .left-section {
+    max-width: 700px !important;
+    width: 100% !important;
+    margin-right: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .header {
+    width: 100%;
+    text-align: center;
+  }
+
+  .account-type-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .right-section {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  .tabs-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    justify-items: center;
+  }
+
+  .tab-item {
+    width: 100%;
+    max-width: 180px;
+    min-width: 0;
+  }
+
+  .form-section {
+    width: 100%;
+  }
+}
+
+/* 900px - Medium Tablets - BETTER CENTERING */
+@media (max-width: 900px) {
+  .left-section {
+    max-width: 600px !important;
+  }
+
+  .tabs-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+  }
+
+  .tab-item {
+    max-width: 160px;
+  }
+}
+
+/* 768px - Tablets & Mobile - FULL CENTER */
+@media (max-width: 768px) {
+  .account-type-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem !important;
+    padding: 1rem;
+    margin: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .left-section {
+    max-width: 550px !important;
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .header {
+    width: 100%;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0 !important;
+  }
+
+  .account-type-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .tabs-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .tab-item {
+    padding: 0.75rem 0.5rem !important;
+    height: 90px !important;
+    width: 100%;
+    max-width: none;
+  }
+
+  .icon-svg {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .tab-label {
+    font-size: 0.9rem !important;
+  }
+
+  .form-section {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .cnic-input {
+    font-size: 16px !important;
+    padding: 0.875rem 1rem !important;
+    height: 50px;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem !important;
+  }
+
+  .form-label {
+    margin-top: 1rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .button-group {
+    width: 100%;
+  }
+
+  .right-section {
+    max-width: 500px;
+  }
+}
+
+/* 600px - Mobile Landscape */
+@media (max-width: 600px) {
+  .account-type-container {
+    padding: 0.875rem !important;
+  }
+
+  .left-section {
+    max-width: 100% !important;
+  }
+
+  .tabs-container {
+    max-width: 100%;
+  }
+
+  .form-section {
+    max-width: 100%;
+  }
+}
+
+/* 480px - Mobile Portrait - SINGLE COLUMN CENTERED */
+@media (max-width: 480px) {
+  .account-type-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem !important;
+    margin: 0 !important;
+    padding: 0.5rem !important;
+    padding-top: 0 !important;
+  }
+
+  .left-section {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .header {
+    text-align: center;
+  }
+
+  .header h1 {
+    font-size: 1.3rem !important;
+    margin-bottom: 0.4rem !important;
+    margin-top: 0 !important;
+  }
+
+  .account-type-tabs {
+    width: 100%;
+  }
+
+  .tabs-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .tab-item {
+    padding: 0.6rem 0.4rem !important;
+    height: 80px !important;
+    max-width: none;
+  }
+
+  .icon-svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .tab-label {
+    font-size: 0.8rem !important;
+    white-space: normal !important;
+    text-align: center;
+  }
+
+  .form-section {
+    width: 100%;
+  }
+
+  .form-label {
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.35rem !important;
+    font-size: 15px !important;
+  }
+
+  .form-group {
+    margin-bottom: 1rem !important;
+  }
+
+  .cnic-input {
+    height: 46px !important;
+    font-size: 16px !important;
+    padding: 0.75rem !important;
+  }
+
+  .help-text {
+    font-size: 0.75rem !important;
+  }
+
+  .button-group {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    margin-top: 1.5rem !important;
+    width: 100%;
+  }
+
+  .btn-back,
+  .btn-next {
+    width: 100% !important;
+    min-width: auto !important;
+    height: 46px !important;
+    font-size: 15px !important;
+  }
+
+  .right-section {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* 360px - Small Mobile - ULTRA COMPACT CENTERED */
+@media (max-width: 360px) {
+  .account-type-container {
+    padding: 0.4rem !important;
+  }
+
+  .tabs-container {
+    gap: 0.4rem !important;
+  }
+
+  .tab-item {
+    padding: 0.5rem 0.3rem !important;
+    height: 75px !important;
+  }
+
+  .icon-svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .tab-label {
+    font-size: 0.7rem !important;
+  }
+
+  .header h1 {
+    font-size: 1.1rem !important;
+  }
+
+  .btn-back,
+  .btn-next {
+    height: 44px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* Landscape Mode Override - KEEP SIDE BY SIDE */
+@media (max-width: 768px) and (orientation: landscape) {
+  .account-type-container {
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem !important;
+  }
+
+  .left-section {
+    max-width: 500px !important;
+  }
+
+  .right-section {
+    max-width: 300px;
+  }
+
+  .button-group {
+    flex-direction: row !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .btn-back,
+  .btn-next {
+    flex: 1;
+  }
+
+  .tabs-container {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .tab-item {
+    height: 70px !important;
+  }
+}
+
+/* Portrait Landscape Override for very small screens */
+@media (max-width: 480px) and (orientation: landscape) {
+  .account-type-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tabs-container {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.4rem !important;
+  }
+
+  .tab-item {
+    height: 65px !important;
+  }
+}
+
+/* Touch Optimizations */
+@media (max-width: 768px) {
+  .tab-item,
+  .btn-back,
+  .btn-next {
+    -webkit-tap-highlight-color: rgba(122, 20, 122, 0.1);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .tab-item:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}

@@ -1,285 +1,41 @@
 <script type="text/html" id="navTemplate">
-  <li style="list-style: none; display: flex; align-items: center;">
-    <!-- Step Circle + Label -->
-    <a
-      href="#"
-      style="display: flex; align-items: center; gap: 8px; text-decoration: none;"
-    >
-      <!-- Circle -->
-      <div class="nav-items">
-        <div class="label-class">
+    <li style="list-style: none; display: flex; align-items: center;">
+        <a href="#" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+            <div class="nav-items">
+                <div class="label-class">
           <span data-bind="css: 'circle ' + $parent.getStepStatus($data.path)">
             <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
           </span>
-          <!-- Label -->
-          <span
-            data-bind="css: 'step-label ' + $parent.getStepStatus($data.path)"
-          >
+                    <span data-bind="css: 'step-label ' + $parent.getStepStatus($data.path)">
             <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
           </span>
-        </div>
-        <div>
-          <span
-            data-bind="css: 'under-label ' + $parent.getStepStatus($data.path)"
-          >
+                </div>
+                <div>
+          <span data-bind="css: 'under-label ' + $parent.getStepStatus($data.path)">
             <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
           </span>
-        </div>
-      </div>
-    </a>
+                </div>
+            </div>
+        </a>
 
-    <!-- Connector line (except last step) -->
-    <!-- ko if: !$parent.isLastStep($data.path) -->
-    <span
-      data-bind="css: 'connector ' + $parent.getConnectorStatus($data.path)"
-    ></span>
-    <!-- /ko -->
-  </li>
+        <!-- Connector line (except last step) -->
+        <!-- ko if: !$parent.isLastStep($data.path) -->
+        <span data-bind="css: 'connector ' + $parent.getConnectorStatus($data.path)"></span>
+        <!-- /ko -->
+    </li>
 </script>
 
 <!-- Top navigation -->
 <!-- ko if: properties.showNavigation -->
 <oj-tab-bar class="tab-bar" data="[[properties.data]]" edge="top" selection="{{properties.selection}}"
-  item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
+            item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
 </oj-tab-bar>
 <!-- /ko -->
 
 <!-- Drawer Navigation -->
 <oj-drawer-popup edge="start" opened="{{properties.sideDrawerOn}}" modality="modeless">
-  <oj-navigation-list data="[[properties.data]]" selection="{{properties.selection}}"
-    on-click="[[properties.toggleDrawer]]"
-    item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
-  </oj-navigation-list>
+    <oj-navigation-list data="[[properties.data]]" selection="{{properties.selection}}"
+                        on-click="[[properties.toggleDrawer]]"
+                        item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
+    </oj-navigation-list>
 </oj-drawer-popup>
-
-<style>
-  .label-class {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 50px;
-  }
-
-  /* Circle base */
-  .circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 600;
-    border: 2px solid #d0d0d0;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-    background-color: #d1d5db !important;
-    color: #6b7280 !important;
-  }
-
-  /* Current step (highlighted green) */
-  .circle.active {
-    border-color: #00c853;
-    background-color: #d1d5db !important;
-    color: #6b7280 !important;
-    height: 40px;
-    width: 40px;
-  }
-
-  /* Completed steps (past steps) */
-  .circle.completed {
-    border-color: #00c853 !important;
-    background-color: #00c853 !important;
-    color: #fff !important;
-  }
-
-  /* Not reached yet */
-  .circle.incomplete {
-    border-color: #d0d0d0;
-    background-color: #fff;
-    color: #999;
-  }
-
-  /* Labels */
-  .step-label {
-    font-size: 15px;
-    font-weight: 500;
-    color: #d0d0d0;
-    white-space: nowrap;
-    transition: all 0.3s ease;
-  }
-
-  .step-label.active {
-    color: #999;
-  }
-
-  .step-label.completed {
-    color: #00c853;
-  }
-
-  .step-label.incomplete {
-    color: #999;
-  }
-
-  /* Under-label Classes */
- .under-label {
-  background-color: transparent;
-  display: block;
-  margin-top: 4px;
-  font-size: 0px;
-}
-
-.under-label.active {
-  background-color: #00c853;
-  height: 5px;
-  width: 40px;
-  border-radius: 5px;
-}
-  /* Connector line */
-  .connector {
-    flex: 1;
-    height: 3px;
-    min-width: 100px;
-    margin: 0 0;
-    background-color: #d0d0d0;
-    transition: background-color 0.3s ease;
-  }
-
-  .connector.active {
-    background-color: #d0d0d0 !important;
-  }
-
-  .connector.completed {
-    background-color: #00c853;
-  }
-
-  .connector.incomplete {
-    background-color: #d0d0d0;
-  }
-
-  /* Tab bar styling */
-  .tab-bar ul {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  #navTabBar {
-    background: transparent !important;
-    border: none !important;
-    position: relative;
-    padding: 0 0;
-  }
-
-  /* Tab Bar Item Styling */
-  #navTabBar .oj-tab-bar-item {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex;
-    justify-content: center;
-    position: relative;
-  }
-
-  /* Tab Bar Item Link */
-  #navTabBar .oj-tab-bar-item>a {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-decoration: none !important;
-    /* padding: 1rem 0.5rem !important; */
-    width: 100% !important;
-    position: relative;
-    /* z-index: 2; */
-  }
-
-  /* Media Queries for Responsiveness */
-  @media (max-width: 1024px) {
-    .nav-item {
-      gap: 30px; /* Reduce gap between items */
-    }
-
-    .circle {
-      width: 35px;
-      height: 35px;
-      font-size: 13px;
-    }
-
-    .step-label {
-      font-size: 14px;
-    }
-
-    .connector {
-      height: 2px;
-    }
-  }
-
-  @media (max-width: 768px) {
-    /* For tablets and smaller devices */
-    .nav-item {
-      gap: 20px;
-    }
-
-    .circle {
-      width: 30px;
-      height: 30px;
-      font-size: 12px;
-    }
-
-    .step-label {
-      font-size: 13px;
-    }
-
-    .connector {
-      height: 2px;
-    }
-
-    /* For smaller screens, switch to drawer navigation */
-    .tab-bar {
-      display: block;
-    }
-
-    oj-drawer-popup {
-      display: block;
-    }
-  }
-
-  @media (max-width: 480px) {
-    /* For small mobile devices */
-    .nav-item {
-      gap: 15px; /* Further reduce gap */
-    }
-
-    .circle {
-      width: 25px;
-      height: 25px;
-      font-size: 10px;
-    }
-
-    .step-label {
-      font-size: 12px;
-    }
-
-    .connector {
-      height: 1px;
-    }
-
-    /* Keeping the drawer navigation visible */
-    oj-drawer-popup {
-      display: block;
-    }
-
-    .tab-bar {
-      display: block;
-    }
-  }
-</style>
