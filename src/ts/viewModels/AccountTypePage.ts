@@ -22,7 +22,6 @@ class AccountTypePage {
   // ----- UI actions -----
   selectAccountType = (type: string) => {
     this.selectedAccountType(type);
-    console.log("Selected account type:", type);
   };
 
   goBack = () => {
@@ -33,20 +32,63 @@ class AccountTypePage {
     }
   };
 
-  goNext = () => {
+  goNext = async () => {
     if (!this.validateCNIC()) return;
+
     this.isLoading(true);
-    setTimeout(() => {
-      this.isLoading(false);
+    this.cnicError(""); // clear previous error
+
+    const requestBody = {
+      cnicNo: this.cnicNumber().replace(/\D/g, ""),
+      accountType: this.selectedAccountType(),
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/api/accounts/init", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+
+      // If backend returned an error (like CNIC not found)
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to initialize account.");
+      }
+
+      const data = await response.json();
+      console.log("✅ API Response:", data);
+
+      const accountId = data.accountId || data.id;
+      // if (!accountId) {
+      //   throw new Error("Account ID missing from response.");
+      // }
+
+      // Save ID for next screen
+      localStorage.setItem("accountId", String(accountId));
+      if (appViewModel) {
+        appViewModel.currentAccountId = accountId;
+      }
+
+      // Navigate only on successful API response
       if (appViewModel?.router) {
         appViewModel.goToNextStep("accountTypePage", "accountDetailsPage");
-        // console.log('Completed steps:', appViewModel.completedSteps());
       } else {
-        alert(
-          `Navigation successful!\nCNIC: ${this.cnicNumber()}\nAccount Type: ${this.selectedAccountType()}`
-        );
+        alert(`✅ Account initialized!\nAccount ID: ${accountId}`);
       }
-    }, 500);
+    } catch (err: unknown) {
+      console.error("❌ Error calling /init API:", err);
+
+      if (err instanceof Error) {
+        this.cnicError(err.message);
+        // Optionally show alert for major errors
+        // alert(err.message);
+      } else {
+        this.cnicError("Unexpected error occurred.");
+      }
+    } finally {
+      this.isLoading(false);
+    }
   };
 
   // ----- Formatting & Validation -----
@@ -65,12 +107,10 @@ class AccountTypePage {
         digits.slice(0, 5) + "-" + digits.slice(5, 12) + "-" + digits.slice(12);
     }
 
-    // Only update if different to avoid infinite loops
     if (formatted !== this.cnicNumber()) {
       this.cnicNumber(formatted);
     }
 
-    // Clear error when user starts typing
     if (this.cnicError()) {
       this.cnicError("");
     }
@@ -107,19 +147,15 @@ class AccountTypePage {
     return clean.length === 13 && !this.cnicError() && !this.isLoading();
   });
 
-  // Clear CNIC error on focus
   onCnicFocus = () => {
     this.cnicError("");
   };
 
-  // Component lifecycle methods
   connected = (): void => {
     document.title = "MBL | Account Type";
   };
 
-  disconnected = (): void => {
-    console.log("accountTypePage disconnected");
-  };
+  disconnected = (): void => {};
 }
 
 export = AccountTypePage;

@@ -47,11 +47,12 @@ class RootViewModel {
   footerLinks: Array<object> = [];
   showNavigation: ko.Computed<boolean>;
   selection: KnockoutRouterAdapter<any>;
+  currentAccountId = ko.observable<number | null>(null);
+
 
   // ✅ Step tracking
   completedSteps = ko.observableArray<string>([]);
   currentStep = ko.observable<string>("accountTypePage");
-
   // Define step order
   private navOrder = [
     "accountTypePage",
@@ -148,8 +149,6 @@ class RootViewModel {
           // ✅ Mark all PREVIOUS steps as completed (not including current)
           const completed = this.navOrder.slice(0, idx);
           this.completedSteps(completed);
-          console.log("➡️ Root currentStep:", newPath);
-          console.log("✅ Root completedSteps:", this.completedSteps());
         } else if (idx === 0) {
           // First step - no completed steps yet
           this.completedSteps([]);
@@ -163,6 +162,11 @@ class RootViewModel {
     // release bootstrap busy state
     Context.getPageContext().getBusyContext().applicationBootstrapComplete();
   }
+
+  setAccountId(id: number) {
+  this.currentAccountId(id);
+}
+
 
   announcementHandler = (event: any): void => {
     this.message(event.detail.message);
@@ -184,8 +188,6 @@ class RootViewModel {
 
   // ✅ Go to next step (mark current as complete and navigate)
   goToNextStep(currentPath: string, nextPath: string): void {
-    console.log(`🚀 Going from ${currentPath} to ${nextPath}`);
-    
     // Just navigate - the router subscription will handle completion
     this.router.go({ path: nextPath });
   }

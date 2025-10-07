@@ -25,6 +25,9 @@ class LoginDetailsPage {
   strengthBarWidth: ko.Computed<string>;
   strengthBarColor: ko.Computed<string>;
 
+  apiLoading: ko.Observable<boolean>;
+  apiError: ko.Observable<string | null>;
+
   constructor() {
     this.password = ko.observable("");
     this.confirmPassword = ko.observable("");
@@ -41,25 +44,28 @@ class LoginDetailsPage {
       hasSpecial: false,
     });
 
+    this.apiLoading = ko.observable(false);
+    this.apiError = ko.observable(null);
+
     this.strengthBarWidth = ko.computed<string>(() => {
       switch (this.passwordStrength()) {
         case "Strong":
-          return "100%" as string;
+          return "100%";
         case "Medium":
-          return "60%" as string;
+          return "60%";
         default:
-          return "30%" as string;
+          return "30%";
       }
     });
 
     this.strengthBarColor = ko.computed<string>(() => {
       switch (this.passwordStrength()) {
         case "Strong":
-          return "#00c855" as string;
+          return "#00c855";
         case "Medium":
-          return "#ffb400" as string;
+          return "#ffb400";
         default:
-          return "#e53e3e" as string;
+          return "#e53e3e";
       }
     });
 
@@ -120,9 +126,7 @@ class LoginDetailsPage {
       this.confirmPasswordStatusClass("error");
       this.isConfirmPasswordValid(false);
     } else {
-      this.confirmPasswordStatus(
-        "Please ensure password meets all requirements"
-      );
+      this.confirmPasswordStatus("Please ensure password meets all requirements");
       this.confirmPasswordStatusClass("error");
       this.isConfirmPasswordValid(false);
     }
@@ -179,11 +183,49 @@ class LoginDetailsPage {
     }
   };
 
-  goNext = (): void => {
-    if (this.isNextButtonEnabled()) {
-      if (appViewModel) {
-        appViewModel.goToNextStep("loginDetailsPage", "termsPage");
+  /** ✅ Updated goNext — calls your /credentials API */
+  goNext = async (): Promise<void> => {
+    if (!this.isNextButtonEnabled()) return;
+
+    this.apiLoading(true);
+    this.apiError(null);
+
+    const accountId = localStorage.getItem("accountId");
+    const username = localStorage.getItem("username");
+    const password = this.password();
+
+    if (!accountId || !username) {
+      this.apiError("Missing account information. Please go back and verify.");
+      this.apiLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/accounts/${accountId}/credentials`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        }
+      );
+
+      const data = await response.json();
+      console.log("✅ Credentials API Response:", data);
+
+      if (data.success) {
+        this.apiLoading(false);
+        if (appViewModel) {
+          appViewModel.goToNextStep("loginDetailsPage", "termsPage");
+        }
+      } else {
+        this.apiError(data.message || "Failed to set credentials.");
+        this.apiLoading(false);
       }
+    } catch (err: any) {
+      console.error("❌ API Error:", err);
+      this.apiError("Network or server error occurred.");
+      this.apiLoading(false);
     }
   };
 

@@ -116,51 +116,73 @@ class AccountDetailsPage {
     }
   };
 
-  public goNext = (): void => {
-    this.hasError(false);
-    this.errorMessage("");
+  public goNext = async (): Promise<void> => {
+  this.hasError(false);
+  this.errorMessage("");
 
-    if (!this.canProceed()) {
-      const msg =
-        this.activeTab() === "account"
-          ? "Please enter a valid 14-digit account number"
-          : "Please enter a valid IBAN";
-      this.showError(msg);
+  if (!this.canProceed()) {
+    const msg =
+      this.activeTab() === "account"
+        ? "Please enter a valid 14-digit account number"
+        : "Please enter a valid IBAN";
+    this.showError(msg);
+    return;
+  }
+
+  this.isLoading(true);
+
+  try {
+    // Get stored accountId from localStorage (from /init API)
+    const accountId = localStorage.getItem("accountId");
+    if (!accountId) {
+      this.showError("Account ID not found. Please restart the process.");
       return;
     }
 
-    this.isLoading(true);
+    // Prepare request body
+    const requestBody =
+      this.activeTab() === "account"
+        ? { accountNumber: this.accountNumber().replace(/\s+/g, "") }
+        : { iban: this.ibanNumber().replace(/\s+/g, "").toUpperCase() };
 
-    setTimeout(() => {
-      try {
-        if (this.activeTab() === "account") {
-          const cleanAcc = this.accountNumber().replace(/\s+/g, "");
-          if (!this.validateAccountNumber(cleanAcc)) {
-            this.showError(
-              "Invalid account number. Please check and try again."
-            );
-            return;
-          }
-        } else {
-          const cleanIban = this.ibanNumber().replace(/\s+/g, "").toUpperCase();
-          if (!this.validateIban(cleanIban)) {
-            this.showError("Invalid IBAN. Please check and try again.");
-            return;
-          }
-        }
+    // Send request to backend
+    const response = await fetch(`http://localhost:8080/api/accounts/${accountId}/details`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
+    });
 
-        // Navigate only if validation passes
-        if (appViewModel.router) {
-          appViewModel.router.go({ path: "verificationPage" });
-        }
-      } catch (err) {
-        console.error(err);
-        this.showError("An unexpected error occurred. Please try again.");
-      } finally {
-        this.isLoading(false);
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(errText || "Failed to validate account details");
+    }
+
+    const data = await response.json();
+    console.log("✅ /details API response:", data);
+
+     if (appViewModel) {
+      appViewModel.goToNextStep("accountDetailsPage", "verificationPage");
+    }
+
+    if (data.valid) {
+      alert(`✅ Account validated successfully!\n\nMessage: ${data.message}`);
+      // Navigate to verification page
+      if (appViewModel?.router) {
+        appViewModel.goToNextStep("accountDetailsPage", "verificationPage");
       }
-    }, 500); // simulate async call
-  };
+    } else {
+      this.showError(data.message || "Provided details do not match this account.");
+    }
+  } catch (error: unknown) {
+    console.error("❌ Error validating account details:", error);
+    const errMsg =
+      error instanceof Error ? error.message : "Unexpected error occurred";
+    this.showError("API error: " + errMsg);
+  } finally {
+    this.isLoading(false);
+  }
+};
+
 
   /**
    * Validate IBAN using MOD-97 algorithm

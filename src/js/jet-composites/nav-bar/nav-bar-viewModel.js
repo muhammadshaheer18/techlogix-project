@@ -5,8 +5,6 @@
  */
 define(["knockout"], function (ko) {
   function ViewModel(context) {
-    console.log("✅ NAV-BAR VIEWMODEL LOADED");
-
     var self = this;
     self.properties = context.properties || {};
 
@@ -17,29 +15,19 @@ define(["knockout"], function (ko) {
     if (window.appViewModel) {
       self.currentStep = window.appViewModel.currentStep;
       self.completedSteps = window.appViewModel.completedSteps;
-      console.log("✅ Using global appViewModel observables");
     } else {
       // Fallback if window.appViewModel isn't ready yet
       self.currentStep = ko.observable("");
       self.completedSteps = ko.observableArray([]);
-      console.log("⚠️ Using fallback observables");
     }
-
-    // Debug: Log initial values
-    console.log("🔍 nav-bar initialized with:");
-    console.log("  - currentStep:", ko.unwrap(self.currentStep));
-    console.log("  - completedSteps:", ko.unwrap(self.completedSteps));
-
     // ✅ Subscribe to changes for debugging
     if (ko.isObservable(self.currentStep)) {
       self.currentStep.subscribe(function (newPath) {
-        console.log("📍 nav-bar sees currentStep change:", newPath);
       });
     }
 
     if (ko.isObservable(self.completedSteps)) {
       self.completedSteps.subscribe(function (completed) {
-        console.log("✅ nav-bar sees completedSteps change:", completed);
       });
     }
 
@@ -57,8 +45,6 @@ define(["knockout"], function (ko) {
     self.getStepStatus = function (stepPath) {
       var isCurrent = self.isStepCurrent(stepPath);
       var isCompleted = self.isStepCompleted(stepPath);
-      
-      console.log("🔍 Step:", stepPath, "Current:", isCurrent, "Completed:", isCompleted);
       
       if (isCurrent) {
         return "active";
