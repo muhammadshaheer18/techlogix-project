@@ -1,28 +1,522 @@
-@media (max-width: 768px) {
+/* ========================================
+   TERMS PAGE - SPECIFIC STYLES
+========================================= */
+
+/* Main Container */
+.terms-container {
+  display: flex;
+  width: 100%;
+  gap: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Left Section */
+.left-section {
+  flex: 1;
+  max-width: 800px;
+  margin-top: 0px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Right Section */
+.right-section {
+  margin-right: 30px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Header */
+.header h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Terms Content */
+.terms-content {
+  background: white;
+  width: 100%;
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-top: 80px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.terms-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.terms-container p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.terms-container h6 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.terms-container ul,
+.terms-container ol {
+  margin-left: 20px;
+  margin-bottom: 1rem;
+}
+
+.terms-container li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 96px;
+}
+
+.btn-back {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #ccc;
+  background-color: #eee;
+  color: #7a147a;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 190px;
+  height: 55px;
+}
+
+.btn-back:hover {
+  border-color: #999;
+  color: #333;
+}
+
+.btn-next {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: #7a147a;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 190px;
+  height: 55px;
+}
+
+.btn-next:hover {
+  transform: translateY(-1px);
+}
+
+.btn-next:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Oracle JET Overrides */
+.oj-hybrid-padding {
+  padding: 0 !important;
+}
+
+/* ========================================
+   RESPONSIVE STYLES FOR TERMS PAGE
+========================================= */
+
+/* 1200px - Large Screens */
+@media (max-width: 1200px) {
   .terms-container {
-    padding: 0.5rem;
+    gap: 1.5rem;
   }
-  
+
   .terms-content {
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 1rem;
+    margin-top: 60px;
   }
-  
-  .terms-container p,
-  .terms-container h6 {
-    font-size: 14px;
+
+  .button-group {
+    margin-top: 80px;
   }
 }
 
-@media (max-width: 480px) {
-  .terms-content {
-    max-height: 350px;
-    padding: 0.75rem;
+/* 1024px - Tablets (Landscape) - START CENTERING */
+@media (max-width: 1024px) {
+  .terms-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
   }
-  
+
+  .left-section {
+    max-width: 700px !important;
+    width: 100% !important;
+    margin-right: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    order: 1;
+  }
+
+  .header {
+    width: 100%;
+    text-align: center;
+  }
+
+  .right-section {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto !important;
+    display: flex;
+    justify-content: center;
+    order: 2;
+  }
+
+  .terms-content {
+    width: 100%;
+    max-width: 600px;
+    max-height: 450px;
+    margin-top: 50px;
+  }
+
+  .button-group {
+    margin-top: 60px;
+  }
+}
+
+/* 900px - Medium Tablets */
+@media (max-width: 900px) {
+  .left-section {
+    max-width: 600px !important;
+  }
+
+  .terms-content {
+    max-width: 100%;
+  }
+}
+
+/* 768px - Tablets & Mobile - FULL CENTER */
+@media (max-width: 768px) {
+  .terms-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem !important;
+    padding: 1rem;
+    margin: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .left-section {
+    max-width: 550px !important;
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    order: 1;
+  }
+
+  .header {
+    width: 100%;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0 !important;
+  }
+
+  .terms-content {
+    width: 100%;
+    max-width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 1rem;
+    margin-top: 40px;
+  }
+
   .terms-container p,
   .terms-container h6 {
-    font-size: 13px;
+    font-size: 14px !important;
+  }
+
+  .terms-container h6 {
+    margin-top: 1.25rem;
+  }
+
+  .checkbox-group {
+    margin-top: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .checkbox-label {
+    font-size: 14px !important;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  .button-group {
+    width: 100%;
+    margin-top: 50px !important;
+  }
+
+  .btn-back,
+  .btn-next {
+    height: 50px !important;
+  }
+
+  .right-section {
+    max-width: 500px;
+    width: 100%;
+    order: 2;
+  }
+}
+
+/* 600px - Mobile Landscape */
+@media (max-width: 600px) {
+  .terms-container {
+    padding: 0.875rem !important;
+  }
+
+  .left-section {
+    max-width: 100% !important;
+  }
+
+  .terms-content {
+    max-width: 100%;
+  }
+}
+
+/* 480px - Mobile Portrait - SINGLE COLUMN CENTERED */
+@media (max-width: 480px) {
+  .terms-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem !important;
+    margin: 0 !important;
+    padding: 0.5rem !important;
+    padding-top: 0 !important;
+  }
+
+  .left-section {
+    max-width: 100% !important;
+    width: 100% !important;
+    order: 1;
+  }
+
+  .header {
+    text-align: center;
+  }
+
+  .header h1 {
+    font-size: 1.3rem !important;
+    margin-bottom: 0.4rem !important;
+    margin-top: 0 !important;
+  }
+
+  .terms-content {
+    width: 100%;
+    max-height: 350px;
+    padding: 0.75rem;
+    margin-top: 30px;
+  }
+
+  .terms-container p,
+  .terms-container h6 {
+    font-size: 13px !important;
+  }
+
+  .terms-container h6 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .terms-container ul,
+  .terms-container ol {
+    margin-left: 15px;
+  }
+
+  .checkbox-group {
+    margin-top: 1.25rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .checkbox-label {
+    font-size: 13px !important;
+    gap: 0.5rem;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+  }
+
+  .button-group {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    margin-top: 40px !important;
+    width: 100%;
+  }
+
+  .btn-back,
+  .btn-next {
+    width: 100% !important;
+    min-width: auto !important;
+    height: 46px !important;
+    font-size: 15px !important;
+  }
+
+  .right-section {
+    width: 100%;
+    max-width: 100%;
+    order: 2;
+  }
+}
+
+/* 360px - Small Mobile - ULTRA COMPACT CENTERED */
+@media (max-width: 360px) {
+  .terms-container {
+    padding: 0.4rem !important;
+  }
+
+  .header h1 {
+    font-size: 1.1rem !important;
+  }
+
+  .terms-content {
+    max-height: 320px;
+    padding: 0.65rem;
+    margin-top: 25px;
+  }
+
+  .terms-container p,
+  .terms-container h6 {
+    font-size: 12px !important;
+  }
+
+  .checkbox-label {
+    font-size: 12px !important;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+  }
+
+  .btn-back,
+  .btn-next {
+    height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  .button-group {
+    margin-top: 35px !important;
+  }
+}
+
+/* Landscape Mode Override - KEEP CENTERED WITH HELP CARD BELOW */
+@media (max-width: 768px) and (orientation: landscape) {
+  .terms-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem !important;
+  }
+
+  .left-section {
+    max-width: 500px !important;
+    order: 1;
+  }
+
+  .right-section {
+    max-width: 300px;
+    order: 2;
+  }
+
+  .terms-content {
+    max-height: 300px;
+  }
+
+  .button-group {
+    flex-direction: row !important;
+    margin-top: 40px !important;
+  }
+
+  .btn-back,
+  .btn-next {
+    flex: 1;
+  }
+}
+
+/* Portrait Landscape Override for very small screens */
+@media (max-width: 480px) and (orientation: landscape) {
+  .terms-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Touch Optimizations */
+@media (max-width: 768px) {
+  .btn-back,
+  .btn-next,
+  .checkbox-label {
+    -webkit-tap-highlight-color: rgba(122, 20, 122, 0.1);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .btn-back:active,
+  .btn-next:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  /* Smooth scrolling for terms content */
+  .terms-content {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
   }
 }
