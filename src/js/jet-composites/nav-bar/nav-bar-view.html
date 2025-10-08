@@ -1,41 +1,54 @@
 <script type="text/html" id="navTemplate">
-    <li style="list-style: none; display: flex; align-items: center;">
-        <a href="#" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-            <div class="nav-items">
-                <div class="label-class">
+  <li style="list-style: none; display: flex; align-items: center;">
+    <!-- Step Circle + Label -->
+    <a
+      href="#"
+      style="display: flex; align-items: center; gap: 8px; text-decoration: none;"
+    >
+      <!-- Circle -->
+      <div class="nav-items">
+        <div class="label-class">
           <span data-bind="css: 'circle ' + $parent.getStepStatus($data.path)">
             <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
           </span>
-                    <span data-bind="css: 'step-label ' + $parent.getStepStatus($data.path)">
+          <!-- Label -->
+          <span
+            data-bind="css: 'step-label ' + $parent.getStepStatus($data.path)"
+          >
             <oj-bind-text value="[[$data.detail.label]]"></oj-bind-text>
           </span>
-                </div>
-                <div>
-          <span data-bind="css: 'under-label ' + $parent.getStepStatus($data.path)">
+        </div>
+        <div>
+          <span
+            data-bind="css: 'under-label ' + $parent.getStepStatus($data.path)"
+          >
             <oj-bind-text value="[[$data.detail.value]]"></oj-bind-text>
           </span>
-                </div>
-            </div>
-        </a>
+        </div>
+      </div>
+    </a>
 
-        <!-- Connector line (except last step) -->
-        <!-- ko if: !$parent.isLastStep($data.path) -->
-        <span data-bind="css: 'connector ' + $parent.getConnectorStatus($data.path)"></span>
-        <!-- /ko -->
-    </li>
+    <!-- Connector line (except last step) -->
+    <!-- ko if: !$parent.isLastStep($data.path) -->
+    <span
+      data-bind="css: 'connector ' + $parent.getConnectorStatus($data.path)"
+    ></span>
+    <!-- /ko -->
+  </li>
 </script>
 
 <!-- Top navigation -->
 <!-- ko if: properties.showNavigation -->
 <oj-tab-bar class="tab-bar" data="[[properties.data]]" edge="top" selection="{{properties.selection}}"
-            item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
+  item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
 </oj-tab-bar>
 <!-- /ko -->
 
 <!-- Drawer Navigation -->
 <oj-drawer-popup edge="start" opened="{{properties.sideDrawerOn}}" modality="modeless">
-    <oj-navigation-list data="[[properties.data]]" selection="{{properties.selection}}"
-                        on-click="[[properties.toggleDrawer]]"
-                        item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
-    </oj-navigation-list>
+  <oj-navigation-list data="[[properties.data]]" selection="{{properties.selection}}"
+    on-click="[[properties.toggleDrawer]]"
+    item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]">
+  </oj-navigation-list>
 </oj-drawer-popup>
+

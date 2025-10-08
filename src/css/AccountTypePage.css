@@ -668,7 +668,7 @@
 /* Landscape Mode Override - KEEP SIDE BY SIDE */
 @media (max-width: 768px) and (orientation: landscape) {
   .account-type-container {
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     gap: 2rem !important;
   }
