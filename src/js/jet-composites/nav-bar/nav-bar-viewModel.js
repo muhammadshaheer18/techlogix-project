@@ -11,16 +11,13 @@ define(["knockout"], function (ko) {
     // Unwrap steps safely (ArrayDataProvider exposes .data array)
     self.steps = ko.unwrap(self.properties.data?.data) || [];
 
-    // ✅ SOLUTION: Get observables from global appViewModel
     if (window.appViewModel) {
       self.currentStep = window.appViewModel.currentStep;
       self.completedSteps = window.appViewModel.completedSteps;
     } else {
-      // Fallback if window.appViewModel isn't ready yet
       self.currentStep = ko.observable("");
       self.completedSteps = ko.observableArray([]);
     }
-    // ✅ Subscribe to changes for debugging
     if (ko.isObservable(self.currentStep)) {
       self.currentStep.subscribe(function (newPath) {
       });
@@ -55,7 +52,6 @@ define(["knockout"], function (ko) {
       return "incomplete";
     };
 
-    // ✅ Connector should be green if the step BEFORE it is completed OR current
     self.getConnectorStatus = function (stepPath) {
       if(self.isStepCurrent(stepPath)){
         return "active";

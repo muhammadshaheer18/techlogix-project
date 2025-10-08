@@ -48,9 +48,7 @@ class RootViewModel {
   showNavigation: ko.Computed<boolean>;
   selection: KnockoutRouterAdapter<any>;
   currentAccountId = ko.observable<number | null>(null);
-
-
-  // ✅ Step tracking
+  //steps check
   completedSteps = ko.observableArray<string>([]);
   currentStep = ko.observable<string>("accountTypePage");
   // Define step order
@@ -139,14 +137,14 @@ class RootViewModel {
       () => this.selection.path() !== "successPage"
     );
 
-    // ✅ Keep currentStep in sync with router
+    // Keep currentStep in sync with router
     this.selection.path.subscribe((newPath: string) => {
       if (newPath) {
         this.currentStep(newPath);
 
         const idx = this.navOrder.indexOf(newPath);
         if (idx > 0) {
-          // ✅ Mark all PREVIOUS steps as completed (not including current)
+          // Mark all PREVIOUS steps as completed (not including current)
           const completed = this.navOrder.slice(0, idx);
           this.completedSteps(completed);
         } else if (idx === 0) {
@@ -186,7 +184,7 @@ class RootViewModel {
     }
   };
 
-  // ✅ Go to next step (mark current as complete and navigate)
+  // Go to next step (mark current as complete and navigate)
   goToNextStep(currentPath: string, nextPath: string): void {
     // Just navigate - the router subscription will handle completion
     this.router.go({ path: nextPath });
