@@ -1,34 +1,38 @@
 /* ========================================
-   VERIFICATION PAGE - SPECIFIC STYLES
+   VERIFICATION PAGE - FULL STYLES
 ========================================= */
 
 /* Main Container */
 .verification-container {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   gap: 2rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box;
   overflow: hidden;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
+  margin: 0 auto;
+  padding: 0.5rem;
 }
 
 /* Left Section */
 .left-section {
   flex: 1;
   max-width: 800px;
-  margin-top: 0px;
-  box-sizing: border-box;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /* Right Section */
 .right-section {
-  margin-right: 30px;
   flex-shrink: 0;
-  box-sizing: border-box;
   min-width: 0;
+  margin-left: auto;
+  margin-right: 30px;
+  display: flex;
+  justify-content: center;
 }
 
 /* Header */
@@ -37,48 +41,39 @@
   font-size: 1.7rem;
   font-weight: bold;
   color: #333;
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
 }
 
 /* Sub Header */
 .sub-header {
   font-size: 1.125rem;
   color: #666;
-  margin-top: 80px;
-  margin-bottom: 0.5rem;
   font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 0.5rem;
+  align-self: flex-start;
 }
 
 /* Form Section */
-.form-section {
-  background: white;
-  width: 100%;
-}
-
 .form-group {
-  margin-bottom: 2rem;
-}
-
-.form-label {
-  display: block;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
-  margin-top: 80px;
-}
-
-/* Username Input */
-.username-input {
+  position: relative;
   width: 100%;
+  margin-top: 10px;
+  margin-bottom: 1.5rem;
+}
+
+/* Input */
+.username-input {
+  width: 65%;
+  height: 55px;
   padding: 0.75rem 1rem;
   border: 1.5px solid #e0e0e0;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1rem;
   background-color: #fff;
+  color: #000;
   transition: border-color 0.3s ease;
   box-sizing: border-box;
-  height: 55px;
 }
 
 .username-input:focus {
@@ -86,36 +81,47 @@
   border-color: #7a147a;
 }
 
-.username-input::placeholder {
-  color: #999;
+/* Input States */
+.form-group.idle .username-input {
+  border-color: #ccc;
+}
+
+.form-group.valid .username-input {
+  border-color: #00c853;
+}
+
+.form-group.invalid .username-input {
+  border-color: #e53935;
 }
 
 /* Status Messages */
 .success-text {
-  font-size: 0.875rem;
-  color: #28a745;
+  font-size: 0.9rem;
+  color: #00c853;
   margin-top: 0.5rem;
+  font-weight: 500;
 }
 
 .error-text {
   font-size: 0.875rem;
-  color: #dc3545;
+  color: #e53935;
   margin-top: 0.5rem;
 }
 
 .info-text {
-  font-size: 0.875rem;
-  color: #666;
+  font-size: 0.9rem;
+  color: black;
   margin-top: 0.5rem;
 }
 
-/* Conditions */
+/* Conditions Section */
 .conditions {
-  font-size: 0.875rem;
-  color: #666;
-  margin-top: 1rem;
-  margin-bottom: 60px;
+  font-size: 0.9rem;
+  color: black;
+  margin-top: 0.75rem;
+  margin-bottom: 40px;
   line-height: 1.6;
+  width: 500px;
 }
 
 .conditions ul {
@@ -127,11 +133,12 @@
   margin-bottom: 0.5rem;
 }
 
-/* Button Group */
+/* Buttons */
 .button-group {
   display: flex;
   gap: 1rem;
-  margin-top: 96px;
+  margin-top: 40px;
+  width: 100%;
 }
 
 .btn-back {
@@ -171,36 +178,42 @@
   transform: translateY(-1px);
 }
 
+
+.btn-next:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Oracle JET Overrides */
 .oj-hybrid-padding {
   padding: 0 !important;
 }
 
 /* ========================================
-   RESPONSIVE STYLES FOR VERIFICATION PAGE
+   RESPONSIVE STYLES
 ========================================= */
 
-/* 1200px - Large Screens */
+/* Large Screens */
 @media (max-width: 1200px) {
   .verification-container {
     gap: 1.5rem;
   }
 
-  .form-label,
   .sub-header {
-    margin-top: 60px;
-  }
-
-  .button-group {
-    margin-top: 80px;
+    margin-top: 15px;
   }
 
   .conditions {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
+  }
+
+  .button-group {
+    margin-top: 30px;
   }
 }
 
-/* 1024px - Tablets (Landscape) - START CENTERING */
+/* Tablets Landscape */
 @media (max-width: 1024px) {
   .verification-container {
     flex-direction: column;
@@ -212,8 +225,6 @@
     max-width: 700px !important;
     width: 100% !important;
     margin-right: 0 !important;
-    display: flex;
-    flex-direction: column;
     align-items: center;
   }
 
@@ -226,116 +237,72 @@
     width: 100%;
     max-width: 600px;
     margin: 0 auto !important;
-    display: flex;
-    justify-content: center;
-    order: 2;
   }
 
-  .form-section {
-    width: 100%;
-    max-width: 600px;
-  }
-
-  .sub-header,
-  .form-label {
-    margin-top: 50px;
-  }
-
-  .button-group {
-    margin-top: 60px;
+  .sub-header {
+    margin-top: 25px;
   }
 
   .conditions {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+  }
+
+  .button-group {
+    margin-top: 40px;
   }
 }
 
-/* 900px - Medium Tablets */
+/* Medium Tablets */
 @media (max-width: 900px) {
   .left-section {
     max-width: 600px !important;
   }
 
-  .form-section {
-    max-width: 100%;
+  .form-group {
+    margin-bottom: 1.25rem !important;
   }
 }
 
-/* 768px - Tablets & Mobile - FULL CENTER */
+/* Tablets & Mobile */
 @media (max-width: 768px) {
   .verification-container {
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem !important;
+    gap: 1.5rem;
     padding: 1rem;
     margin: 0 !important;
-    padding-top: 0 !important;
   }
 
   .left-section {
     max-width: 550px !important;
     width: 100% !important;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    order: 1;
-  }
-
-  .header {
-    width: 100%;
-    text-align: center;
   }
 
   .header h1 {
     font-size: 1.5rem !important;
     margin-bottom: 0.5rem !important;
-    margin-top: 0 !important;
   }
 
   .sub-header {
     font-size: 18px !important;
-    margin-top: 40px !important;
-  }
-
-  .form-section {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .form-label {
-    margin-top: 40px !important;
-    font-size: 16px !important;
+    margin-top: 25px !important;
   }
 
   .username-input {
-    font-size: 16px !important;
-    padding: 0.875rem 1rem !important;
     height: 50px !important;
-  }
-
-  .form-group {
-    margin-bottom: 1.25rem !important;
-  }
-
-  .success-text,
-  .error-text,
-  .info-text {
-    font-size: 14px !important;
+    font-size: 16px !important;
+    padding: 0.85rem 1rem !important;
   }
 
   .conditions {
     font-size: 14px !important;
-    width: 100%;
-    margin-bottom: 40px !important;
-  }
-
-  .conditions ul {
-    margin-left: 18px;
+    margin-bottom: 35px !important;
   }
 
   .button-group {
     width: 100%;
-    margin-top: 50px !important;
+    margin-top: 35px !important;
   }
 
   .btn-back,
@@ -346,11 +313,10 @@
   .right-section {
     max-width: 500px;
     width: 100%;
-    order: 2;
   }
 }
 
-/* 600px - Mobile Landscape */
+/* Mobile Landscape */
 @media (max-width: 600px) {
   .verification-container {
     padding: 0.875rem !important;
@@ -359,85 +325,45 @@
   .left-section {
     max-width: 100% !important;
   }
-
-  .form-section {
-    max-width: 100%;
-  }
 }
 
-/* 480px - Mobile Portrait - SINGLE COLUMN CENTERED */
+/* Mobile Portrait */
 @media (max-width: 480px) {
   .verification-container {
     flex-direction: column;
     align-items: center;
     gap: 1rem !important;
-    margin: 0 !important;
     padding: 0.5rem !important;
-    padding-top: 0 !important;
-  }
-
-  .left-section {
-    max-width: 100% !important;
-    width: 100% !important;
-    order: 1;
-  }
-
-  .header {
-    text-align: center;
   }
 
   .header h1 {
     font-size: 1.3rem !important;
-    margin-bottom: 0.4rem !important;
-    margin-top: 0 !important;
   }
 
   .sub-header {
     font-size: 16px !important;
-    margin-top: 30px !important;
-    margin-bottom: 0.35rem !important;
-  }
-
-  .form-section {
-    width: 100%;
+    margin-top: 20px !important;
   }
 
   .form-label {
-    margin-top: 30px !important;
-    margin-bottom: 0.35rem !important;
+    margin-top: 20px !important;
     font-size: 15px !important;
   }
 
   .username-input {
     height: 46px !important;
-    font-size: 16px !important;
-    padding: 0.75rem !important;
-  }
-
-  .form-group {
-    margin-bottom: 1rem !important;
-  }
-
-  .success-text,
-  .error-text,
-  .info-text {
-    font-size: 14px !important;
   }
 
   .conditions {
     font-size: 13px !important;
-    margin-bottom: 30px !important;
-  }
-
-  .conditions ul {
-    margin-left: 15px;
+    margin-bottom: 25px !important;
   }
 
   .button-group {
     flex-direction: column !important;
     gap: 0.75rem !important;
-    margin-top: 40px !important;
     width: 100%;
+    margin-top: 30px !important;
   }
 
   .btn-back,
@@ -447,31 +373,17 @@
     height: 46px !important;
     font-size: 15px !important;
   }
-
-  .right-section {
-    width: 100%;
-    max-width: 100%;
-    order: 2;
-  }
 }
 
-/* 360px - Small Mobile - ULTRA COMPACT CENTERED */
+/* Small Mobile */
 @media (max-width: 360px) {
-  .verification-container {
-    padding: 0.4rem !important;
-  }
-
   .header h1 {
     font-size: 1.1rem !important;
   }
 
   .sub-header {
     font-size: 15px !important;
-    margin-top: 25px !important;
-  }
-
-  .form-label {
-    margin-top: 25px !important;
+    margin-top: 20px !important;
   }
 
   .username-input {
@@ -489,44 +401,20 @@
   }
 
   .button-group {
-    margin-top: 35px !important;
+    margin-top: 25px !important;
   }
 }
 
-/* Landscape Mode Override - KEEP CENTERED WITH HELP CARD BELOW */
+/* Landscape Mode Override */
 @media (max-width: 768px) and (orientation: landscape) {
-  .verification-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem !important;
-  }
-
-  .left-section {
-    max-width: 500px !important;
-    order: 1;
-  }
-
-  .right-section {
-    max-width: 300px;
-    order: 2;
-  }
-
   .button-group {
     flex-direction: row !important;
-    margin-top: 40px !important;
+    margin-top: 30px !important;
   }
 
   .btn-back,
   .btn-next {
     flex: 1;
-  }
-}
-
-/* Portrait Landscape Override for very small screens */
-@media (max-width: 480px) and (orientation: landscape) {
-  .verification-container {
-    flex-direction: column;
-    align-items: center;
   }
 }
 
