@@ -117,64 +117,64 @@ class AccountDetailsPage {
   };
 
   public goNext = async (): Promise<void> => {
-  this.hasError(false);
-  this.errorMessage("");
+    this.hasError(false);
+    this.errorMessage("");
 
-  if (!this.canProceed()) {
-    const msg =
-      this.activeTab() === "account"
-        ? "Please enter a valid 14-digit account number"
-        : "Please enter a valid IBAN";
-    this.showError(msg);
-    return;
-  }
-
-  this.isLoading(true);
-
-  try {
-    const accountId = localStorage.getItem("accountId");
-    if (!accountId) {
-      this.showError("Account ID not found. Please restart the process.");
+    if (!this.canProceed()) {
+      const msg =
+        this.activeTab() === "account"
+          ? "Please enter a valid 14-digit account number"
+          : "Please enter a valid IBAN";
+      this.showError(msg);
       return;
     }
 
-    const requestBody =
-      this.activeTab() === "account"
-        ? { accountNumber: this.accountNumber().replace(/\s+/g, "") }
-        : { iban: this.ibanNumber().replace(/\s+/g, "").toUpperCase() };
+    this.isLoading(true);
 
-    const response = await fetch(
-      `http://localhost:8080/api/accounts/${accountId}/details`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody),
+    try {
+      const accountId = localStorage.getItem("accountId");
+      if (!accountId) {
+        this.showError("Account ID not found. Please restart the process.");
+        return;
       }
-    );
 
-    if (!response.ok) {
-      // Backend error
-      let errMsg = await response.text();
-      try {
-        const data = JSON.parse(errMsg);
-        errMsg = data.message || errMsg;
-      } catch {}
-      throw new Error(errMsg || "Validation failed");
+      const requestBody =
+        this.activeTab() === "account"
+          ? { accountNumber: this.accountNumber().replace(/\s+/g, "") }
+          : { iban: this.ibanNumber().replace(/\s+/g, "").toUpperCase() };
+
+      const response = await fetch(
+        `http://localhost:8080/api/accounts/${accountId}/details`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        // Backend error
+        let errMsg = await response.text();
+        try {
+          const data = JSON.parse(errMsg);
+          errMsg = data.message || errMsg;
+        } catch { }
+        throw new Error(errMsg || "Validation failed");
+      }
+
+      // No errors — route to verification page
+      if (appViewModel?.router) {
+        appViewModel.goToNextStep("accountDetailsPage", "verificationPage");
+      }
+
+    } catch (error: unknown) {
+      const errMsg =
+        error instanceof Error ? error.message : "Unexpected error occurred";
+      this.showError(errMsg);
+    } finally {
+      this.isLoading(false);
     }
-
-    // No errors — route to verification page
-    if (appViewModel?.router) {
-      appViewModel.goToNextStep("accountDetailsPage", "verificationPage");
-    }
-
-  } catch (error: unknown) {
-    const errMsg =
-      error instanceof Error ? error.message : "Unexpected error occurred";
-    this.showError(errMsg);
-  } finally {
-    this.isLoading(false);
-  }
-};
+  };
 
 
   /**

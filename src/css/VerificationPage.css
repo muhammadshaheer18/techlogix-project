@@ -1,18 +1,17 @@
 /* ========================================
-   VERIFICATION PAGE - FULL STYLES
+   VERIFICATION PAGE (USERNAME) - FULL RESPONSIVE STYLES
 ========================================= */
 
 /* Main Container */
 .verification-container {
   display: flex;
-  flex-wrap: wrap;
   width: 100%;
   gap: 2rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box;
   overflow: hidden;
-  margin: 0 auto;
-  padding: 0.5rem;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 /* Left Section */
@@ -20,19 +19,15 @@
   flex: 1;
   max-width: 800px;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  box-sizing: border-box;
 }
 
 /* Right Section */
 .right-section {
   flex-shrink: 0;
   min-width: 0;
-  margin-left: auto;
   margin-right: 30px;
-  display: flex;
-  justify-content: center;
+  box-sizing: border-box;
 }
 
 /* Header */
@@ -44,6 +39,12 @@
   margin: 0 0 10px 0;
 }
 
+.header h1 span {
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: #666;
+}
+
 /* Sub Header */
 .sub-header {
   font-size: 1.125rem;
@@ -51,7 +52,7 @@
   font-weight: 600;
   margin-top: 20px;
   margin-bottom: 0.5rem;
-  align-self: flex-start;
+  display: block;
 }
 
 /* Form Section */
@@ -64,7 +65,8 @@
 
 /* Input */
 .username-input {
-  width: 65%;
+  width: 100%;
+  max-width: 500px;
   height: 55px;
   padding: 0.75rem 1rem;
   border: 1.5px solid #e0e0e0;
@@ -110,35 +112,40 @@
 
 .info-text {
   font-size: 0.9rem;
-  color: black;
+  color: #666;
   margin-top: 0.5rem;
 }
 
 /* Conditions Section */
 .conditions {
   font-size: 0.9rem;
-  color: black;
-  margin-top: 0.75rem;
+  color: #333;
+  margin-top: 1rem;
   margin-bottom: 40px;
   line-height: 1.6;
-  width: 500px;
+  max-width: 600px;
+}
+
+.conditions p {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
 }
 
 .conditions ul {
   margin-left: 20px;
   padding-left: 0;
+  margin-top: 0.5rem;
 }
 
 .conditions li {
   margin-bottom: 0.5rem;
 }
 
-/* Buttons */
+/* Button Group */
 .button-group {
   display: flex;
   gap: 1rem;
   margin-top: 40px;
-  width: 100%;
 }
 
 .btn-back {
@@ -178,9 +185,8 @@
   transform: translateY(-1px);
 }
 
-
 .btn-next:disabled {
-  background: #ccc;
+  background: #7a147a;
   cursor: not-allowed;
   transform: none;
 }
@@ -191,29 +197,25 @@
 }
 
 /* ========================================
-   RESPONSIVE STYLES
+   RESPONSIVE STYLES FOR VERIFICATION PAGE
 ========================================= */
 
-/* Large Screens */
+/* 1200px - Large Screens */
 @media (max-width: 1200px) {
   .verification-container {
     gap: 1.5rem;
   }
 
-  .sub-header {
-    margin-top: 15px;
-  }
-
   .conditions {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
   }
 
   .button-group {
-    margin-top: 30px;
+    margin-top: 35px;
   }
 }
 
-/* Tablets Landscape */
+/* 1024px - Tablets (Landscape) - START CENTERING */
 @media (max-width: 1024px) {
   .verification-container {
     flex-direction: column;
@@ -225,7 +227,10 @@
     max-width: 700px !important;
     width: 100% !important;
     margin-right: 0 !important;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    order: 1;
   }
 
   .header {
@@ -233,76 +238,156 @@
     text-align: center;
   }
 
+  .sub-header {
+    width: 100%;
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .username-input {
+    max-width: 600px;
+  }
+
+  .success-text,
+  .error-text,
+  .info-text {
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .conditions {
+    text-align: left;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .conditions p {
+    text-align: center;
+  }
+
+  .button-group {
+    width: 100%;
+    max-width: 600px;
+    justify-content: center;
+  }
+
   .right-section {
     width: 100%;
     max-width: 600px;
     margin: 0 auto !important;
-  }
-
-  .sub-header {
-    margin-top: 25px;
-  }
-
-  .conditions {
-    margin-bottom: 30px;
-  }
-
-  .button-group {
-    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    order: 2;
   }
 }
 
-/* Medium Tablets */
+/* 900px - Medium Tablets */
 @media (max-width: 900px) {
   .left-section {
     max-width: 600px !important;
   }
 
-  .form-group {
-    margin-bottom: 1.25rem !important;
+  .username-input {
+    max-width: 100%;
+  }
+
+  .conditions {
+    max-width: 100%;
+  }
+
+  .button-group {
+    max-width: 100%;
   }
 }
 
-/* Tablets & Mobile */
+/* 768px - Tablets & Mobile - FULL CENTER */
 @media (max-width: 768px) {
   .verification-container {
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.5rem !important;
     padding: 1rem;
     margin: 0 !important;
+    padding-top: 0 !important;
   }
 
   .left-section {
     max-width: 550px !important;
     width: 100% !important;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    order: 1;
+  }
+
+  .header {
+    width: 100%;
+    text-align: center;
   }
 
   .header h1 {
     font-size: 1.5rem !important;
     margin-bottom: 0.5rem !important;
+    margin-top: 0 !important;
+  }
+
+  .header h1 span {
+    font-size: 1.1rem !important;
   }
 
   .sub-header {
     font-size: 18px !important;
-    margin-top: 25px !important;
+    margin-top: 20px !important;
+    text-align: center;
+    width: 100%;
+  }
+
+  .form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .username-input {
+    width: 100%;
+    max-width: 100%;
     height: 50px !important;
     font-size: 16px !important;
-    padding: 0.85rem 1rem !important;
+    padding: 0.875rem 1rem !important;
+  }
+
+  .success-text,
+  .error-text,
+  .info-text {
+    text-align: center;
+    width: 100%;
+    font-size: 14px !important;
   }
 
   .conditions {
     font-size: 14px !important;
-    margin-bottom: 35px !important;
+    margin-bottom: 30px !important;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .conditions p {
+    text-align: center;
   }
 
   .button-group {
     width: 100%;
-    margin-top: 35px !important;
+    margin-top: 30px !important;
   }
 
   .btn-back,
@@ -313,10 +398,11 @@
   .right-section {
     max-width: 500px;
     width: 100%;
+    order: 2;
   }
 }
 
-/* Mobile Landscape */
+/* 600px - Mobile Landscape */
 @media (max-width: 600px) {
   .verification-container {
     padding: 0.875rem !important;
@@ -327,43 +413,91 @@
   }
 }
 
-/* Mobile Portrait */
+/* 480px - Mobile Portrait - SINGLE COLUMN CENTERED */
 @media (max-width: 480px) {
   .verification-container {
     flex-direction: column;
     align-items: center;
     gap: 1rem !important;
+    margin: 0 !important;
     padding: 0.5rem !important;
+    padding-top: 0 !important;
+  }
+
+  .left-section {
+    max-width: 100% !important;
+    width: 100% !important;
+    order: 1;
+  }
+
+  .header {
+    text-align: center;
+    width: 100%;
   }
 
   .header h1 {
     font-size: 1.3rem !important;
+    margin-bottom: 0.4rem !important;
+    margin-top: 0 !important;
+  }
+
+  .header h1 span {
+    font-size: 1rem !important;
   }
 
   .sub-header {
     font-size: 16px !important;
-    margin-top: 20px !important;
+    margin-top: 15px !important;
+    text-align: center;
   }
 
-  .form-label {
-    margin-top: 20px !important;
-    font-size: 15px !important;
+  .form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem !important;
   }
 
   .username-input {
+    width: 100% !important;
+    max-width: 100% !important;
     height: 46px !important;
+    font-size: 16px !important;
+    padding: 0.75rem !important;
+  }
+
+  .success-text,
+  .error-text,
+  .info-text {
+    text-align: center;
+    width: 100%;
+    font-size: 13px !important;
   }
 
   .conditions {
     font-size: 13px !important;
     margin-bottom: 25px !important;
+    width: 100%;
+    text-align: left;
+    margin-top: 0.75rem !important;
+  }
+
+  .conditions p {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .conditions ul {
+    text-align: left;
+    margin-left: 15px;
   }
 
   .button-group {
     flex-direction: column !important;
     gap: 0.75rem !important;
-    width: 100%;
-    margin-top: 30px !important;
+    width: 100% !important;
+    margin-top: 25px !important;
   }
 
   .btn-back,
@@ -373,25 +507,47 @@
     height: 46px !important;
     font-size: 15px !important;
   }
+
+  .right-section {
+    width: 100%;
+    max-width: 100%;
+    order: 2;
+  }
 }
 
-/* Small Mobile */
+/* 360px - Small Mobile - ULTRA COMPACT CENTERED */
 @media (max-width: 360px) {
+  .verification-container {
+    padding: 0.4rem !important;
+  }
+
   .header h1 {
     font-size: 1.1rem !important;
   }
 
+  .header h1 span {
+    font-size: 0.9rem !important;
+  }
+
   .sub-header {
     font-size: 15px !important;
-    margin-top: 20px !important;
+    margin-top: 12px !important;
   }
 
   .username-input {
     height: 44px !important;
+    font-size: 15px !important;
+  }
+
+  .success-text,
+  .error-text,
+  .info-text {
+    font-size: 12px !important;
   }
 
   .conditions {
     font-size: 12px !important;
+    margin-bottom: 20px !important;
   }
 
   .btn-back,
@@ -401,20 +557,48 @@
   }
 
   .button-group {
-    margin-top: 25px !important;
+    margin-top: 20px !important;
   }
 }
 
-/* Landscape Mode Override */
+/* Landscape Mode Override - KEEP SIDE BY SIDE */
 @media (max-width: 768px) and (orientation: landscape) {
+  .verification-container {
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem !important;
+  }
+
+  .left-section {
+    max-width: 500px !important;
+    order: 1;
+  }
+
+  .right-section {
+    max-width: 300px;
+    order: 2;
+  }
+
   .button-group {
     flex-direction: row !important;
-    margin-top: 30px !important;
+    margin-top: 25px !important;
   }
 
   .btn-back,
   .btn-next {
     flex: 1;
+  }
+}
+
+/* Portrait Landscape Override for very small screens */
+@media (max-width: 480px) and (orientation: landscape) {
+  .verification-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .button-group {
+    flex-direction: row !important;
   }
 }
 
