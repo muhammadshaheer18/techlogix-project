@@ -19,24 +19,19 @@ class AccountTypePage {
     this.cnicNumber.subscribe((val) => this.formatCNIC(val));
   }
 
-  // ----- UI actions -----
   selectAccountType = (type: string) => {
     this.selectedAccountType(type);
   };
 
   goBack = () => {
-    if (appViewModel?.router) {
-      appViewModel.router.go({ path: "accountTypePage" });
-    } else {
-      window.history.back();
-    }
+    if (!this.isLoading()) window.location.href = "WelcomePage.html";
   };
 
   goNext = async () => {
     if (!this.validateCNIC()) return;
 
     this.isLoading(true);
-    this.cnicError(""); // clear previous error
+    this.cnicError("");
 
     const requestBody = {
       cnicNo: this.cnicNumber().replace(/\D/g, ""),
@@ -50,70 +45,54 @@ class AccountTypePage {
         body: JSON.stringify(requestBody),
       });
 
-      // If backend returned an error (like CNIC not found)
+      const data = await response.json().catch(() => null);
+
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Failed to initialize account.");
+        const message = data?.message || "Account initialization failed.";
+        if (message.includes("already exists")) {
+          this.cnicError("A digital account with this CNIC already exists.");
+        } else if (message.includes("No registered user")) {
+          this.cnicError("No registered user found with this CNIC.");
+        } else if (message.includes("account status")) {
+          this.cnicError("This CNIC already has an active account.");
+        } else {
+          this.cnicError(message);
+        }
+        return;
       }
 
-      const data = await response.json();
-      console.log("✅ API Response:", data);
-
-      const accountId = data.accountId || data.id;
-      // if (!accountId) {
-      //   throw new Error("Account ID missing from response.");
-      // }
-
-      // Save ID for next screen
-      localStorage.setItem("accountId", String(accountId));
-      if (appViewModel) {
-        appViewModel.currentAccountId = accountId;
+      const accountId = data?.accountId || data?.id;
+      if (accountId) {
+        localStorage.setItem("accountId", String(accountId));
+        if (appViewModel) appViewModel.currentAccountId = accountId;
       }
 
-      // Navigate only on successful API response
       if (appViewModel?.router) {
         appViewModel.goToNextStep("accountTypePage", "accountDetailsPage");
       } else {
-        alert(`✅ Account initialized!\nAccount ID: ${accountId}`);
+        alert(`Account initialized successfully.\nAccount ID: ${accountId || "N/A"}`);
+        window.location.href = "AccountDetailsPage.html";
       }
-    } catch (err: unknown) {
-      console.error("❌ Error calling /init API:", err);
-
-      if (err instanceof Error) {
-        this.cnicError(err.message);
-        // Optionally show alert for major errors
-        // alert(err.message);
-      } else {
-        this.cnicError("Unexpected error occurred.");
-      }
+    } catch (err) {
+      console.error("API Error:", err);
+      this.cnicError("Unexpected error occurred. Please try again.");
     } finally {
       this.isLoading(false);
     }
   };
 
-  // ----- Formatting & Validation -----
   private formatCNIC = (value: string) => {
     if (!value) return;
-
     let digits = value.replace(/\D/g, "");
     if (digits.length > 13) digits = digits.slice(0, 13);
 
     let formatted = digits;
-    if (digits.length > 5) {
-      formatted = digits.slice(0, 5) + "-" + digits.slice(5);
-    }
-    if (digits.length > 12) {
-      formatted =
-        digits.slice(0, 5) + "-" + digits.slice(5, 12) + "-" + digits.slice(12);
-    }
+    if (digits.length > 5) formatted = digits.slice(0, 5) + "-" + digits.slice(5);
+    if (digits.length > 12)
+      formatted = digits.slice(0, 5) + "-" + digits.slice(5, 12) + "-" + digits.slice(12);
 
-    if (formatted !== this.cnicNumber()) {
-      this.cnicNumber(formatted);
-    }
-
-    if (this.cnicError()) {
-      this.cnicError("");
-    }
+    if (formatted !== this.cnicNumber()) this.cnicNumber(formatted);
+    if (this.cnicError()) this.cnicError("");
   };
 
   private isCnicStructurallyValid = (): boolean => {
@@ -126,22 +105,18 @@ class AccountTypePage {
 
   validateCNIC = (): boolean => {
     const clean = this.cnicNumber().replace(/\D/g, "");
-
     if (!clean) {
-      this.cnicError("CNIC number is required");
+      this.cnicError("CNIC number is required.");
       return false;
     }
-
     if (!this.isCnicStructurallyValid()) {
-      this.cnicError("Invalid CNIC. Use format 12345-1234567-1 (13 digits).");
+      this.cnicError("Invalid CNIC. Use format 12345-1234567-1.");
       return false;
     }
-
     this.cnicError("");
     return true;
   };
 
-  // Computed observable for form validation
   isFormValid = ko.pureComputed(() => {
     const clean = this.cnicNumber().replace(/\D/g, "");
     return clean.length === 13 && !this.cnicError() && !this.isLoading();

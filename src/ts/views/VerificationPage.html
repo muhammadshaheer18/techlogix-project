@@ -15,32 +15,32 @@
       <input
         type="text"
         class="username-input"
-        placeholder="032211234567"
-        data-bind="value: username, valueUpdate: 'afterkeydown'"
+        placeholder="03353186729"
+        data-bind="value: username, valueUpdate: 'afterkeydown', event: { input: onUsernameChange }"
       />
-      <!-- Dynamic Messages -->
-      <div
-        class="success-text"
-        data-bind="visible: usernameStatus() === 'valid'"
-      >
-        Username Available!
-      </div>
-      <div
-        class="error-text"
-        data-bind="visible: usernameStatus() === 'invalid'"
-      >
-        Username not available!
-      </div>
 
-      <p class="info-text" data-bind="visible: usernameStatus() === 'idle'">
+      <!-- Dynamic messages -->
+      <div class="success-text" data-bind="visible: usernameStatus() === 'valid'">
+        ✅ Username available
+      </div>
+      <div class="error-text" data-bind="visible: usernameStatus() === 'exists'">
+        ❌ Username already exists
+      </div>
+      <div class="error-text" data-bind="visible: usernameStatus() === 'invalid'">
+        ⚠️ Username must be between 8 and 16 characters
+      </div>
+      <div class="info-text" data-bind="visible: usernameStatus() === 'idle'">
         Your default username is your mobile number
-      </p>
+      </div>
+      <div class="loading-text" data-bind="visible: usernameStatus() === 'checking'">
+        Checking availability...
+      </div>
     </div>
 
     <div class="conditions">
       <p>If you wish to change it please refer the following conditions:</p>
       <ul>
-        <li>Minimum username length should be 8 charachters with a maximum length of 16 charachters</li>
+        <li>Minimum username length should be 8 characters with a maximum of 16.</li>
         <li>Special characters are optional.</li>
       </ul>
     </div>
@@ -49,7 +49,7 @@
       <button class="btn-back" data-bind="click: goBack">Back</button>
       <button
         class="btn-next"
-        data-bind="click: goNext, enable: usernameStatus() === 'valid'"
+        data-bind="click: goNext, enable: usernameStatus() === 'valid' || usernameStatus() === 'idle'"
       >
         Next
       </button>
