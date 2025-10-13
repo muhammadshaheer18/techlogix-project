@@ -6,6 +6,8 @@ class Terms {
 
   constructor() {
     this.accepted = ko.observable(true);
+    const cnicNo = localStorage.getItem("cnicNo");
+
   }
 
   handleBack = (): void => {

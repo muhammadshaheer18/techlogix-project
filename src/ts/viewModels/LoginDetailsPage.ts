@@ -62,11 +62,11 @@ class LoginDetailsPage {
   getBarColor = (index: number): string => {
     const strength = this.passwordStrength();
     if (strength === "Strong") {
-      return index <= 4 ? "#00c855" : "#e0e0e0"; // all green
+      return index <= 4 ? "#00c855" : "#e0e0e0";
     } else if (strength === "Medium") {
-      return index <= 2 ? "#ffb400" : "#e0e0e0"; // two yellow
+      return index <= 2 ? "#ffb400" : "#e0e0e0";
     } else if (strength === "Weak") {
-      return index === 1 ? "#e53e3e" : "#e0e0e0"; // one red
+      return index === 1 ? "#e53e3e" : "#e0e0e0";
     } else {
       return "#e0e0e0";
     }
@@ -115,7 +115,9 @@ class LoginDetailsPage {
       this.confirmPasswordStatusClass("error");
       this.isConfirmPasswordValid(false);
     } else {
-      this.confirmPasswordStatus("Please ensure password meets all requirements");
+      this.confirmPasswordStatus(
+        "Please ensure password meets all requirements"
+      );
       this.confirmPasswordStatusClass("error");
       this.isConfirmPasswordValid(false);
     }
@@ -172,27 +174,28 @@ class LoginDetailsPage {
     }
   };
 
-  /** ✅ Updated goNext — username can be null now */
+  /** ✅ Updated goNext — uses CNIC instead of accountId */
   goNext = async (): Promise<void> => {
     if (!this.isNextButtonEnabled()) return;
 
     this.apiLoading(true);
     this.apiError(null);
 
-    const accountId = localStorage.getItem("accountId");
-    const username = localStorage.getItem("username"); // Can be null
+    const cnicNo = localStorage.getItem("cnicNo");
+    const username = localStorage.getItem("username"); // optional
     const password = this.password();
 
-    // ✅ Only block if accountId is missing
-    if (!accountId) {
-      this.apiError("Missing account information. Please go back and verify.");
+    if (!cnicNo) {
+      this.apiError("Missing CNIC. Please restart the process.");
       this.apiLoading(false);
       return;
     }
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/accounts/${accountId}/credentials`,
+        `http://localhost:8080/api/accounts/credentials/${encodeURIComponent(
+          cnicNo
+        )}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

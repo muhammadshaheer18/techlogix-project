@@ -1,5 +1,4 @@
 import * as ko from "knockout";
-import * as AccUtils from "../accUtils";
 
 class SuccessOnboardPage {
   accountTitle: ko.Observable<string>;
@@ -19,27 +18,25 @@ class SuccessOnboardPage {
   connected(): void {
     document.title = "MBL | Onboarding Success";
 
-    // Fetch accountId from localStorage (set during previous flow)
-    const accountId = localStorage.getItem("accountId");
+    // ✅ Fetch CNIC from localStorage (set during previous flow)
+    const cnicNo = localStorage.getItem("cnicNo");
 
-    if (!accountId) {
+    if (!cnicNo) {
       this.isLoading(false);
-      this.errorMessage("Account ID not found in localStorage.");
+      this.errorMessage("CNIC not found in localStorage. Please restart the process.");
       return;
     }
 
-    // ✅ Fetch data from backend
-    this.fetchAccountSummary(accountId);
+    // ✅ Fetch data from backend using CNIC
+    this.fetchAccountSummary(cnicNo);
   }
 
-  fetchAccountSummary(accountId: string): void {
-    const baseUrl = "http://localhost:8080/api/accounts"; // Update to match your backend base path
+  fetchAccountSummary(cnicNo: string): void {
+    const baseUrl = "http://localhost:8080/api/accounts"; // backend base path
 
-    fetch(`${baseUrl}/${accountId}/summary`, {
+    fetch(`${baseUrl}/summary/${encodeURIComponent(cnicNo)}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     })
       .then(async (response) => {
         if (!response.ok) {
@@ -49,21 +46,24 @@ class SuccessOnboardPage {
         return response.json();
       })
       .then((data) => {
-        // API returns AccountSummaryResponse(accountTitle, username, accountNumber)
-        this.accountTitle(data.accountTitle);
-        this.username(data.username);
-        this.accountNumber(data.accountNumber);
+        // ✅ unwrap ApiResponse
+        const account = data.data;
+        if (!account) throw new Error("No account data returned from API.");
+
+        this.accountTitle(account.accountTitle);
+        this.username(account.username);
+        this.accountNumber(account.accountNumber);
       })
       .catch((err) => {
         console.error("Error fetching account summary:", err);
         this.errorMessage("Failed to load account details. Please try again later.");
       })
-      .finally(() => {
-        this.isLoading(false);
-      });
+      .finally(() => this.isLoading(false));
   }
 
+
   handleContinue = (): void => {
+    // Optionally navigate to login or dashboard
   };
 }
 

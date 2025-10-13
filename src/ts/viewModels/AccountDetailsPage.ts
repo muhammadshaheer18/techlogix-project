@@ -23,20 +23,26 @@ class AccountDetailsPage {
     this.hasError = ko.observable(false);
     this.errorMessage = ko.observable("");
 
-    this.handlePageReload(); // ✅ Clear all data only when page is reloaded
+    this.handlePageReload();
     this.restoreFromSharedSession();
 
-    // Computed observables
+    // ✅ Account number validation
     this.isAccountNumberValid = ko.computed(() => {
       const clean = this.accountNumber().replace(/\s+/g, "");
       return /^\d{14}$/.test(clean);
     });
 
+    // ✅ IBAN validation
     this.isIbanValid = ko.computed(() => {
       const iban = this.ibanNumber().replace(/\s+/g, "").toUpperCase();
-      return iban.length >= 15 && iban.length <= 34 && /^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(iban);
+      return (
+        iban.length >= 15 &&
+        iban.length <= 34 &&
+        /^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(iban)
+      );
     });
 
+    // ✅ Allow next button only when valid and not loading
     this.canProceed = ko.computed(() => {
       const valid =
         this.activeTab() === "account"
@@ -45,7 +51,7 @@ class AccountDetailsPage {
       return valid && !this.isLoading();
     });
 
-    // Format account number (XXXXX XXXXXXXXX)
+    // ✅ Auto-format account number (XXXXX XXXXXXXXX)
     this.accountNumber.subscribe((val) => {
       if (!val) return;
       let clean = val.replace(/\D/g, "").substring(0, 14);
@@ -54,7 +60,7 @@ class AccountDetailsPage {
       this.saveToSharedSession();
     });
 
-    // Format IBAN with spaces every 4 characters
+    // ✅ Auto-format IBAN (spaces every 4 chars)
     this.ibanNumber.subscribe((val) => {
       if (!val) return;
       let clean = val.replace(/[^A-Z0-9]/gi, "").toUpperCase().substring(0, 34);
@@ -63,20 +69,20 @@ class AccountDetailsPage {
       this.saveToSharedSession();
     });
 
-    // ✅ Ensure session clears when the user reloads or closes the browser
+    // ✅ Clear session only on reload, not between steps
     window.addEventListener("beforeunload", () => {
       sessionStorage.clear();
     });
   }
 
   // -------------------------------
-  // ✅ Clears all session data only on actual reload
+  // Handle first-time reload
   // -------------------------------
   private handlePageReload() {
     try {
       const reloaded = sessionStorage.getItem("pageReloaded");
       if (!reloaded) {
-        sessionStorage.clear(); // clear on first page load
+        sessionStorage.clear();
         sessionStorage.setItem("pageReloaded", "true");
       }
     } catch (e) {
@@ -85,7 +91,7 @@ class AccountDetailsPage {
   }
 
   // -------------------------------
-  // Shared session helpers
+  // Save + Restore session state
   // -------------------------------
   private saveToSharedSession() {
     try {
@@ -124,20 +130,24 @@ class AccountDetailsPage {
   }
 
   // -------------------------------
-  // Navigation
+  // Navigation between tabs/pages
   // -------------------------------
   public switchTab = (tabName: string): void => {
     this.activeTab(tabName);
     this.hasError(false);
     this.errorMessage("");
-    this.saveToSharedSession(); // ✅ persist active tab
+    this.saveToSharedSession();
   };
 
   public goBack = (): void => {
-    this.saveToSharedSession(); // ✅ preserve data before going back
-    if (appViewModel) appViewModel.goToNextStep("accountDetailsPage", "accountTypePage");
+    this.saveToSharedSession();
+    if (appViewModel)
+      appViewModel.goToNextStep("accountDetailsPage", "accountTypePage");
   };
 
+  // -------------------------------
+  // ✅ API call for account validation
+  // -------------------------------
   public goNext = async (): Promise<void> => {
     this.hasError(false);
     this.errorMessage("");
@@ -154,19 +164,29 @@ class AccountDetailsPage {
     this.isLoading(true);
 
     try {
-      const accountId = localStorage.getItem("accountId");
-      if (!accountId) {
-        this.showError("Account ID not found. Please restart the process.");
+      // ✅ Retrieve CNIC stored from first step
+      const cnicNo =
+        sessionStorage.getItem("cnicNo") || localStorage.getItem("cnicNo");
+      if (!cnicNo) {
+        this.showError("CNIC not found. Please restart the process.");
         return;
       }
 
+      // ✅ Prepare request body (includes CNIC)
       const requestBody =
         this.activeTab() === "account"
-          ? { accountNumber: this.accountNumber().replace(/\s+/g, "") }
-          : { iban: this.ibanNumber().replace(/\s+/g, "").toUpperCase() };
+          ? {
+              cnicNo,
+              accountNumber: this.accountNumber().replace(/\s+/g, ""),
+            }
+          : {
+              cnicNo,
+              iban: this.ibanNumber().replace(/\s+/g, "").toUpperCase(),
+            };
 
+      // ✅ Updated backend endpoint
       const response = await fetch(
-        `http://localhost:8080/api/accounts/${accountId}/details`,
+        `http://localhost:8080/api/accounts/validate-account/${cnicNo}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -180,17 +200,19 @@ class AccountDetailsPage {
           const data = JSON.parse(errMsg);
           errMsg = data.message || errMsg;
         } catch {}
-        throw new Error(errMsg || "Validation failed");
+        throw new Error(errMsg || "Account validation failed.");
       }
+      localStorage.setItem("cnicNo", cnicNo);
+      // ✅ Save before navigating
+      this.saveToSharedSession();
 
-      this.saveToSharedSession(); // ✅ keep data before moving forward
-
-      // Navigate to verification page
+      // ✅ Go to verification step
       if (appViewModel?.router)
         appViewModel.goToNextStep("accountDetailsPage", "verificationPage");
 
     } catch (error: unknown) {
-      const msg = error instanceof Error ? error.message : "Unexpected error occurred";
+      const msg =
+        error instanceof Error ? error.message : "Unexpected error occurred";
       this.showError(msg);
     } finally {
       this.isLoading(false);
@@ -198,17 +220,17 @@ class AccountDetailsPage {
   };
 
   // -------------------------------
-  // Helper methods
+  // Error handling helpers
   // -------------------------------
   private showError(message: string): void {
     this.errorMessage(message);
     this.hasError(true);
-
-    setTimeout(() => {
-      this.hasError(false);
-    }, 5000);
+    setTimeout(() => this.hasError(false), 5000);
   }
 
+  // -------------------------------
+  // Form utilities
+  // -------------------------------
   public clearForm = (): void => {
     this.accountNumber("");
     this.ibanNumber("");

@@ -138,6 +138,8 @@ class AccountTypePage {
         }
         return;
       }
+      sessionStorage.setItem("cnicNo", requestBody.cnicNo);
+
 
       const accountId = data?.accountId || data?.id;
       if (accountId) {

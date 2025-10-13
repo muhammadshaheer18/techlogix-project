@@ -11,15 +11,11 @@
 
     <label class="sub-header">Username</label>
 
-    <div class="form-group" data-bind="css: usernameStatus()">
-      <input
-        type="text"
-        class="username-input"
-        placeholder="03353186729"
-        data-bind="value: username, valueUpdate: 'afterkeydown', event: { input: onUsernameChange }"
-      />
+    <div class="form-group" data-bind="css: usernameStatus">
+      <input type="text" class="username-input" placeholder="03353186729"
+        data-bind="value: username, valueUpdate: 'afterkeydown', event: { blur: onUsernameBlur }" />
 
-      <!-- Dynamic messages -->
+      <!-- Dynamic messages (✅ FIXED visible bindings) -->
       <div class="success-text" data-bind="visible: usernameStatus() === 'valid'">
         ✅ Username available
       </div>
@@ -47,10 +43,8 @@
 
     <div class="button-group">
       <button class="btn-back" data-bind="click: goBack">Back</button>
-      <button
-        class="btn-next"
-        data-bind="click: goNext, enable: usernameStatus() === 'valid' || usernameStatus() === 'idle'"
-      >
+      <button class="btn-next"
+        data-bind="click: goNext, enable: usernameStatus() === 'valid' || usernameStatus() === 'idle'">
         Next
       </button>
     </div>
