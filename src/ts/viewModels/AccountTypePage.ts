@@ -1,6 +1,8 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
 
+const SLICE_KEY = "accountTypePage";
+
 class AccountTypePage {
   selectedAccountType = ko.observable<string>("Individual");
   cnicNumber = ko.observable<string>("");
@@ -16,15 +18,91 @@ class AccountTypePage {
   ]);
 
   constructor() {
-    this.cnicNumber.subscribe((val) => this.formatCNIC(val));
+    this.clearSessionOnReload(); // ✅ Only clears when page is reloaded
+    this.restoreFromSharedSession();
+
+    // Persist CNIC changes
+    this.cnicNumber.subscribe((val) => {
+      this.formatCNIC(val);
+      this.saveToSharedSession();
+    });
+
+    // Persist account type changes
+    this.selectedAccountType.subscribe(() => this.saveToSharedSession());
+
+    // ✅ Ensure session is cleared when browser reloads/closes
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.clear();
+    });
   }
 
+  // -------------------------------
+  // ✅ Clear all session data ONLY on hard reload (F5)
+  // -------------------------------
+  private clearSessionOnReload() {
+    try {
+      const reloaded = sessionStorage.getItem("pageReloaded");
+      if (reloaded) {
+        // Still same tab navigation — skip clearing
+        return;
+      }
+      // If not set → true reload → clear session & mark it
+      sessionStorage.clear();
+      sessionStorage.setItem("pageReloaded", "true");
+    } catch (e) {
+      console.warn("Failed to handle session reload:", e);
+    }
+  }
+
+  // -------------------------------
+  // Shared session helpers
+  // -------------------------------
+  private saveToSharedSession() {
+    try {
+      const slice = {
+        cnicNumber: this.cnicNumber(),
+        selectedAccountType: this.selectedAccountType(),
+      };
+      appViewModel?.setOnboardingSlice(SLICE_KEY, slice);
+    } catch (e) {
+      console.warn("Failed to save onboarding slice", e);
+    }
+  }
+
+  private restoreFromSharedSession() {
+    try {
+      const slice = appViewModel?.getOnboardingSlice(SLICE_KEY);
+      if (slice) {
+        if (slice.cnicNumber) this.cnicNumber(slice.cnicNumber);
+        if (slice.selectedAccountType) this.selectedAccountType(slice.selectedAccountType);
+      }
+    } catch (e) {
+      console.warn("Failed to restore onboarding slice", e);
+    }
+  }
+
+  private clearLocalSlice() {
+    try {
+      const full = appViewModel?.getOnboardingData();
+      if (full && full[SLICE_KEY]) {
+        delete full[SLICE_KEY];
+        appViewModel?.setOnboardingData(full);
+      }
+    } catch {}
+  }
+
+  // -------------------------------
+  // Navigation & actions
+  // -------------------------------
   selectAccountType = (type: string) => {
     this.selectedAccountType(type);
   };
 
   goBack = () => {
-    if (!this.isLoading()) window.location.href = "WelcomePage.html";
+    this.saveToSharedSession(); // ✅ Persist before going back
+    if (!this.isLoading()) {
+      appViewModel?.goToNextStep("accountTypePage", "welcomePage");
+    }
   };
 
   goNext = async () => {
@@ -64,15 +142,11 @@ class AccountTypePage {
       const accountId = data?.accountId || data?.id;
       if (accountId) {
         localStorage.setItem("accountId", String(accountId));
-        if (appViewModel) appViewModel.currentAccountId = accountId;
+        if (appViewModel) appViewModel.currentAccountId(accountId);
       }
 
-      if (appViewModel?.router) {
-        appViewModel.goToNextStep("accountTypePage", "accountDetailsPage");
-      } else {
-        alert(`Account initialized successfully.\nAccount ID: ${accountId || "N/A"}`);
-        window.location.href = "AccountDetailsPage.html";
-      }
+      this.saveToSharedSession(); // ✅ Preserve data before moving forward
+      appViewModel?.goToNextStep("accountTypePage", "accountDetailsPage");
     } catch (err) {
       console.error("API Error:", err);
       this.cnicError("Unexpected error occurred. Please try again.");
@@ -81,6 +155,9 @@ class AccountTypePage {
     }
   };
 
+  // -------------------------------
+  // CNIC Validation & formatting
+  // -------------------------------
   private formatCNIC = (value: string) => {
     if (!value) return;
     let digits = value.replace(/\D/g, "");
@@ -117,6 +194,9 @@ class AccountTypePage {
     return true;
   };
 
+  // -------------------------------
+  // Form helpers
+  // -------------------------------
   isFormValid = ko.pureComputed(() => {
     const clean = this.cnicNumber().replace(/\D/g, "");
     return clean.length === 13 && !this.cnicError() && !this.isLoading();

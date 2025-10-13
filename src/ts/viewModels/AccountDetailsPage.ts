@@ -1,11 +1,9 @@
-// account-details.ts
 import * as ko from "knockout";
-import Context = require("ojs/ojcontext");
-import ModuleElementUtils = require("ojs/ojmodule-element-utils");
 import appViewModel from "../appController";
 
+const SLICE_KEY = "accountDetailsPage";
+
 class AccountDetailsPage {
-  // Observable properties
   public accountNumber: ko.Observable<string>;
   public ibanNumber: ko.Observable<string>;
   public activeTab: ko.Observable<string>;
@@ -13,13 +11,11 @@ class AccountDetailsPage {
   public hasError: ko.Observable<boolean>;
   public errorMessage: ko.Observable<string>;
 
-  // Computed observables
   public isAccountNumberValid: ko.Computed<boolean>;
   public isIbanValid: ko.Computed<boolean>;
   public canProceed: ko.Computed<boolean>;
 
   constructor() {
-    // Initialize observables
     this.accountNumber = ko.observable("");
     this.ibanNumber = ko.observable("");
     this.activeTab = ko.observable("account");
@@ -27,93 +23,119 @@ class AccountDetailsPage {
     this.hasError = ko.observable(false);
     this.errorMessage = ko.observable("");
 
-    // Initialize computed observables
+    this.handlePageReload(); // ✅ Clear all data only when page is reloaded
+    this.restoreFromSharedSession();
+
+    // Computed observables
     this.isAccountNumberValid = ko.computed(() => {
-      const account = this.accountNumber();
-      // Remove spaces and check if it's 14 digits
-      const cleanAccount = account.replace(/\s+/g, "");
-      return /^\d{14}$/.test(cleanAccount);
+      const clean = this.accountNumber().replace(/\s+/g, "");
+      return /^\d{14}$/.test(clean);
     });
 
     this.isIbanValid = ko.computed(() => {
-      const iban = this.ibanNumber();
-      if (!iban) return false;
-
-      // Remove spaces and convert to uppercase
-      const cleanIban = iban.replace(/\s+/g, "").toUpperCase();
-
-      // Basic IBAN format validation (15-34 characters, starts with 2 letters followed by 2 digits)
-      const ibanRegex =
-        /^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}$/;
-      return (
-        ibanRegex.test(cleanIban) &&
-        cleanIban.length >= 15 &&
-        cleanIban.length <= 34
-      );
+      const iban = this.ibanNumber().replace(/\s+/g, "").toUpperCase();
+      return iban.length >= 15 && iban.length <= 34 && /^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(iban);
     });
 
     this.canProceed = ko.computed(() => {
-      const isValid =
+      const valid =
         this.activeTab() === "account"
           ? this.isAccountNumberValid()
           : this.isIbanValid();
-      return isValid && !this.isLoading();
+      return valid && !this.isLoading();
     });
 
-    // Format account number with spaces as user types
-    this.accountNumber.subscribe((newValue: string) => {
-      if (newValue) {
-        // Remove all spaces first
-        let cleanValue = newValue.replace(/\s+/g, "");
-        // Only keep digits
-        cleanValue = cleanValue.replace(/\D/g, "");
-        // Limit to 14 digits
-        if (cleanValue.length > 14) {
-          cleanValue = cleanValue.substring(0, 14);
-        }
-        // Add spaces every 5 digits (XXXXX XXXXXXXXX format)
-        if (cleanValue.length > 5) {
-          cleanValue =
-            cleanValue.substring(0, 5) + " " + cleanValue.substring(5);
-        }
-        // Update observable only if the formatted value is different
-        if (cleanValue !== newValue) {
-          this.accountNumber(cleanValue);
-        }
-      }
+    // Format account number (XXXXX XXXXXXXXX)
+    this.accountNumber.subscribe((val) => {
+      if (!val) return;
+      let clean = val.replace(/\D/g, "").substring(0, 14);
+      if (clean.length > 5) clean = clean.slice(0, 5) + " " + clean.slice(5);
+      if (clean !== val) this.accountNumber(clean);
+      this.saveToSharedSession();
     });
-    // Format IBAN with spaces as user types
-    this.ibanNumber.subscribe((newValue: string) => {
-      if (newValue) {
-        // Remove all spaces and convert to uppercase
-        let cleanValue = newValue.replace(/\s+/g, "").toUpperCase();
-        // Only keep alphanumeric characters
-        cleanValue = cleanValue.replace(/[^A-Z0-9]/g, "");
-        // Limit to 34 characters (max IBAN length)
-        if (cleanValue.length > 34) {
-          cleanValue = cleanValue.substring(0, 34);
-        }
-        // Add spaces every 4 characters for better readability
-        const formatted = cleanValue.replace(/(.{4})/g, "$1 ").trim();
-        // Update observable only if the formatted value is different
-        if (formatted !== newValue) {
-          this.ibanNumber(formatted);
-        }
-      }
+
+    // Format IBAN with spaces every 4 characters
+    this.ibanNumber.subscribe((val) => {
+      if (!val) return;
+      let clean = val.replace(/[^A-Z0-9]/gi, "").toUpperCase().substring(0, 34);
+      clean = clean.replace(/(.{4})/g, "$1 ").trim();
+      if (clean !== val) this.ibanNumber(clean);
+      this.saveToSharedSession();
+    });
+
+    // ✅ Ensure session clears when the user reloads or closes the browser
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.clear();
     });
   }
 
+  // -------------------------------
+  // ✅ Clears all session data only on actual reload
+  // -------------------------------
+  private handlePageReload() {
+    try {
+      const reloaded = sessionStorage.getItem("pageReloaded");
+      if (!reloaded) {
+        sessionStorage.clear(); // clear on first page load
+        sessionStorage.setItem("pageReloaded", "true");
+      }
+    } catch (e) {
+      console.warn("Failed to handle session reload:", e);
+    }
+  }
+
+  // -------------------------------
+  // Shared session helpers
+  // -------------------------------
+  private saveToSharedSession() {
+    try {
+      const slice = {
+        accountNumber: this.accountNumber(),
+        ibanNumber: this.ibanNumber(),
+        activeTab: this.activeTab(),
+      };
+      appViewModel?.setOnboardingSlice(SLICE_KEY, slice);
+    } catch (e) {
+      console.warn("Failed to save account details slice", e);
+    }
+  }
+
+  private restoreFromSharedSession() {
+    try {
+      const slice = appViewModel?.getOnboardingSlice(SLICE_KEY);
+      if (slice) {
+        if (slice.accountNumber) this.accountNumber(slice.accountNumber);
+        if (slice.ibanNumber) this.ibanNumber(slice.ibanNumber);
+        if (slice.activeTab) this.activeTab(slice.activeTab);
+      }
+    } catch (e) {
+      console.warn("Failed to restore account details slice", e);
+    }
+  }
+
+  private clearLocalSlice() {
+    try {
+      const full = appViewModel?.getOnboardingData();
+      if (full && full[SLICE_KEY]) {
+        delete full[SLICE_KEY];
+        appViewModel?.setOnboardingData(full);
+      }
+    } catch {}
+  }
+
+  // -------------------------------
+  // Navigation
+  // -------------------------------
   public switchTab = (tabName: string): void => {
     this.activeTab(tabName);
     this.hasError(false);
     this.errorMessage("");
+    this.saveToSharedSession(); // ✅ persist active tab
   };
 
   public goBack = (): void => {
-    console.log("Going back to previous step");
-    if (appViewModel) {
-      appViewModel.goToNextStep("accountDetailsPage", "accountTypePage");
-    }
+    this.saveToSharedSession(); // ✅ preserve data before going back
+    if (appViewModel) appViewModel.goToNextStep("accountDetailsPage", "accountTypePage");
   };
 
   public goNext = async (): Promise<void> => {
@@ -153,149 +175,35 @@ class AccountDetailsPage {
       );
 
       if (!response.ok) {
-        // Backend error
         let errMsg = await response.text();
         try {
           const data = JSON.parse(errMsg);
           errMsg = data.message || errMsg;
-        } catch { }
+        } catch {}
         throw new Error(errMsg || "Validation failed");
       }
 
-      // No errors — route to verification page
-      if (appViewModel?.router) {
+      this.saveToSharedSession(); // ✅ keep data before moving forward
+
+      // Navigate to verification page
+      if (appViewModel?.router)
         appViewModel.goToNextStep("accountDetailsPage", "verificationPage");
-      }
 
     } catch (error: unknown) {
-      const errMsg =
-        error instanceof Error ? error.message : "Unexpected error occurred";
-      this.showError(errMsg);
+      const msg = error instanceof Error ? error.message : "Unexpected error occurred";
+      this.showError(msg);
     } finally {
       this.isLoading(false);
     }
   };
 
-
-  /**
-   * Validate IBAN using MOD-97 algorithm
-   */
-  private validateIban(iban: string): boolean {
-    // Basic format validation
-    if (!/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(iban)) {
-      return false;
-    }
-
-    // Length validation by country (simplified)
-    const countryLengths: { [key: string]: number } = {
-      AD: 24,
-      AE: 23,
-      AL: 28,
-      AT: 20,
-      AZ: 28,
-      BA: 20,
-      BE: 16,
-      BG: 22,
-      BH: 22,
-      BR: 29,
-      BY: 28,
-      CH: 21,
-      CR: 22,
-      CY: 28,
-      CZ: 24,
-      DE: 22,
-      DK: 18,
-      DO: 28,
-      EE: 20,
-      EG: 29,
-      ES: 24,
-      FI: 18,
-      FO: 18,
-      FR: 27,
-      GB: 22,
-      GE: 22,
-      GI: 23,
-      GL: 18,
-      GR: 27,
-      GT: 28,
-      HR: 21,
-      HU: 28,
-      IE: 22,
-      IL: 23,
-      IS: 26,
-      IT: 27,
-      JO: 30,
-      KW: 30,
-      KZ: 20,
-      LB: 28,
-      LC: 32,
-      LI: 21,
-      LT: 20,
-      LU: 20,
-      LV: 21,
-      MC: 27,
-      MD: 24,
-      ME: 22,
-      MK: 19,
-      MR: 27,
-      MT: 31,
-      MU: 30,
-      NL: 18,
-      NO: 15,
-      PK: 24,
-      PL: 28,
-      PS: 29,
-      PT: 25,
-      QA: 29,
-      RO: 24,
-      RS: 22,
-      SA: 24,
-      SE: 24,
-      SI: 19,
-      SK: 24,
-      SM: 27,
-      TN: 24,
-      TR: 26,
-      UA: 29,
-      VG: 24,
-      XK: 20,
-    };
-
-    const countryCode = iban.substring(0, 2);
-    const expectedLength = countryLengths[countryCode];
-
-    if (!expectedLength || iban.length !== expectedLength) {
-      return false;
-    }
-
-    // MOD-97 validation
-    const rearranged = iban.substring(4) + iban.substring(0, 4);
-    const numericString = rearranged.replace(/[A-Z]/g, (char) =>
-      (char.charCodeAt(0) - 55).toString()
-    );
-
-    // Calculate mod 97 for large numbers
-    let remainder = 0;
-    for (let i = 0; i < numericString.length; i++) {
-      remainder = (remainder * 10 + parseInt(numericString[i])) % 97;
-    }
-
-    return remainder === 1;
-  }
-
-  private validateAccountNumber(accountNumber: string): boolean {
-    // Basic validation - 14 digits
-    if (!/^\d{14}$/.test(accountNumber)) {
-      return false;
-    }
-    return true;
-  }
-
+  // -------------------------------
+  // Helper methods
+  // -------------------------------
   private showError(message: string): void {
     this.errorMessage(message);
     this.hasError(true);
 
-    // Auto-hide error after 5 seconds
     setTimeout(() => {
       this.hasError(false);
     }, 5000);

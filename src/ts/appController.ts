@@ -48,10 +48,8 @@ class RootViewModel {
   showNavigation: ko.Computed<boolean>;
   selection: KnockoutRouterAdapter<any>;
   currentAccountId = ko.observable<number | null>(null);
-  //steps check
   completedSteps = ko.observableArray<string>([]);
   currentStep = ko.observable<string>("accountTypePage");
-  // Define step order
   private navOrder = [
     "accountTypePage",
     "accountDetailsPage",
@@ -61,8 +59,10 @@ class RootViewModel {
     "successPage",
   ];
 
+  // Centralized onboarding storage key
+  private STORAGE_KEY = "onboarding_flow_data";
+
   constructor() {
-    // Announcements
     const globalBodyElement = document.getElementById(
       "globalBody"
     ) as HTMLElement;
@@ -74,50 +74,25 @@ class RootViewModel {
 
     // Responsive breakpoints
     const smQuery = ResponsiveUtils.getFrameworkQuery("sm-only");
-    if (smQuery) {
-      this.smScreen = ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
-    }
+    if (smQuery) this.smScreen = ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
 
     const mdQuery = ResponsiveUtils.getFrameworkQuery("md-up");
-    if (mdQuery) {
-      this.mdScreen = ResponsiveKnockoutUtils.createMediaQueryObservable(mdQuery);
-    }
+    if (mdQuery) this.mdScreen = ResponsiveKnockoutUtils.createMediaQueryObservable(mdQuery);
 
     // Router + nav items
     const navData = [
       { path: "", redirect: "accountTypePage" },
-      {
-        path: "accountTypePage",
-        detail: { label: "Account Type", iconClass: "circle", value: "1" },
-      },
-      {
-        path: "accountDetailsPage",
-        detail: { label: "Account Detail", iconClass: "circle", value: "2" },
-      },
-      {
-        path: "verificationPage",
-        detail: { label: "Verification", iconClass: "circle", value: "3" },
-      },
-      {
-        path: "loginDetailsPage",
-        detail: { label: "Login Details", iconClass: "circle", value: "4" },
-      },
-      {
-        path: "termsPage",
-        detail: { label: "Terms & Conditions", iconClass: "circle", value: "5" },
-      },
-      {
-        path: "successPage",
-        detail: { label: "Success Page", iconClass: "circle", value: "6" },
-      },
+      { path: "accountTypePage", detail: { label: "Account Type", iconClass: "circle", value: "1" } },
+      { path: "accountDetailsPage", detail: { label: "Account Detail", iconClass: "circle", value: "2" } },
+      { path: "verificationPage", detail: { label: "Verification", iconClass: "circle", value: "3" } },
+      { path: "loginDetailsPage", detail: { label: "Login Details", iconClass: "circle", value: "4" } },
+      { path: "termsPage", detail: { label: "Terms & Conditions", iconClass: "circle", value: "5" } },
+      { path: "successPage", detail: { label: "Success Page", iconClass: "circle", value: "6" } },
     ];
 
-    this.router = new CoreRouter(navData, {
-      urlAdapter: new UrlParamAdapter(),
-    });
+    this.router = new CoreRouter(navData, { urlAdapter: new UrlParamAdapter() });
     this.router.sync();
 
-    // Expose globally
     window.appRouter = this.router;
     window.appViewModel = this;
 
@@ -126,46 +101,64 @@ class RootViewModel {
 
     // Only show navigation on main flow
     const hiddenPages = ["termsPage", "successPage", ""];
-    const navItemsForNavigation = navData.filter(
-      (item) => !hiddenPages.includes(item.path)
-    );
-    this.navDataProvider = new ArrayDataProvider(navItemsForNavigation, {
-      keyAttributes: "path",
-    });
+    const navItemsForNavigation = navData.filter(item => !hiddenPages.includes(item.path));
+    this.navDataProvider = new ArrayDataProvider(navItemsForNavigation, { keyAttributes: "path" });
 
-    this.showNavigation = ko.pureComputed(
-      () => this.selection.path() !== "successPage"
-    );
+    this.showNavigation = ko.pureComputed(() => this.selection.path() !== "successPage");
 
     // Keep currentStep in sync with router
     this.selection.path.subscribe((newPath: string) => {
       if (newPath) {
         this.currentStep(newPath);
-
         const idx = this.navOrder.indexOf(newPath);
-        if (idx > 0) {
-          // Mark all PREVIOUS steps as completed (not including current)
-          const completed = this.navOrder.slice(0, idx);
-          this.completedSteps(completed);
-        } else if (idx === 0) {
-          // First step - no completed steps yet
-          this.completedSteps([]);
-        }
+        this.completedSteps(idx > 0 ? this.navOrder.slice(0, idx) : []);
       }
     });
 
-    // auto-close drawer on md+
     this.mdScreen?.subscribe(() => this.sideDrawerOn(false));
 
-    // release bootstrap busy state
     Context.getPageContext().getBusyContext().applicationBootstrapComplete();
   }
 
   setAccountId(id: number) {
-  this.currentAccountId(id);
-}
+    this.currentAccountId(id);
+  }
 
+  // -------------------------------
+  // Centralized onboarding state
+  // -------------------------------
+  getOnboardingData(): any {
+    try {
+      const raw = sessionStorage.getItem(this.STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  }
 
+  setOnboardingData(data: any): void {
+    try {
+      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+    } catch {}
+  }
+
+  getOnboardingSlice(sliceKey: string): any {
+    return this.getOnboardingData()[sliceKey] || null;
+  }
+
+  setOnboardingSlice(sliceKey: string, sliceData: any): void {
+    const full = this.getOnboardingData();
+    full[sliceKey] = sliceData;
+    this.setOnboardingData(full);
+  }
+
+  clearOnboarding(): void {
+    sessionStorage.removeItem(this.STORAGE_KEY);
+  }
+
+  // -------------------------------
+  // UI & navigation helpers
+  // -------------------------------
   announcementHandler = (event: any): void => {
     this.message(event.detail.message);
     this.manner(event.detail.manner);
@@ -184,9 +177,7 @@ class RootViewModel {
     }
   };
 
-  // Go to next step (mark current as complete and navigate)
   goToNextStep(currentPath: string, nextPath: string): void {
-    // Just navigate - the router subscription will handle completion
     this.router.go({ path: nextPath });
   }
 }
