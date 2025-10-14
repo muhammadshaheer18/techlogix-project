@@ -1,46 +1,31 @@
-<head>
-  <link rel="stylesheet" href="../../css/termsPage.css" />
-</head>
-
-<div class="terms-container">
+<div class="terms-container" data-bind="with: $data">
   <div class="terms-card">
     <div class="header">
-      <h1>Terms & Conditions</h1>
+      <h1 data-bind="text: title"></h1>
     </div>
+
     <div class="terms-content">
-      <p>Terms and Conditions for Meezan Bank Internet Banking Facility/Services Pakistan</p>
-      <h6>NOTICE</h6>
-      <p>
-        Please read the following Terms and Conditions carefully as access to and use of Meezan Bank
-        Internet Banking Facility is subject to these Terms and Conditions. By accessing this website or any
-        webpage thereof, the Customer unconditionally and irrevocably agrees to be bound by the Terms &
-        Conditions. If the Customer does not agree with these Terms and Conditions:
-      </p>
-      <p class="important">
-        Please do not access this Site or any webpage thereof.
-      </p>
+      <p data-bind="text: intro"></p>
 
-      <p>Definition</p>
-      <p>
-        “Terms and Conditions/ Agreement” means these terms and conditions and as amended/modified by Meezan
-        Bank from time to time which will be posted on this website.
-      </p>
-
-      <h6>NOTICE</h6>
-      <p>
-        Please read the following Terms and Conditions carefully as access to and use of Meezan Bank
-        Internet Banking Facility is subject to these Terms and Conditions. By accessing this website or any
-        webpage thereof, the Customer unconditionally and irrevocably agrees to be bound by the Terms &
-        Conditions. If the Customer does not agree with these Terms and Conditions:
-      </p>
-      <p class="important">
-        Please do not access this Site or any webpage thereof.
-      </p>
+      <!-- ko foreach: sections -->
+      <h6 data-bind="text: heading"></h6>
+      <!-- ko foreach: paragraphs -->
+      <p data-bind="text: $data, css: { important: $data.includes('Please do not access') }"></p>
+      <!-- /ko -->
+      <!-- /ko -->
+         <label>
+        <input type="checkbox" data-bind="checked: accepted" />
+        I accept the Terms & Conditions
+      </label>
     </div>
 
     <div class="button-group">
-      <button type="button" class="btn btn-back" data-bind="click: handleBack">Back</button>
-      <button type="button" class="btn btn-next" data-bind="click: handleAccept, enable: accepted">Next</button>
+      <button type="button" class="btn btn-back" data-bind="click: handleBack">
+        Back
+      </button>
+      <button type="button" class="btn btn-next" data-bind="click: handleAccept, enable: accepted">
+        Next
+      </button>
     </div>
   </div>
 </div>

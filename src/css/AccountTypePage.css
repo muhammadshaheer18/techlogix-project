@@ -240,6 +240,13 @@
   height: 55px;
 }
 
+.btn-next.btn-disabled {
+  background-color: #eee; 
+  color: #7a147a;
+  border: 2px solid #ccc;/* gray when disabled */
+  cursor: not-allowed;
+}
+
 .btn-next:hover {
   transform: translateY(-1px);
 }

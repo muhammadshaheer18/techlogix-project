@@ -262,6 +262,13 @@
       color: #fff;
     }
 
+    .btn-next:disabled {
+      background: #cccccc !important;
+      color: #666 !important;
+      cursor: not-allowed !important;
+      transform: none !important;
+    }
+
     .btn-next:hover {
       transform: translateY(-1px);
     }

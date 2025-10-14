@@ -354,9 +354,15 @@ nav-bar {
   height: 55px;
 }
 
+.btn-next.btn-disabled {
+  background-color: #cccccc !important;
+  color: #666 !important;
+  cursor: not-allowed !important;
+}
+
 .btn-next:hover {
   transform: translateY(-1px);
-}
+} 
 
 .checkmark {
   position: absolute;

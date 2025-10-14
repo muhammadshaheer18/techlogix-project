@@ -13,6 +13,7 @@ class VerificationPage {
   private usernameExists = ko.observable<boolean>(false);
   private usernameTimer: number | null = null;
   private hasUserStoppedTyping = ko.observable<boolean>(false);
+  private hasCheckedOnce = ko.observable<boolean>(false);
 
   constructor() {
     this.clearSessionOnReload();
@@ -21,24 +22,25 @@ class VerificationPage {
     // Detect user typing with debounce
     this.username.subscribe(() => {
       this.hasUserStoppedTyping(false);
+      this.hasCheckedOnce(false);
       this.saveToSharedSession();
 
       if (this.usernameTimer) clearTimeout(this.usernameTimer);
 
-      // Wait 1.5 seconds after last keystroke before checking availability
+      // Wait 3 seconds after last keystroke before checking
       this.usernameTimer = window.setTimeout(() => {
         this.hasUserStoppedTyping(true);
         this.checkUsernameAvailability();
-      }, 3000);
+      }, 1000);
     });
 
-    // Clear session on full page reload
+    // Clear session only once on a full page reload
     window.addEventListener("beforeunload", () => {
       sessionStorage.clear();
     });
   }
 
-  // ✅ Clear session only once when truly reloaded
+  // Clear session only once on actual reload
   private clearSessionOnReload() {
     try {
       const reloaded = sessionStorage.getItem("pageReloaded");
@@ -75,12 +77,12 @@ class VerificationPage {
 
   // ---------------- Fetch User Data ----------------
   fetchUserData = async (): Promise<void> => {
-   const cnicNo = localStorage.getItem("cnicNo");
-  if (!cnicNo) {
-    this.apiError("CNIC not found.");
-    this.apiLoading(false);
-    return;
-  }
+    const cnicNo = localStorage.getItem("cnicNo");
+    if (!cnicNo) {
+      this.apiError("CNIC not found.");
+      this.apiLoading(false);
+      return;
+    }
 
     this.apiLoading(true);
     this.apiError(null);
@@ -97,8 +99,8 @@ class VerificationPage {
       }
 
       const data = text ? JSON.parse(text) : null;
-      if (data) {
-        this.fallbackPhone = data.phone ?? null;
+      if (data?.data) {
+        this.fallbackPhone = data.data.phone ?? null;
       }
     } catch {
       this.apiError("Unable to fetch user data.");
@@ -114,6 +116,7 @@ class VerificationPage {
     if (!value) return "idle";
     if (this.apiLoading()) return "checking";
     if (value.length < 8 || value.length > 16) return "invalid";
+    if (!this.hasCheckedOnce()) return "pending";
     if (this.usernameExists()) return "exists";
     return "valid";
   });
@@ -132,18 +135,21 @@ class VerificationPage {
         return "❌ Username already exists";
       case "valid":
         return "✅ Username available";
+      case "pending":
+        return "";
       default:
         return "";
     }
   });
 
-  // Debounced API check
+  // ---------------- Debounced API Check ----------------
   public checkUsernameAvailability = async (): Promise<void> => {
     const usernameValue = this.username()?.trim();
 
-    if (!this.hasUserStoppedTyping()) return; // don't check if still typing
+    if (!this.hasUserStoppedTyping()) return;
     if (!usernameValue || usernameValue.length < 8 || usernameValue.length > 16) {
       this.usernameExists(false);
+      this.hasCheckedOnce(false);
       return;
     }
 
@@ -154,8 +160,18 @@ class VerificationPage {
       const res = await fetch(
         `http://localhost:8080/api/accounts/check-username?username=${encodeURIComponent(usernameValue)}`
       );
-      const data = res.ok ? await res.json() : { exists: false };
-      this.usernameExists(Boolean(data.exists));
+      const json = await res.json().catch(() => null);
+      // Correct extraction for wrapped API response
+      const exists = json?.data?.exists ?? false;
+
+      this.usernameExists(exists);
+      this.hasCheckedOnce(true);
+      
+      if (exists) {
+        this.apiError("Username already exists. Please choose another.");
+      } else {
+        this.apiError(null);
+      }
     } catch {
       this.usernameExists(false);
       this.apiError("Network error while checking username.");
@@ -164,7 +180,7 @@ class VerificationPage {
     }
   };
 
-  // Manual check when focus leaves field
+  // ---------------- Manual Check on Blur ----------------
   public onUsernameBlur = (): void => {
     if (this.hasUserStoppedTyping()) {
       this.checkUsernameAvailability();

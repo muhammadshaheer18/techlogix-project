@@ -1,267 +1,280 @@
-  <head>
-    <link rel="stylesheet" href="../../css/AccountDetailsPage.css" />
-  </head>
+<head>
+  <link rel="stylesheet" href="../../css/AccountDetailsPage.css" />
+</head>
 
-  <div class="oj-hybrid-padding">
-    <div class="account-details-container">
-      <!-- Left Section -->
-      <div class="left-section">
-        <div class="header">
-          <h1>Enter Account Details</h1>
+<div class="oj-hybrid-padding">
+  <div class="account-details-container">
+    <!-- Left Section -->
+    <div class="left-section">
+      <div class="header">
+        <h1>Enter Account Details</h1>
+      </div>
+
+      <!-- Nav-Bar component -->
+      <nav-bar></nav-bar>
+
+      <!-- Tabs -->
+      <div class="tab-navigation">
+        <div class="tab-item"
+          data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, click: function() { switchTab('account') }">
+          Account Number
         </div>
-
-        <!-- Nav-Bar component -->
-        <nav-bar></nav-bar>
-
-        <!-- Tabs -->
-        <div class="tab-navigation">
-          <div
-            class="tab-item"
-            data-bind="css: { active: activeTab() === 'account', inactive: activeTab() !== 'account' }, click: function() { switchTab('account') }"
-          >
-            Account Number
-          </div>
-          <div
-            class="tab-item"
-            data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, click: function() { switchTab('iban') }"
-          >
-            IBAN
-          </div>
-        </div>
-
-        <!-- Account Number Form -->
-        <div class="form-section" data-bind="if: activeTab() === 'account'">
-          <div class="form-group">
-            <label class="form-label">Account Number</label>
-            <input
-              type="text"
-              class="form-input"
-              placeholder="XXXXX XXXXXXXXX"
-              data-bind="textInput: accountNumber, event: { focus: onInputFocus }"
-            />
-            <div class="help-text">Please enter your 14-digit Account Number</div>
-          </div>
-
-          <!-- Error message -->
-          <div class="error-message" data-bind="visible: hasError, text: errorMessage"></div>
-
-          <div class="button-group">
-            <button class="btn-back" data-bind="click: goBack">Back</button>
-            <button class="btn-next" data-bind="click: goNext">Next</button>
-          </div>
-        </div>
-
-        <!-- IBAN Form -->
-        <div class="form-section" data-bind="if: activeTab() === 'iban'">
-          <div class="form-group">
-            <label class="form-label">IBAN</label>
-            <input
-              type="text"
-              class="form-input"
-              placeholder="XXXX XXXX XXXX XXXX"
-              data-bind="textInput: ibanNumber, event: { focus: onInputFocus }"
-            />
-            <div class="help-text">Please enter your IBAN number</div>
-          </div>
-
-          <!-- Error message -->
-          <div class="error-message" data-bind="visible: hasError, text: errorMessage"></div>
-
-          <div class="button-group">
-            <button class="btn-back" data-bind="click: goBack">Back</button>
-            <button class="btn-next" data-bind="click: goNext">Next</button>
-          </div>
+        <div class="tab-item"
+          data-bind="css: { active: activeTab() === 'iban', inactive: activeTab() !== 'iban' }, click: function() { switchTab('iban') }">
+          IBAN
         </div>
       </div>
 
-      <!-- Right Section -->
-      <div class="right-section">
-        <help-card></help-card>
+      <!-- Account Number Form -->
+      <div class="form-section" data-bind="if: activeTab() === 'account'">
+        <div class="form-group">
+          <label class="form-label">Account Number</label>
+          <input type="text" class="form-input" placeholder="XXXXX XXXXXXXXX"
+            data-bind="textInput: accountNumber, event: { focus: onInputFocus }" />
+          <div class="help-text">Please enter your 14-digit Account Number</div>
+        </div>
+
+        <!-- Error message -->
+        <div class="error-message" data-bind="visible: hasError, text: errorMessage"></div>
+
+        <div class="button-group">
+          <button class="btn-back" data-bind="click: goBack">Back</button>
+          <button class="btn-next" data-bind="
+          click: goNext,
+          enable: canProceed,
+          css: { 'btn-disabled': !canProceed }
+          attr: { disabled: !canProceed() }">
+            Next
+          </button>
+
+        </div>
+      </div>
+
+      <!-- IBAN Form -->
+      <div class="form-section" data-bind="if: activeTab() === 'iban'">
+        <div class="form-group">
+          <label class="form-label">IBAN</label>
+          <input type="text" class="form-input" placeholder="XXXX XXXX XXXX XXXX"
+            data-bind="textInput: ibanNumber, event: { focus: onInputFocus }" />
+          <div class="help-text">Please enter your IBAN number</div>
+        </div>
+
+        <!-- Error message -->
+        <div class="error-message" data-bind="visible: hasError, text: errorMessage"></div>
+
+        <div class="button-group">
+          <button class="btn-back" data-bind="click: goBack">Back</button>
+          <button class="btn-next" data-bind="
+          click: goNext,
+          enable: canProceed,
+          css: { 'btn-disabled': !canProceed }
+          attr: { disabled: !canProceed() }">
+            Next
+          </button>
+
+
+        </div>
       </div>
     </div>
+
+    <!-- Right Section -->
+    <div class="right-section">
+      <help-card></help-card>
+    </div>
   </div>
+</div>
 
-  <style>
-    /* Container */
+<style>
+  /* Container */
+  .account-details-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-between;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .left-section {
+    width: 700px;
+  }
+
+  .right-section {
+    width: 350px;
+    margin-right: 30px;
+  }
+
+  /* Header */
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  /* Tabs */
+  .tab-navigation {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    color: #999;
+    background-color: #ebe8e8;
+  }
+
+  .tab-item.active {
+    background-color: #ffecfd;
+    color: #7a147a;
+    border-bottom: 3px solid #7a147a;
+  }
+
+  .tab-item.inactive {
+    color: #999;
+  }
+
+  /* Forms */
+  .form-group {
+    margin-top: 40px;
+  }
+
+  .form-label {
+    font-size: 17px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .form-input {
+    width: 100%;
+    height: 55px;
+    padding: 0 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: all 0.2s;
+  }
+
+  .form-input:focus {
+    border: 1px solid #7a147a;
+    outline: none;
+  }
+
+  .help-text {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+  }
+
+  /* Error messages */
+  .error-message {
+    color: #d8000c;
+    background-color: #ffd2d2;
+    border: 1px solid #d8000c;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  /* Buttons */
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .btn-back,
+  .btn-next {
+    flex: 1;
+    height: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-back {
+    background-color: #ccc;
+    color: #333;
+  }
+
+  .btn-next {
+    background-color: #7a147a;
+    color: #fff;
+  }
+
+ /* Force disabled button style */
+.btn-next:disabled,
+.btn-next.btn-disabled {
+  background-color: #cccccc !important;
+  color: #666 !important;
+  cursor: not-allowed !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+  @media (max-width: 1200px) {
     .account-details-container {
-      display: flex;
-      flex-direction: row;
-      gap: 20px;
-      justify-content: space-between;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      flex-direction: column;
     }
 
-    .left-section {
-      width: 700px;
-    }
-
+    .left-section,
     .right-section {
-      width: 350px;
-      margin-right: 30px;
+      width: 100%;
+      margin-right: 0;
     }
 
-    /* Header */
-    .header h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 20px;
+    .button-group {
+      margin-top: 20px;
     }
+  }
 
-    /* Tabs */
-    .tab-navigation {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
+  @media (max-width: 768px) {
     .tab-item {
-      flex: 1;
-      text-align: center;
-      padding: 12px 0;
-      font-weight: 600;
-      font-size: 18px;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-      color: #999;
-      background-color: #ebe8e8;
-    }
-
-    .tab-item.active {
-      background-color: #ffecfd;
-      color: #7a147a;
-      border-bottom: 3px solid #7a147a;
-    }
-
-    .tab-item.inactive {
-      color: #999;
-    }
-
-    /* Forms */
-    .form-group {
-      margin-top: 40px;
+      font-size: 16px;
+      padding: 10px 0;
     }
 
     .form-label {
-      font-size: 17px;
-      margin-bottom: 8px;
-      display: block;
+      font-size: 16px;
     }
 
     .form-input {
-      width: 100%;
-      height: 55px;
-      padding: 0 12px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      transition: all 0.2s;
-    }
-
-    .form-input:focus {
-      border: 1px solid #7a147a;
-      outline: none;
-    }
-
-    .help-text {
-      font-size: 13px;
-      color: #666;
-      margin-top: 5px;
-    }
-
-    /* Error messages */
-    .error-message {
-      color: #d8000c;
-      background-color: #ffd2d2;
-      border: 1px solid #d8000c;
-      padding: 10px 15px;
-      border-radius: 5px;
-      margin-top: 10px;
-      font-size: 15px;
-      font-weight: 500;
-    }
-
-    /* Buttons */
-    .button-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 30px;
-    }
-
-    .btn-back,
-    .btn-next {
-      flex: 1;
       height: 50px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
     }
 
-    .btn-back {
-      background-color: #ccc;
-      color: #333;
+    .button-group button {
+      height: 45px;
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .tab-item {
+      font-size: 14px;
     }
 
-    .btn-back:hover {
-      background-color: #bbb;
+    .form-label {
+      font-size: 14px;
     }
 
-    .btn-next {
-      background-color: #7a147a;
-      color: #fff;
+    .form-input {
+      height: 45px;
     }
 
-    .btn-next:hover {
-      background-color: #5f0f5f;
+    .button-group button {
+      height: 40px;
+      font-size: 14px;
     }
-
-    @media (max-width: 1200px) {
-      .account-details-container {
-        flex-direction: column;
-      }
-      .left-section,
-      .right-section {
-        width: 100%;
-        margin-right: 0;
-      }
-      .button-group {
-        margin-top: 20px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .tab-item {
-        font-size: 16px;
-        padding: 10px 0;
-      }
-      .form-label {
-        font-size: 16px;
-      }
-      .form-input {
-        height: 50px;
-      }
-      .button-group button {
-        height: 45px;
-        font-size: 15px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .tab-item {
-        font-size: 14px;
-      }
-      .form-label {
-        font-size: 14px;
-      }
-      .form-input {
-        height: 45px;
-      }
-      .button-group button {
-        height: 40px;
-        font-size: 14px;
-      }
-    }
-  </style>
+  }
+</style>
