@@ -18,35 +18,30 @@ class AccountTypePage {
   ]);
 
   constructor() {
-    this.clearSessionOnReload(); // ✅ Only clears when page is reloaded
+    this.handlePageReload();
     this.restoreFromSharedSession();
 
-    // Persist CNIC changes
+    //Persistance:
+
     this.cnicNumber.subscribe((val) => {
       this.formatCNIC(val);
       this.saveToSharedSession();
     });
 
-    // Persist account type changes
     this.selectedAccountType.subscribe(() => this.saveToSharedSession());
 
-    // ✅ Ensure session is cleared when browser reloads/closes
     window.addEventListener("beforeunload", () => {
       sessionStorage.clear();
     });
   }
 
-  // -------------------------------
-  // ✅ Clear all session data ONLY on hard reload (F5)
-  // -------------------------------
-  private clearSessionOnReload() {
+  private handlePageReload() {
     try {
-      const reloaded = sessionStorage.getItem("pageReloaded");
-      if (reloaded) {
-        // Still same tab navigation — skip clearing
+      const navigatedAway = sessionStorage.getItem("navigatedFromAccountType");
+      if (navigatedAway === "true") {
+        sessionStorage.removeItem("navigatedFromAccountType");
         return;
       }
-      // If not set → true reload → clear session & mark it
       sessionStorage.clear();
       sessionStorage.setItem("pageReloaded", "true");
     } catch (e) {
@@ -54,9 +49,6 @@ class AccountTypePage {
     }
   }
 
-  // -------------------------------
-  // Shared session helpers
-  // -------------------------------
   private saveToSharedSession() {
     try {
       const slice = {
@@ -88,21 +80,15 @@ class AccountTypePage {
         delete full[SLICE_KEY];
         appViewModel?.setOnboardingData(full);
       }
-    } catch {}
+    } catch { }
   }
 
-  // -------------------------------
-  // Navigation & actions
-  // -------------------------------
   selectAccountType = (type: string) => {
     this.selectedAccountType(type);
   };
 
   goBack = () => {
-    this.saveToSharedSession(); // ✅ Persist before going back
-    if (!this.isLoading()) {
-      appViewModel?.goToNextStep("accountTypePage", "welcomePage");
-    }
+    this.saveToSharedSession();
   };
 
   goNext = async () => {
@@ -147,7 +133,8 @@ class AccountTypePage {
         if (appViewModel) appViewModel.currentAccountId(accountId);
       }
 
-      this.saveToSharedSession(); // ✅ Preserve data before moving forward
+      sessionStorage.setItem("navigatedFromAccountType", "true");
+      this.saveToSharedSession();
       appViewModel?.goToNextStep("accountTypePage", "accountDetailsPage");
     } catch (err) {
       console.error("API Error:", err);
@@ -157,9 +144,6 @@ class AccountTypePage {
     }
   };
 
-  // -------------------------------
-  // CNIC Validation & formatting
-  // -------------------------------
   private formatCNIC = (value: string) => {
     if (!value) return;
     let digits = value.replace(/\D/g, "");
@@ -196,9 +180,6 @@ class AccountTypePage {
     return true;
   };
 
-  // -------------------------------
-  // Form helpers
-  // -------------------------------
   isFormValid = ko.pureComputed(() => {
     const clean = this.cnicNumber().replace(/\D/g, "");
     return clean.length === 13 && !this.cnicError() && !this.isLoading();
@@ -212,7 +193,7 @@ class AccountTypePage {
     document.title = "MBL | Account Type";
   };
 
-  disconnected = (): void => {};
+  disconnected = (): void => { };
 }
 
 export = AccountTypePage;

@@ -3,6 +3,7 @@ import "ojs/ojknockout";
 import { ojButton } from "ojs/ojbutton";
 import * as Router from "ojs/ojrouter";
 import appViewModel from "../appController";
+const SLICE_KEY = "loginDetailsPage";
 
 interface PasswordRequirements {
   minLength: boolean;
@@ -15,7 +16,8 @@ class LoginDetailsPage {
   confirmPassword: ko.Observable<string>;
   showPassword: ko.Observable<boolean>;
   showConfirmPassword: ko.Observable<boolean>;
-  isPasswordValid: ko.Observable<boolean>;
+  // Changed to Computed to manage validation logic
+  isPasswordValid: ko.Computed<boolean>;
   isConfirmPasswordValid: ko.Observable<boolean>;
   passwordStrength: ko.Observable<string>;
   confirmPasswordStatus: ko.Observable<string>;
@@ -27,11 +29,11 @@ class LoginDetailsPage {
   apiError: ko.Observable<string | null>;
 
   constructor() {
-    this.password = ko.observable("");
+    this.password = ko.observable("").extend({ rateLimit: 200 });
     this.confirmPassword = ko.observable("");
     this.showPassword = ko.observable(false);
     this.showConfirmPassword = ko.observable(false);
-    this.isPasswordValid = ko.observable(false);
+
     this.isConfirmPasswordValid = ko.observable(false);
     this.passwordStrength = ko.observable("Weak");
     this.confirmPasswordStatus = ko.observable("");
@@ -42,20 +44,49 @@ class LoginDetailsPage {
       hasSpecial: false,
     });
 
+    this.handlePageReload();
+    this.checkForInvalidReload();
+
     this.apiLoading = ko.observable(false);
     this.apiError = ko.observable(null);
+
+    this.isPasswordValid = ko.pureComputed(() => {
+      const password = this.password();
+      const requirements: PasswordRequirements = {
+        minLength: password.length >= 8,
+        hasUpper: /[A-Z]/.test(password),
+        hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+      };
+
+      this.requirements(requirements);
+
+      const validCount = Object.values(requirements).filter((req) => req).length;
+      if (validCount === 3) {
+        this.passwordStrength("Strong");
+        return true;
+      } else if (validCount === 2) {
+        this.passwordStrength("Medium");
+        return false;
+      } else {
+        this.passwordStrength("Weak");
+        return false;
+      }
+    });
 
     this.isNextButtonEnabled = ko.computed(() => {
       return this.isPasswordValid() && this.isConfirmPasswordValid();
     });
 
-    this.password.subscribe((newValue) => {
-      this.validatePassword(newValue);
+    this.password.subscribe(() => {
       this.validateConfirmPassword();
     });
 
     this.confirmPassword.subscribe(() => {
       this.validateConfirmPassword();
+    });
+
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.clear();
     });
   }
 
@@ -72,32 +103,11 @@ class LoginDetailsPage {
     }
   };
 
-  validatePassword = (password: string): void => {
-    const requirements: PasswordRequirements = {
-      minLength: password.length >= 8,
-      hasUpper: /[A-Z]/.test(password),
-      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-    };
-
-    this.requirements(requirements);
-
-    const validCount = Object.values(requirements).filter((req) => req).length;
-
-    if (validCount === 3) {
-      this.passwordStrength("Strong");
-      this.isPasswordValid(true);
-    } else if (validCount === 2) {
-      this.passwordStrength("Medium");
-      this.isPasswordValid(false);
-    } else {
-      this.passwordStrength("Weak");
-      this.isPasswordValid(false);
-    }
-  };
-
   validateConfirmPassword = (): void => {
     const password = this.password();
     const confirmPassword = this.confirmPassword();
+    // Read the computed to establish dependency and ensure correct state check
+    const isMainPasswordValid = this.isPasswordValid();
 
     if (confirmPassword === "") {
       this.confirmPasswordStatus("");
@@ -106,7 +116,7 @@ class LoginDetailsPage {
       return;
     }
 
-    if (password === confirmPassword && this.isPasswordValid()) {
+    if (password === confirmPassword && isMainPasswordValid) {
       this.confirmPasswordStatus("Passwords Match!");
       this.confirmPasswordStatusClass("success");
       this.isConfirmPasswordValid(true);
@@ -165,6 +175,42 @@ class LoginDetailsPage {
       ? "requirement-item valid"
       : "requirement-item invalid";
   };
+  private checkForInvalidReload() {
+    try {
+      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
+      if (navigatedFromAccountType !== "true") {
+        console.warn("Invalid access/hard reload detected on Login Details page. Redirecting to Account Type page.");
+        this.clearLocalSlice();
+        appViewModel?.goToNextStep("loginDetailsPage", "accountTypePage");
+      }
+    } catch (e) {
+      console.error("Error during reload check:", e);
+    }
+  }
+
+  private clearLocalSlice() {
+    try {
+      const full = appViewModel?.getOnboardingData();
+      if (full && full[SLICE_KEY]) {
+        delete full[SLICE_KEY];
+        appViewModel?.setOnboardingData(full);
+      }
+    } catch { }
+  }
+
+  // Clear session only once on actual reload
+  private handlePageReload() {
+    try {
+      const reloaded = sessionStorage.getItem("pageReloaded");
+      if (!reloaded) {
+        sessionStorage.clear();
+        sessionStorage.setItem("pageReloaded", "true");
+      }
+    } catch (e) {
+      console.warn("Failed to handle session reload:", e);
+    }
+  }
+
 
   goBack = (): void => {
     if (appViewModel?.router) {
@@ -174,7 +220,6 @@ class LoginDetailsPage {
     }
   };
 
-  /** ✅ Updated goNext — uses CNIC instead of accountId */
   goNext = async (): Promise<void> => {
     if (!this.isNextButtonEnabled()) return;
 
@@ -204,14 +249,10 @@ class LoginDetailsPage {
       );
 
       const data = await response.json();
-      console.log("✅ Credentials API Response:", data);
     } catch (err: any) {
-      console.error("❌ API Error:", err);
       this.apiError("Network or server error occurred.");
     } finally {
       this.apiLoading(false);
-
-      // ✅ Always proceed to next step
       if (appViewModel) {
         appViewModel.goToNextStep("loginDetailsPage", "termsPage");
       }

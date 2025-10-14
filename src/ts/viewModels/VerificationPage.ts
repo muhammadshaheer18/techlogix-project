@@ -1,14 +1,11 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
-
 const SLICE_KEY = "verificationPage";
 
 class VerificationPage {
-  // Observables
   public username = ko.observable<string>("");
   public apiError = ko.observable<string | null>(null);
   public apiLoading = ko.observable<boolean>(false);
-
   private fallbackPhone: string | null = null;
   private usernameExists = ko.observable<boolean>(false);
   private usernameTimer: number | null = null;
@@ -16,37 +13,55 @@ class VerificationPage {
   private hasCheckedOnce = ko.observable<boolean>(false);
 
   constructor() {
-    this.clearSessionOnReload();
+    this.handlePageReload();
     this.restoreFromSharedSession();
-
-    // Detect user typing with debounce
+    this.checkForInvalidReload();
     this.username.subscribe(() => {
       this.hasUserStoppedTyping(false);
       this.hasCheckedOnce(false);
       this.saveToSharedSession();
 
       if (this.usernameTimer) clearTimeout(this.usernameTimer);
-
-      // Wait 3 seconds after last keystroke before checking
       this.usernameTimer = window.setTimeout(() => {
         this.hasUserStoppedTyping(true);
         this.checkUsernameAvailability();
       }, 1000);
     });
-
-    // Clear session only once on a full page reload
     window.addEventListener("beforeunload", () => {
       sessionStorage.clear();
     });
   }
 
-  // Clear session only once on actual reload
-  private clearSessionOnReload() {
+  private checkForInvalidReload() {
+    try {
+      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
+      if (navigatedFromAccountType !== "true") {
+        console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
+        this.clearLocalSlice();
+        appViewModel?.goToNextStep("verificationPage", "accountTypePage");
+      }
+    } catch (e) {
+      console.error("Error during reload check:", e);
+    }
+  }
+
+  private clearLocalSlice() {
+    try {
+      const full = appViewModel?.getOnboardingData();
+      if (full && full[SLICE_KEY]) {
+        delete full[SLICE_KEY];
+        appViewModel?.setOnboardingData(full);
+      }
+    } catch { }
+  }
+
+  private handlePageReload() {
     try {
       const reloaded = sessionStorage.getItem("pageReloaded");
-      if (reloaded) return;
-      sessionStorage.clear();
-      sessionStorage.setItem("pageReloaded", "true");
+      if (!reloaded) {
+        sessionStorage.clear();
+        sessionStorage.setItem("pageReloaded", "true");
+      }
     } catch (e) {
       console.warn("Failed to handle session reload:", e);
     }
@@ -75,7 +90,6 @@ class VerificationPage {
     this.fetchUserData();
   }
 
-  // ---------------- Fetch User Data ----------------
   fetchUserData = async (): Promise<void> => {
     const cnicNo = localStorage.getItem("cnicNo");
     if (!cnicNo) {
@@ -109,7 +123,6 @@ class VerificationPage {
     }
   };
 
-  // ---------------- Username Validation ----------------
   public usernameStatus = ko.computed(() => {
     const value = this.username()?.trim();
 
@@ -130,11 +143,11 @@ class VerificationPage {
       case "checking":
         return "Checking availability...";
       case "invalid":
-        return "⚠️ Username must be between 8 and 16 characters";
+        return "Username must be between 8 and 16 characters";
       case "exists":
-        return "❌ Username already exists";
+        return "Username already exists";
       case "valid":
-        return "✅ Username available";
+        return "Username available";
       case "pending":
         return "";
       default:
@@ -142,7 +155,6 @@ class VerificationPage {
     }
   });
 
-  // ---------------- Debounced API Check ----------------
   public checkUsernameAvailability = async (): Promise<void> => {
     const usernameValue = this.username()?.trim();
 
@@ -166,7 +178,7 @@ class VerificationPage {
 
       this.usernameExists(exists);
       this.hasCheckedOnce(true);
-      
+
       if (exists) {
         this.apiError("Username already exists. Please choose another.");
       } else {
@@ -180,14 +192,12 @@ class VerificationPage {
     }
   };
 
-  // ---------------- Manual Check on Blur ----------------
   public onUsernameBlur = (): void => {
     if (this.hasUserStoppedTyping()) {
       this.checkUsernameAvailability();
     }
   };
 
-  // ---------------- Navigation ----------------
   goNext = () => {
     const usernameValue = this.username()?.trim();
 

@@ -1,6 +1,5 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
-
 const SLICE_KEY = "accountDetailsPage";
 
 class AccountDetailsPage {
@@ -22,17 +21,15 @@ class AccountDetailsPage {
     this.isLoading = ko.observable(false);
     this.hasError = ko.observable(false);
     this.errorMessage = ko.observable("");
-
     this.handlePageReload();
     this.restoreFromSharedSession();
+    this.checkForInvalidReload();
 
-    // ✅ Account number validation
     this.isAccountNumberValid = ko.computed(() => {
       const clean = this.accountNumber().replace(/\s+/g, "");
       return /^\d{14}$/.test(clean);
     });
 
-    // ✅ IBAN validation
     this.isIbanValid = ko.computed(() => {
       const iban = this.ibanNumber().replace(/\s+/g, "").toUpperCase();
       return (
@@ -42,7 +39,6 @@ class AccountDetailsPage {
       );
     });
 
-    // ✅ Allow next button only when valid and not loading
     this.canProceed = ko.computed(() => {
       const valid =
         this.activeTab() === "account"
@@ -51,7 +47,6 @@ class AccountDetailsPage {
       return valid && !this.isLoading();
     });
 
-    // ✅ Auto-format account number (XXXXX XXXXXXXXX)
     this.accountNumber.subscribe((val) => {
       if (!val) return;
       let clean = val.replace(/\D/g, "").substring(0, 14);
@@ -60,7 +55,6 @@ class AccountDetailsPage {
       this.saveToSharedSession();
     });
 
-    // ✅ Auto-format IBAN (spaces every 4 chars)
     this.ibanNumber.subscribe((val) => {
       if (!val) return;
       let clean = val.replace(/[^A-Z0-9]/gi, "").toUpperCase().substring(0, 34);
@@ -69,15 +63,24 @@ class AccountDetailsPage {
       this.saveToSharedSession();
     });
 
-    // ✅ Clear session only on reload, not between steps
     window.addEventListener("beforeunload", () => {
       sessionStorage.clear();
     });
   }
 
-  // -------------------------------
-  // Handle first-time reload
-  // -------------------------------
+  private checkForInvalidReload() {
+    try {
+      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
+      if (navigatedFromAccountType !== "true") {
+        console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
+        this.clearLocalSlice();
+        appViewModel?.goToNextStep("accountDetailsPage", "accountTypePage");
+      }
+    } catch (e) {
+      console.error("Error during reload check:", e);
+    }
+  }
+
   private handlePageReload() {
     try {
       const reloaded = sessionStorage.getItem("pageReloaded");
@@ -90,9 +93,6 @@ class AccountDetailsPage {
     }
   }
 
-  // -------------------------------
-  // Save + Restore session state
-  // -------------------------------
   private saveToSharedSession() {
     try {
       const slice = {
@@ -126,12 +126,9 @@ class AccountDetailsPage {
         delete full[SLICE_KEY];
         appViewModel?.setOnboardingData(full);
       }
-    } catch {}
+    } catch { }
   }
 
-  // -------------------------------
-  // Navigation between tabs/pages
-  // -------------------------------
   public switchTab = (tabName: string): void => {
     this.activeTab(tabName);
     this.hasError(false);
@@ -145,9 +142,6 @@ class AccountDetailsPage {
       appViewModel.goToNextStep("accountDetailsPage", "accountTypePage");
   };
 
-  // -------------------------------
-  // ✅ API call for account validation
-  // -------------------------------
   public goNext = async (): Promise<void> => {
     this.hasError(false);
     this.errorMessage("");
@@ -164,27 +158,22 @@ class AccountDetailsPage {
     this.isLoading(true);
 
     try {
-      // ✅ Retrieve CNIC stored from first step
       const cnicNo =
         sessionStorage.getItem("cnicNo") || localStorage.getItem("cnicNo");
       if (!cnicNo) {
         this.showError("CNIC not found. Please restart the process.");
         return;
       }
-
-      // ✅ Prepare request body (includes CNIC)
       const requestBody =
         this.activeTab() === "account"
           ? {
-              cnicNo,
-              accountNumber: this.accountNumber().replace(/\s+/g, ""),
-            }
+            cnicNo,
+            accountNumber: this.accountNumber().replace(/\s+/g, ""),
+          }
           : {
-              cnicNo,
-              iban: this.ibanNumber().replace(/\s+/g, "").toUpperCase(),
-            };
-
-      // ✅ Updated backend endpoint
+            cnicNo,
+            iban: this.ibanNumber().replace(/\s+/g, "").toUpperCase(),
+          };
       const response = await fetch(
         `http://localhost:8080/api/accounts/validate-account/${cnicNo}`,
         {
@@ -199,14 +188,11 @@ class AccountDetailsPage {
         try {
           const data = JSON.parse(errMsg);
           errMsg = data.message || errMsg;
-        } catch {}
+        } catch { }
         throw new Error(errMsg || "Account validation failed.");
       }
       localStorage.setItem("cnicNo", cnicNo);
-      // ✅ Save before navigating
       this.saveToSharedSession();
-
-      // ✅ Go to verification step
       if (appViewModel?.router)
         appViewModel.goToNextStep("accountDetailsPage", "verificationPage");
 
@@ -219,18 +205,12 @@ class AccountDetailsPage {
     }
   };
 
-  // -------------------------------
-  // Error handling helpers
-  // -------------------------------
   private showError(message: string): void {
     this.errorMessage(message);
     this.hasError(true);
     setTimeout(() => this.hasError(false), 5000);
   }
 
-  // -------------------------------
-  // Form utilities
-  // -------------------------------
   public clearForm = (): void => {
     this.accountNumber("");
     this.ibanNumber("");

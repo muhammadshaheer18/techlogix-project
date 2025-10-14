@@ -1,5 +1,6 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
+const SLICE_KEY = "termsPage";
 
 interface Section {
   heading: string;
@@ -19,14 +20,57 @@ class Terms {
   sections = ko.observableArray<Section>([]);
 
   constructor() {
-    this.accepted = ko.observable(false); // User must tick checkbox
-
+    this.accepted = ko.observable(false); 
+    this.handlePageReload();
+    this.checkForInvalidReload();
     this.loadTerms();
+
+
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.clear();
+    });
   }
 
-  // Fetch terms content from JSON
+  private handlePageReload() {
+    try {
+      const reloaded = sessionStorage.getItem("pageReloaded");
+      if (!reloaded) {
+        sessionStorage.clear();
+        sessionStorage.setItem("pageReloaded", "true");
+      }
+    } catch (e) {
+      console.warn("Failed to handle session reload:", e);
+    }
+
+
+  }
+
+  private clearLocalSlice() {
+    try {
+      const full = appViewModel?.getOnboardingData();
+      if (full && full[SLICE_KEY]) {
+        delete full[SLICE_KEY];
+        appViewModel?.setOnboardingData(full);
+      }
+    } catch { }
+  }
+
+  private checkForInvalidReload() {
+    try {
+      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
+      if (navigatedFromAccountType !== "true") {
+        console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
+        this.clearLocalSlice();
+        appViewModel?.goToNextStep("termsPage", "accountTypePage");
+      }
+    } catch (e) {
+      console.error("Error during reload check:", e);
+    }
+
+  }
+
   private loadTerms(): void {
-   fetch("ts/views/termsData.json")
+    fetch("ts/views/termsData.json")
       .then(res => res.json())
       .then((data: TermsData) => {
         this.title(data.title);

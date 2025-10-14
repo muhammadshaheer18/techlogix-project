@@ -1,4 +1,6 @@
 import * as ko from "knockout";
+import appViewModel from "../appController";
+const SLICE_KEY = "successPage";
 
 class SuccessOnboardPage {
   accountTitle: ko.Observable<string>;
@@ -13,12 +15,54 @@ class SuccessOnboardPage {
     this.accountNumber = ko.observable("");
     this.isLoading = ko.observable(true);
     this.errorMessage = ko.observable("");
+    this.handlePageReload();
+    this.checkForInvalidReload();
+
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.clear();
+    });
+  }
+
+  private handlePageReload() {
+    try {
+      const reloaded = sessionStorage.getItem("pageReloaded");
+      if (!reloaded) {
+        sessionStorage.clear();
+        sessionStorage.setItem("pageReloaded", "true");
+      }
+    } catch (e) {
+      console.warn("Failed to handle session reload:", e);
+    }
+
+
+  }
+
+  private clearLocalSlice() {
+    try {
+      const full = appViewModel?.getOnboardingData();
+      if (full && full[SLICE_KEY]) {
+        delete full[SLICE_KEY];
+        appViewModel?.setOnboardingData(full);
+      }
+    } catch { }
+  }
+
+  private checkForInvalidReload() {
+    try {
+      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
+      if (navigatedFromAccountType !== "true") {
+        console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
+        this.clearLocalSlice();
+        appViewModel?.goToNextStep("sucessPage", "accountTypePage");
+      }
+    } catch (e) {
+      console.error("Error during reload check:", e);
+    }
+
   }
 
   connected(): void {
     document.title = "MBL | Onboarding Success";
-
-    // ✅ Fetch CNIC from localStorage (set during previous flow)
     const cnicNo = localStorage.getItem("cnicNo");
 
     if (!cnicNo) {
@@ -26,8 +70,6 @@ class SuccessOnboardPage {
       this.errorMessage("CNIC not found in localStorage. Please restart the process.");
       return;
     }
-
-    // ✅ Fetch data from backend using CNIC
     this.fetchAccountSummary(cnicNo);
   }
 
@@ -46,7 +88,6 @@ class SuccessOnboardPage {
         return response.json();
       })
       .then((data) => {
-        // ✅ unwrap ApiResponse
         const account = data.data;
         if (!account) throw new Error("No account data returned from API.");
 
@@ -63,7 +104,6 @@ class SuccessOnboardPage {
 
 
   handleContinue = (): void => {
-    // Optionally navigate to login or dashboard
   };
 }
 
