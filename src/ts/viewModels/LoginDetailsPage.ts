@@ -4,7 +4,7 @@ import { ojButton } from "ojs/ojbutton";
 import * as Router from "ojs/ojrouter";
 import appViewModel from "../appController";
 const SLICE_KEY = "loginDetailsPage";
-
+//classCreation
 interface PasswordRequirements {
   minLength: boolean;
   hasUpper: boolean;
@@ -16,7 +16,6 @@ class LoginDetailsPage {
   confirmPassword: ko.Observable<string>;
   showPassword: ko.Observable<boolean>;
   showConfirmPassword: ko.Observable<boolean>;
-  // Changed to Computed to manage validation logic
   isPasswordValid: ko.Computed<boolean>;
   isConfirmPasswordValid: ko.Observable<boolean>;
   passwordStrength: ko.Observable<string>;
@@ -33,7 +32,6 @@ class LoginDetailsPage {
     this.confirmPassword = ko.observable("");
     this.showPassword = ko.observable(false);
     this.showConfirmPassword = ko.observable(false);
-
     this.isConfirmPasswordValid = ko.observable(false);
     this.passwordStrength = ko.observable("Weak");
     this.confirmPasswordStatus = ko.observable("");
@@ -89,7 +87,90 @@ class LoginDetailsPage {
       sessionStorage.clear();
     });
   }
+  //Session and Refresh Handling
+  private handlePageReload() {
+    try {
+      const reloaded = sessionStorage.getItem("pageReloaded");
+      if (!reloaded) {
+        sessionStorage.clear();
+        sessionStorage.setItem("pageReloaded", "true");
+      }
+    } catch (e) {
+      console.warn("Failed to handle session reload:", e);
+    }
+  }
 
+  private checkForInvalidReload() {
+    try {
+      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
+      if (navigatedFromAccountType !== "true") {
+        console.warn("Invalid access/hard reload detected on Login Details page. Redirecting to Account Type page.");
+        this.clearLocalSlice();
+        appViewModel?.goToNextStep("loginDetailsPage", "accountTypePage");
+      }
+    } catch (e) {
+      console.error("Error during reload check:", e);
+    }
+  }
+
+  private clearLocalSlice() {
+    try {
+      const full = appViewModel?.getOnboardingData();
+      if (full && full[SLICE_KEY]) {
+        delete full[SLICE_KEY];
+        appViewModel?.setOnboardingData(full);
+      }
+    } catch { }
+  }
+  //goBack & goNext Handlers
+  goBack = (): void => {
+    if (appViewModel?.router) {
+      appViewModel.router.go({ path: "verificationPage" });
+    } else {
+      window.history.back();
+    }
+  };
+
+  goNext = async (): Promise<void> => {
+    if (!this.isNextButtonEnabled()) return;
+
+    this.apiLoading(true);
+    this.apiError(null);
+
+    const cnicNo = localStorage.getItem("cnicNo");
+    const username = localStorage.getItem("username"); // optional
+    const password = this.password();
+
+    if (!cnicNo) {
+      this.apiError("Missing CNIC. Please restart the process.");
+      this.apiLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/accounts/credentials/${encodeURIComponent(
+          cnicNo
+        )}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: username || null, password }),
+        }
+      );
+
+      const data = await response.json();
+    } catch (err: any) {
+      this.apiError("Network or server error occurred.");
+    } finally {
+      this.apiLoading(false);
+      if (appViewModel) {
+        appViewModel.goToNextStep("loginDetailsPage", "termsPage");
+      }
+    }
+  };
+
+  //Page Specific Functions
   getBarColor = (index: number): string => {
     const strength = this.passwordStrength();
     if (strength === "Strong") {
@@ -175,97 +256,17 @@ class LoginDetailsPage {
       ? "requirement-item valid"
       : "requirement-item invalid";
   };
-  private checkForInvalidReload() {
-    try {
-      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
-      if (navigatedFromAccountType !== "true") {
-        console.warn("Invalid access/hard reload detected on Login Details page. Redirecting to Account Type page.");
-        this.clearLocalSlice();
-        appViewModel?.goToNextStep("loginDetailsPage", "accountTypePage");
-      }
-    } catch (e) {
-      console.error("Error during reload check:", e);
-    }
-  }
-
-  private clearLocalSlice() {
-    try {
-      const full = appViewModel?.getOnboardingData();
-      if (full && full[SLICE_KEY]) {
-        delete full[SLICE_KEY];
-        appViewModel?.setOnboardingData(full);
-      }
-    } catch { }
-  }
-
-  // Clear session only once on actual reload
-  private handlePageReload() {
-    try {
-      const reloaded = sessionStorage.getItem("pageReloaded");
-      if (!reloaded) {
-        sessionStorage.clear();
-        sessionStorage.setItem("pageReloaded", "true");
-      }
-    } catch (e) {
-      console.warn("Failed to handle session reload:", e);
-    }
-  }
-
-
-  goBack = (): void => {
-    if (appViewModel?.router) {
-      appViewModel.router.go({ path: "verificationPage" });
-    } else {
-      window.history.back();
-    }
-  };
-
-  goNext = async (): Promise<void> => {
-    if (!this.isNextButtonEnabled()) return;
-
-    this.apiLoading(true);
-    this.apiError(null);
-
-    const cnicNo = localStorage.getItem("cnicNo");
-    const username = localStorage.getItem("username"); // optional
-    const password = this.password();
-
-    if (!cnicNo) {
-      this.apiError("Missing CNIC. Please restart the process.");
-      this.apiLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/accounts/credentials/${encodeURIComponent(
-          cnicNo
-        )}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: username || null, password }),
-        }
-      );
-
-      const data = await response.json();
-    } catch (err: any) {
-      this.apiError("Network or server error occurred.");
-    } finally {
-      this.apiLoading(false);
-      if (appViewModel) {
-        appViewModel.goToNextStep("loginDetailsPage", "termsPage");
-      }
-    }
-  };
-
-  connected = (): void => {
-    document.title = "MBL | Login Details";
-  };
 
   validateForm = (): boolean => {
     return this.isNextButtonEnabled();
   };
-}
+  //Page Connected & Disconnected
+  connected = (): void => {
+    document.title = "MBL | Login Details";
+  };
 
+  disconnected = (): void => {
+
+  }
+}
 export = LoginDetailsPage;

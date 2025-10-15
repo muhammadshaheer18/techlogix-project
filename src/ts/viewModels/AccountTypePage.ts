@@ -1,8 +1,7 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
-
 const SLICE_KEY = "accountTypePage";
-
+//classCreation
 class AccountTypePage {
   selectedAccountType = ko.observable<string>("Individual");
   cnicNumber = ko.observable<string>("");
@@ -34,7 +33,7 @@ class AccountTypePage {
       sessionStorage.clear();
     });
   }
-
+  //Session and Refresh Handling
   private handlePageReload() {
     try {
       const navigatedAway = sessionStorage.getItem("navigatedFromAccountType");
@@ -86,7 +85,7 @@ class AccountTypePage {
   selectAccountType = (type: string) => {
     this.selectedAccountType(type);
   };
-
+  //goBack & goNext Handlers
   goBack = () => {
     this.saveToSharedSession();
   };
@@ -143,7 +142,7 @@ class AccountTypePage {
       this.isLoading(false);
     }
   };
-
+  //Page Specific Functions
   private formatCNIC = (value: string) => {
     if (!value) return;
     let digits = value.replace(/\D/g, "");
@@ -188,7 +187,7 @@ class AccountTypePage {
   onCnicFocus = () => {
     this.cnicError("");
   };
-
+  //Page Connected & Disconnected
   connected = (): void => {
     document.title = "MBL | Account Type";
   };

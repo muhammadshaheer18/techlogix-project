@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
 const SLICE_KEY = "successPage";
-
+//classCreation
 class SuccessOnboardPage {
   accountTitle: ko.Observable<string>;
   username: ko.Observable<string>;
@@ -22,7 +22,7 @@ class SuccessOnboardPage {
       sessionStorage.clear();
     });
   }
-
+  //Session and Refresh Handling
   private handlePageReload() {
     try {
       const reloaded = sessionStorage.getItem("pageReloaded");
@@ -33,8 +33,6 @@ class SuccessOnboardPage {
     } catch (e) {
       console.warn("Failed to handle session reload:", e);
     }
-
-
   }
 
   private clearLocalSlice() {
@@ -58,19 +56,6 @@ class SuccessOnboardPage {
     } catch (e) {
       console.error("Error during reload check:", e);
     }
-
-  }
-
-  connected(): void {
-    document.title = "MBL | Onboarding Success";
-    const cnicNo = localStorage.getItem("cnicNo");
-
-    if (!cnicNo) {
-      this.isLoading(false);
-      this.errorMessage("CNIC not found in localStorage. Please restart the process.");
-      return;
-    }
-    this.fetchAccountSummary(cnicNo);
   }
 
   fetchAccountSummary(cnicNo: string): void {
@@ -101,10 +86,22 @@ class SuccessOnboardPage {
       })
       .finally(() => this.isLoading(false));
   }
+  //Page Specific Functions
+  handleContinue = (): void => { };
 
+  //Page Connected & Disconnected
+  connected(): void {
+    document.title = "MBL | Onboarding Success";
+    const cnicNo = localStorage.getItem("cnicNo");
 
-  handleContinue = (): void => {
-  };
+    if (!cnicNo) {
+      this.isLoading(false);
+      this.errorMessage("CNIC not found in localStorage. Please restart the process.");
+      return;
+    }
+    this.fetchAccountSummary(cnicNo);
+  }
+
+  disconnected = (): void => { }
 }
-
 export = SuccessOnboardPage;

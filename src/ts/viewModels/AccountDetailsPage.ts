@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
 const SLICE_KEY = "accountDetailsPage";
-
+//classCreation
 class AccountDetailsPage {
   public accountNumber: ko.Observable<string>;
   public ibanNumber: ko.Observable<string>;
@@ -9,7 +9,6 @@ class AccountDetailsPage {
   public isLoading: ko.Observable<boolean>;
   public hasError: ko.Observable<boolean>;
   public errorMessage: ko.Observable<string>;
-
   public isAccountNumberValid: ko.Computed<boolean>;
   public isIbanValid: ko.Computed<boolean>;
   public canProceed: ko.Computed<boolean>;
@@ -67,20 +66,7 @@ class AccountDetailsPage {
       sessionStorage.clear();
     });
   }
-
-  private checkForInvalidReload() {
-    try {
-      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
-      if (navigatedFromAccountType !== "true") {
-        console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
-        this.clearLocalSlice();
-        appViewModel?.goToNextStep("accountDetailsPage", "accountTypePage");
-      }
-    } catch (e) {
-      console.error("Error during reload check:", e);
-    }
-  }
-
+  //Session and Refresh Handling
   private handlePageReload() {
     try {
       const reloaded = sessionStorage.getItem("pageReloaded");
@@ -119,6 +105,19 @@ class AccountDetailsPage {
     }
   }
 
+  private checkForInvalidReload() {
+    try {
+      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
+      if (navigatedFromAccountType !== "true") {
+        console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
+        this.clearLocalSlice();
+        appViewModel?.goToNextStep("accountDetailsPage", "accountTypePage");
+      }
+    } catch (e) {
+      console.error("Error during reload check:", e);
+    }
+  }
+
   private clearLocalSlice() {
     try {
       const full = appViewModel?.getOnboardingData();
@@ -128,14 +127,7 @@ class AccountDetailsPage {
       }
     } catch { }
   }
-
-  public switchTab = (tabName: string): void => {
-    this.activeTab(tabName);
-    this.hasError(false);
-    this.errorMessage("");
-    this.saveToSharedSession();
-  };
-
+  //goBack & goNext Handlers
   public goBack = (): void => {
     this.saveToSharedSession();
     if (appViewModel)
@@ -204,6 +196,13 @@ class AccountDetailsPage {
       this.isLoading(false);
     }
   };
+  //Page Specific Functions
+  public switchTab = (tabName: string): void => {
+    this.activeTab(tabName);
+    this.hasError(false);
+    this.errorMessage("");
+    this.saveToSharedSession();
+  };
 
   private showError(message: string): void {
     this.errorMessage(message);
@@ -221,10 +220,13 @@ class AccountDetailsPage {
   public onInputFocus = (): void => {
     this.hasError(false);
   };
-
+  //Page Connected & Disconnected
   public connected = (): void => {
     document.title = "MBL | Account Details";
   };
-}
 
+  public disconnected = (): void => {
+
+  }
+}
 export = AccountDetailsPage;

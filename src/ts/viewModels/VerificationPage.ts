@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
 const SLICE_KEY = "verificationPage";
-
+//classCreation
 class VerificationPage {
   public username = ko.observable<string>("");
   public apiError = ko.observable<string | null>(null);
@@ -31,30 +31,7 @@ class VerificationPage {
       sessionStorage.clear();
     });
   }
-
-  private checkForInvalidReload() {
-    try {
-      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
-      if (navigatedFromAccountType !== "true") {
-        console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
-        this.clearLocalSlice();
-        appViewModel?.goToNextStep("verificationPage", "accountTypePage");
-      }
-    } catch (e) {
-      console.error("Error during reload check:", e);
-    }
-  }
-
-  private clearLocalSlice() {
-    try {
-      const full = appViewModel?.getOnboardingData();
-      if (full && full[SLICE_KEY]) {
-        delete full[SLICE_KEY];
-        appViewModel?.setOnboardingData(full);
-      }
-    } catch { }
-  }
-
+  //Session and Refresh Handling
   private handlePageReload() {
     try {
       const reloaded = sessionStorage.getItem("pageReloaded");
@@ -85,11 +62,47 @@ class VerificationPage {
     }
   }
 
-  connected(): void {
-    document.title = "MBL | Verification";
-    this.fetchUserData();
+  private checkForInvalidReload() {
+    try {
+      const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
+      if (navigatedFromAccountType !== "true") {
+        console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
+        this.clearLocalSlice();
+        appViewModel?.goToNextStep("verificationPage", "accountTypePage");
+      }
+    } catch (e) {
+      console.error("Error during reload check:", e);
+    }
   }
 
+  private clearLocalSlice() {
+    try {
+      const full = appViewModel?.getOnboardingData();
+      if (full && full[SLICE_KEY]) {
+        delete full[SLICE_KEY];
+        appViewModel?.setOnboardingData(full);
+      }
+    } catch { }
+  }
+  //goBack & goNext Handlers
+  goBack = () => {
+    this.saveToSharedSession();
+    appViewModel?.router?.go({ path: "accountDetailsPage" });
+  };
+
+  goNext = () => {
+    const usernameValue = this.username()?.trim();
+
+    if (usernameValue && !this.usernameExists() && this.usernameStatus() !== "invalid") {
+      localStorage.setItem("username", usernameValue);
+    } else {
+      localStorage.removeItem("username");
+    }
+
+    this.saveToSharedSession();
+    appViewModel?.goToNextStep("verificationPage", "loginDetailsPage");
+  };
+  //Page Specific Functions
   fetchUserData = async (): Promise<void> => {
     const cnicNo = localStorage.getItem("cnicNo");
     if (!cnicNo) {
@@ -197,24 +210,13 @@ class VerificationPage {
       this.checkUsernameAvailability();
     }
   };
+  //Page Connected & Disconnected
+  connected(): void {
+    document.title = "MBL | Verification";
+    this.fetchUserData();
+  }
 
-  goNext = () => {
-    const usernameValue = this.username()?.trim();
-
-    if (usernameValue && !this.usernameExists() && this.usernameStatus() !== "invalid") {
-      localStorage.setItem("username", usernameValue);
-    } else {
-      localStorage.removeItem("username");
-    }
-
-    this.saveToSharedSession();
-    appViewModel?.goToNextStep("verificationPage", "loginDetailsPage");
-  };
-
-  goBack = () => {
-    this.saveToSharedSession();
-    appViewModel?.router?.go({ path: "accountDetailsPage" });
-  };
+  disconnected(): void { }
 }
 
 export = VerificationPage;

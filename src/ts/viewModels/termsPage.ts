@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
 const SLICE_KEY = "termsPage";
-
+//classCreation
 interface Section {
   heading: string;
   paragraphs: string[];
@@ -20,7 +20,7 @@ class Terms {
   sections = ko.observableArray<Section>([]);
 
   constructor() {
-    this.accepted = ko.observable(false); 
+    this.accepted = ko.observable(false);
     this.handlePageReload();
     this.checkForInvalidReload();
     this.loadTerms();
@@ -30,7 +30,7 @@ class Terms {
       sessionStorage.clear();
     });
   }
-
+  //Session and Refresh Handling
   private handlePageReload() {
     try {
       const reloaded = sessionStorage.getItem("pageReloaded");
@@ -41,8 +41,6 @@ class Terms {
     } catch (e) {
       console.warn("Failed to handle session reload:", e);
     }
-
-
   }
 
   private clearLocalSlice() {
@@ -66,9 +64,24 @@ class Terms {
     } catch (e) {
       console.error("Error during reload check:", e);
     }
-
   }
+  //goBack & goNext Handlers
+  goBack = (): void => {
+    if (appViewModel.router) {
+      appViewModel.router.go({ path: "loginDetailsPage" });
+    }
+  };
 
+  goNext = (): void => {
+    if (this.accepted()) {
+      if (appViewModel.router) {
+        appViewModel.router.go({ path: "successPage" });
+      }
+    } else {
+      alert("Please accept the terms and conditions to continue.");
+    }
+  };
+  //Page Specific Functions
   private loadTerms(): void {
     fetch("ts/views/termsData.json")
       .then(res => res.json())
@@ -81,26 +94,11 @@ class Terms {
         console.error("Failed to load terms:", err);
       });
   }
-
-  handleBack = (): void => {
-    if (appViewModel.router) {
-      appViewModel.router.go({ path: "loginDetailsPage" });
-    }
-  };
-
-  handleAccept = (): void => {
-    if (this.accepted()) {
-      if (appViewModel.router) {
-        appViewModel.router.go({ path: "successPage" });
-      }
-    } else {
-      alert("Please accept the terms and conditions to continue.");
-    }
-  };
-
+  //Page Connected & Disconnected
   connected = (): void => {
     document.title = "MBL | Terms";
   };
-}
 
+  disconnected = (): void => { }
+}
 export = Terms;
