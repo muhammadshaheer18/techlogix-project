@@ -209,7 +209,7 @@ class VerificationPage {
   };
 
   public onUsernameBlur = (): void => {
-  if (this.apiLoading() || this.hasCheckedOnce()) return; // ✅ Prevent duplicate
+  if (this.apiLoading() || this.hasCheckedOnce()) return; 
   this.checkUsernameAvailability();
 };
 
