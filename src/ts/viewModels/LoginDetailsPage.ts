@@ -149,9 +149,9 @@ class LoginDetailsPage {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/accounts/credentials/${encodeURIComponent(
+        `http://localhost:8080/api/accounts/${encodeURIComponent(
           cnicNo
-        )}`,
+        )}/credentials`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

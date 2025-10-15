@@ -61,7 +61,7 @@ class SuccessOnboardPage {
   fetchAccountSummary(cnicNo: string): void {
     const baseUrl = "http://localhost:8080/api/accounts"; // backend base path
 
-    fetch(`${baseUrl}/summary/${encodeURIComponent(cnicNo)}`, {
+    fetch(`${baseUrl}/${encodeURIComponent(cnicNo)}/summary`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })

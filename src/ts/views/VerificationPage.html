@@ -43,7 +43,7 @@
 
     <div class="button-group">
       <button class="btn-back" data-bind="click: goBack">Back</button>
-      <button class="btn-next" data-bind="click: goNext">
+      <button class="btn-next" data-bind="click: goNext , disable: usernameStatus() === 'exists' || usernameStatus() === 'invalid'">
         Next
       </button>
     </div>

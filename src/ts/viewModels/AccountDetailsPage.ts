@@ -167,7 +167,7 @@ class AccountDetailsPage {
             iban: this.ibanNumber().replace(/\s+/g, "").toUpperCase(),
           };
       const response = await fetch(
-        `http://localhost:8080/api/accounts/validate-account/${cnicNo}`,
+        `http://localhost:8080/api/accounts/${cnicNo}/validate-account`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
