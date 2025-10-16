@@ -7,9 +7,9 @@ import "ojs/ojdialog";
 import "ojs/ojinputtext";
 import "ojs/ojbutton";
 
-
 const SLICE_KEY = "loginDetailsPage";
-//classCreation
+const OTP_TIMER_SECONDS = 90; // The timer duration in seconds
+
 interface PasswordRequirements {
   minLength: boolean;
   hasUpper: boolean;
@@ -31,6 +31,9 @@ class LoginDetailsPage {
 
   apiLoading: ko.Observable<boolean>;
   apiError: ko.Observable<string | null>;
+
+  private timerHandle: any = null;
+  private isTimerActive: boolean = false;
 
   constructor() {
     this.password = ko.observable("").extend({ rateLimit: 200 });
@@ -62,8 +65,8 @@ class LoginDetailsPage {
       };
 
       this.requirements(requirements);
+      const validCount = Object.values(requirements).filter((r) => r).length;
 
-      const validCount = Object.values(requirements).filter((req) => req).length;
       if (validCount === 3) {
         this.passwordStrength("Strong");
         return true;
@@ -77,22 +80,20 @@ class LoginDetailsPage {
     });
 
     this.isNextButtonEnabled = ko.computed(() => {
-      return this.isPasswordValid() && this.isConfirmPasswordValid();
+      return this.isPasswordValid() && this.isConfirmPasswordValid() && !this.apiLoading();
     });
 
-    this.password.subscribe(() => {
-      this.validateConfirmPassword();
-    });
-
-    this.confirmPassword.subscribe(() => {
-      this.validateConfirmPassword();
-    });
+    this.password.subscribe(() => this.validateConfirmPassword());
+    this.confirmPassword.subscribe(() => this.validateConfirmPassword());
 
     window.addEventListener("beforeunload", () => {
       sessionStorage.clear();
+      if (this.timerHandle) clearInterval(this.timerHandle);
     });
   }
-  //Session and Refresh Handling
+
+  // ============== SESSION/NAVIGATION HELPERS ==============
+
   private handlePageReload() {
     try {
       const reloaded = sessionStorage.getItem("pageReloaded");
@@ -109,7 +110,6 @@ class LoginDetailsPage {
     try {
       const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
       if (navigatedFromAccountType !== "true") {
-        console.warn("Invalid access/hard reload detected on Login Details page. Redirecting to Account Type page.");
         this.clearLocalSlice();
         appViewModel?.goToNextStep("loginDetailsPage", "accountTypePage");
       }
@@ -127,249 +127,366 @@ class LoginDetailsPage {
       }
     } catch { }
   }
-  //goBack & goNext Handlers
+
   goBack = (): void => {
-    if (appViewModel?.router) {
-      appViewModel.router.go({ path: "verificationPage" });
-    } else {
-      window.history.back();
+    appViewModel?.router
+      ? appViewModel.router.go({ path: "verificationPage" })
+      : window.history.back();
+  };
+
+  // ============== MAIN NEXT HANDLER (API CALLS) ==============
+  goNext = async (): Promise<void> => {
+    if (!this.isNextButtonEnabled()) return;
+
+    this.apiLoading(true);
+    this.apiError(null);
+
+    const cnicNo = localStorage.getItem("cnicNo");
+    const username = localStorage.getItem("username");
+    const password = this.password();
+
+    if (!cnicNo) {
+      this.apiError("Missing CNIC. Please restart the process.");
+      this.apiLoading(false);
+      return;
+    }
+
+    try {
+      // STEP 1️⃣ Save credentials
+      const credentialsResponse = await fetch(
+        `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/credentials`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: username || null, password }),
+        }
+      );
+
+      const credentialsData = await credentialsResponse.json();
+      if (!credentialsResponse.ok) {
+        this.apiError(credentialsData.message || "Error saving credentials.");
+        this.apiLoading(false);
+        return;
+      }
+
+      // STEP 2️⃣ Send OTP
+      const otpResponse = await fetch(
+        `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/send-otp`,
+        { method: "POST", headers: { "Content-Type": "application/json" } }
+      );
+      const otpData = await otpResponse.json();
+
+      if (!otpResponse.ok) {
+        this.apiError(otpData.message || "Failed to send OTP.");
+        this.apiLoading(false);
+        return;
+      }
+
+      // ✅ Open OTP dialog instantly upon success
+      const otpDialog = document.getElementById("otpDialog") as any;
+      const otpMessage = document.getElementById("otpMessage") as HTMLElement;
+      const otpMobile = document.querySelector(".otp-mobile") as HTMLElement;
+
+      if (otpDialog) {
+        // Reset OTP input fields
+        (document.querySelectorAll(".otp-box") as NodeListOf<HTMLInputElement>).forEach(
+          (input) => (input.value = "")
+        );
+
+        // Update dialog message and masked email
+        otpMobile.textContent = otpData?.data?.maskedEmail || 'registered email address';
+        otpMessage.textContent = otpData?.data?.maskedEmail
+          ? `OTP sent successfully to ${otpData.data.maskedEmail}`
+          : "OTP sent successfully!";
+        otpMessage.className = "otp-message success";
+
+        otpDialog.open();
+
+        // Start the timer
+        this.startOtpTimer();
+      }
+    } catch (err) {
+      console.error("Error in goNext:", err);
+      this.apiError("Network or server error occurred.");
+    } finally {
+      this.apiLoading(false);
     }
   };
 
-  goNext = async (): Promise<void> => {
-  if (!this.isNextButtonEnabled()) return;
+  // ============== VALIDATION GETTERS (Ko Bindings) ==============
 
-  this.apiLoading(true);
-  this.apiError(null);
-
-  const cnicNo = localStorage.getItem("cnicNo");
-  const username = localStorage.getItem("username");
-  const password = this.password();
-
-  if (!cnicNo) {
-    this.apiError("Missing CNIC. Please restart the process.");
-    this.apiLoading(false);
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/credentials`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username || null, password }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      const otpDialog = document.getElementById("otpDialog") as any;
-      if (otpDialog) otpDialog.open();
-    } else {
-      this.apiError(data.message || "Server error occurred.");
-    }
-  } catch (err: any) {
-    this.apiError("Network or server error occurred.");
-  } finally {
-    this.apiLoading(false);
-  }
-};
-
-  //Page Specific Functions
-  getBarColor = (index: number): string => {
-    const strength = this.passwordStrength();
-    if (strength === "Strong") {
-      return index <= 4 ? "#00c855" : "#e0e0e0";
-    } else if (strength === "Medium") {
-      return index <= 2 ? "#ffb400" : "#e0e0e0";
-    } else if (strength === "Weak") {
-      return index === 1 ? "#e53e3e" : "#e0e0e0";
-    } else {
-      return "#e0e0e0";
-    }
+  getBarColor = (i: number): string => {
+    const s = this.passwordStrength();
+    if (s === "Strong") return i <= 4 ? "#00c855" : "#e0e0e0";
+    if (s === "Medium") return i <= 2 ? "#ffb400" : "#e0e0e0";
+    return i === 1 ? "#e53e3e" : "#e0e0e0";
   };
 
   validateConfirmPassword = (): void => {
-    const password = this.password();
-    const confirmPassword = this.confirmPassword();
-    // Read the computed to establish dependency and ensure correct state check
-    const isMainPasswordValid = this.isPasswordValid();
+    const p = this.password(),
+      c = this.confirmPassword(),
+      valid = this.isPasswordValid();
 
-    if (confirmPassword === "") {
+    if (!c) {
       this.confirmPasswordStatus("");
       this.confirmPasswordStatusClass("");
       this.isConfirmPasswordValid(false);
       return;
     }
 
-    if (password === confirmPassword && isMainPasswordValid) {
+    if (p === c && valid) {
       this.confirmPasswordStatus("Passwords Match!");
       this.confirmPasswordStatusClass("success");
       this.isConfirmPasswordValid(true);
-    } else if (password !== confirmPassword) {
+    } else if (p !== c) {
       this.confirmPasswordStatus("Passwords do not match");
       this.confirmPasswordStatusClass("error");
       this.isConfirmPasswordValid(false);
     } else {
-      this.confirmPasswordStatus(
-        "Please ensure password meets all requirements"
-      );
+      this.confirmPasswordStatus("Please meet all password requirements");
       this.confirmPasswordStatusClass("error");
       this.isConfirmPasswordValid(false);
     }
   };
 
-  togglePasswordVisibility = (): void => {
-    this.showPassword(!this.showPassword());
-  };
-
-  toggleConfirmPasswordVisibility = (): void => {
+  togglePasswordVisibility = (): void => this.showPassword(!this.showPassword());
+  toggleConfirmPasswordVisibility = (): void =>
     this.showConfirmPassword(!this.showConfirmPassword());
-  };
 
-  getPasswordInputType = (): string => {
-    return this.showPassword() ? "text" : "password";
-  };
+  getPasswordInputType = (): string => (this.showPassword() ? "text" : "password");
+  getConfirmPasswordInputType = (): string =>
+    this.showConfirmPassword() ? "text" : "password";
 
-  getConfirmPasswordInputType = (): string => {
-    return this.showConfirmPassword() ? "text" : "password";
-  };
+  getPasswordToggleText = (): string => (this.showPassword() ? "HIDE" : "SHOW");
+  getConfirmPasswordToggleText = (): string =>
+    this.showConfirmPassword() ? "HIDE" : "SHOW";
 
-  getPasswordToggleText = (): string => {
-    return this.showPassword() ? "HIDE" : "SHOW";
-  };
+  getPasswordInputClass = (): string =>
+    this.password() === ""
+      ? "form-input"
+      : this.isPasswordValid()
+        ? "form-input valid"
+        : "form-input invalid";
 
-  getConfirmPasswordToggleText = (): string => {
-    return this.showConfirmPassword() ? "HIDE" : "SHOW";
-  };
+  getConfirmPasswordInputClass = (): string =>
+    this.confirmPassword() === ""
+      ? "form-input"
+      : this.isConfirmPasswordValid()
+        ? "form-input valid"
+        : "form-input invalid";
 
-  getPasswordInputClass = (): string => {
-    if (this.password() === "") return "form-input";
-    return this.isPasswordValid() ? "form-input valid" : "form-input invalid";
-  };
+  getRequirementClass = (r: keyof PasswordRequirements): string =>
+    this.requirements()[r] ? "requirement-item valid" : "requirement-item invalid";
 
-  getConfirmPasswordInputClass = (): string => {
-    if (this.confirmPassword() === "") return "form-input";
-    return this.isConfirmPasswordValid()
-      ? "form-input valid"
-      : "form-input invalid";
-  };
+  validateForm = (): boolean => this.isNextButtonEnabled();
 
-  getRequirementClass = (requirement: keyof PasswordRequirements): string => {
-    const reqs = this.requirements();
-    return reqs[requirement]
-      ? "requirement-item valid"
-      : "requirement-item invalid";
-  };
+  // ============== OTP HANDLER & TIMER LOGIC ==============
 
-  validateForm = (): boolean => {
-    return this.isNextButtonEnabled();
-  };
-  //Page Connected & Disconnected
- connected = (): void => {
-  document.title = "MBL | Login Details";
+  private startOtpTimer = (initialTime: number = OTP_TIMER_SECONDS) => {
+    if (this.timerHandle) clearInterval(this.timerHandle);
 
-  const otpInputs = Array.from(document.querySelectorAll<HTMLInputElement>(".otp-box"));
-  const otpMessage = document.getElementById("otpMessage") as HTMLElement;
-  const otpDialog = document.getElementById("otpDialog") as any;
-  const otpTimerDisplay = document.getElementById("otpTimer") as HTMLElement;
-  const verifyBtn = document.getElementById("verifyOtpBtn");
-  const cancelBtn = document.getElementById("cancelOtpBtn");
+    const otpTimerDisplay = document.getElementById("otpTimer") as HTMLElement;
+    const resendLink = document.getElementById("resendOtpLink") as HTMLElement;
+    const verifyBtn = document.getElementById("verifyOtpBtn") as HTMLButtonElement;
 
-  // OTP input behavior: numeric-only and auto-focus
-  otpInputs.forEach((input, index) => {
-    input.addEventListener("input", (e) => {
-      const value = (e.target as HTMLInputElement).value;
-      if (!/^[0-9]$/.test(value)) {
-        (e.target as HTMLInputElement).value = "";
-        return;
+    if (!otpTimerDisplay || !verifyBtn) return;
+
+    let timeLeft = initialTime;
+    this.isTimerActive = true;
+    if (resendLink) resendLink.style.display = 'none';
+    verifyBtn.disabled = false;
+
+    const updateDisplay = () => {
+      const m = Math.floor(timeLeft / 60);
+      const s = timeLeft % 60;
+      otpTimerDisplay.textContent = `${m}:${s < 10 ? "0" : ""}${s}`;
+
+      if (timeLeft > 0 && this.isTimerActive) {
+        timeLeft--;
+      } else {
+        clearInterval(this.timerHandle);
+        this.isTimerActive = false;
+        // Timer expired state
+        otpTimerDisplay.textContent = "0:00";
+        const otpMessage = document.getElementById("otpMessage") as HTMLElement;
+        otpMessage.textContent = "OTP expired. Please request a new one.";
+        otpMessage.className = "otp-message error";
+        if (resendLink) resendLink.style.display = 'inline';
+        verifyBtn.disabled = true;
       }
-      if (index < otpInputs.length - 1) otpInputs[index + 1].focus();
-    });
+    };
 
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && !input.value && index > 0) {
-        otpInputs[index - 1].focus();
-      }
-    });
-  });
-
-  // OTP timer (5 min)
-  let timeLeft = 300;
-  const updateTimer = () => {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    otpTimerDisplay.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    if (timeLeft > 0) {
-      timeLeft--;
-      setTimeout(updateTimer, 1000);
-    } else {
-      otpMessage.textContent = "OTP expired. Please request a new one.";
-      otpMessage.className = "otp-message error";
-    }
+    updateDisplay();
+    this.timerHandle = setInterval(updateDisplay, 1000);
   };
-  updateTimer();
 
-  // 🔐 Verify OTP using API
-  verifyBtn?.addEventListener("click", async () => {
-    const otpValue = otpInputs.map((i) => i.value).join("");
+  private resendOtp = async () => {
     const cnicNo = localStorage.getItem("cnicNo");
+    if (!cnicNo) return;
 
-    if (otpValue.length !== 6) {
-      otpMessage.textContent = "Please enter the complete 6-digit OTP.";
-      otpMessage.className = "otp-message error";
-      return;
-    }
-
-    if (!cnicNo) {
-      otpMessage.textContent = "Session expired. Please restart the process.";
-      otpMessage.className = "otp-message error";
-      return;
-    }
-
-    otpMessage.textContent = "Verifying OTP...";
+    const otpMessage = document.getElementById("otpMessage") as HTMLElement;
+    otpMessage.textContent = "Requesting new OTP...";
     otpMessage.className = "otp-message info";
 
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/verify-otp`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ otp: otpValue }),
-        }
+      const otpResponse = await fetch(
+        `http://localhost:8080/api/accounts/send-otp/${encodeURIComponent(cnicNo)}`,
+        { method: "POST", headers: { "Content-Type": "application/json" } }
       );
+      const otpData = await otpResponse.json();
 
-      const data = await response.json();
-
-      if (response.ok && data.verified === true) {
-        otpMessage.textContent = "OTP verified successfully!";
+      if (otpResponse.ok) {
+        otpMessage.textContent = otpData?.data?.maskedEmail
+          ? `New OTP sent successfully to ${otpData.data.maskedEmail}`
+          : "New OTP sent successfully!";
         otpMessage.className = "otp-message success";
-
-        setTimeout(() => {
-          otpDialog.close();
-          appViewModel?.goToNextStep("loginDetailsPage", "termsPage");
-        }, 1000);
+        this.startOtpTimer();
       } else {
-        otpMessage.textContent = data.message || "Invalid OTP. Please try again.";
+        otpMessage.textContent = otpData.message || "Failed to resend OTP.";
         otpMessage.className = "otp-message error";
       }
-    } catch (error) {
-      console.error("OTP verification error:", error);
-      otpMessage.textContent = "Network or server error occurred.";
+    } catch (err) {
+      otpMessage.textContent = "Network or server error occurred during resend.";
       otpMessage.className = "otp-message error";
     }
-  });
+  }
+  connected = (): void => {
+    document.title = "MBL | Login Details";
 
-  cancelBtn?.addEventListener("click", () => {
-    otpDialog.close();
-  });
-};
+    const otpInputs = Array.from(document.querySelectorAll<HTMLInputElement>(".otp-box"));
+    const otpDialog = document.getElementById("otpDialog") as any;
+    const otpMessage = document.getElementById("otpMessage") as HTMLElement;
+    const resendLink = document.getElementById("resendOtpLink") as HTMLElement;
+
+    // Get button references
+    const verifyBtn = document.getElementById("verifyOtpBtn") as HTMLButtonElement;
+    const cancelBtn = document.getElementById("cancelOtpBtn") as HTMLButtonElement;
+
+    // Remove existing event listeners by cloning
+    if (verifyBtn) {
+      const newVerifyBtn = verifyBtn.cloneNode(true) as HTMLButtonElement;
+      verifyBtn.parentNode?.replaceChild(newVerifyBtn, verifyBtn);
+    }
+    if (cancelBtn) {
+      const newCancelBtn = cancelBtn.cloneNode(true) as HTMLButtonElement;
+      cancelBtn.parentNode?.replaceChild(newCancelBtn, cancelBtn);
+    }
+    if (resendLink) {
+      const newResendLink = resendLink.cloneNode(true) as HTMLElement;
+      resendLink.parentNode?.replaceChild(newResendLink, resendLink);
+    }
+
+    // Get fresh references after cloning
+    const newVerifyBtn = document.getElementById("verifyOtpBtn") as HTMLButtonElement;
+    const newCancelBtn = document.getElementById("cancelOtpBtn") as HTMLButtonElement;
+    const newResendLink = document.getElementById("resendOtpLink") as HTMLElement;
+
+    // OTP input behavior (numeric + auto-focus)
+    otpInputs.forEach((input, i) => {
+      input.addEventListener("input", (e) => {
+        const val = (e.target as HTMLInputElement).value;
+        if (!/^[0-9]$/.test(val)) {
+          (e.target as HTMLInputElement).value = "";
+          return;
+        }
+        if (i < otpInputs.length - 1) otpInputs[i + 1].focus();
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && i > 0) otpInputs[i - 1].focus();
+      });
+    });
+
+    // Cancel Button Handler
+    if (newCancelBtn) {
+      newCancelBtn.addEventListener("click", () => {
+        if (this.timerHandle) clearInterval(this.timerHandle);
+        this.isTimerActive = false;
+        otpInputs.forEach((input) => (input.value = ""));
+        if (otpDialog) otpDialog.close();
+      });
+    }
+
+    // Resend OTP
+    if (newResendLink) {
+      newResendLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.resendOtp();
+      });
+    }
+
+    // Verify OTP Handler
+    if (newVerifyBtn) {
+      newVerifyBtn.addEventListener("click", async () => {
+        const otpValue = otpInputs.map((i) => i.value).join("");
+        const cnicNo = localStorage.getItem("cnicNo");
+
+        if (otpValue.length !== 6) {
+          otpMessage.textContent = "Please enter the complete 6-digit OTP.";
+          otpMessage.className = "otp-message error";
+          return;
+        }
+
+        if (!cnicNo) {
+          otpMessage.textContent = "Session expired. Please restart the process.";
+          otpMessage.className = "otp-message error";
+          return;
+        }
+
+        otpMessage.textContent = "Verifying OTP...";
+        otpMessage.className = "otp-message info";
+
+        try {
+          const res = await fetch(
+            `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/verify-otp`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ otp: otpValue }),
+            }
+          );
+
+          const responseData = await res.json();
+          const isVerified = responseData?.data?.verified === true;
+
+          if (res.ok && isVerified) {
+            otpMessage.textContent = "OTP verified successfully! Redirecting...";
+            otpMessage.className = "otp-message success";
+
+            if (this.timerHandle) clearInterval(this.timerHandle);
+            this.isTimerActive = false;
+
+            setTimeout(() => {
+              if (otpDialog) otpDialog.close();
+
+              if (appViewModel && appViewModel.router) {
+                appViewModel.router.go({ path: "termsPage" });
+              } else if (Router.rootInstance) {
+                Router.rootInstance.go("termsPage");
+              } else {
+                window.location.hash = "termsPage";
+              }
+            }, 1200);
+
+          } else {
+            otpMessage.textContent =
+              responseData?.data?.message ||
+              responseData?.message ||
+              "Invalid OTP. Please try again.";
+            otpMessage.className = "otp-message error";
+          }
+        } catch (error) {
+          console.error("OTP verification error:", error);
+          otpMessage.textContent = "Network or server error occurred.";
+          otpMessage.className = "otp-message error";
+        }
+      });
+    }
+  };
 
   disconnected = (): void => {
-
-  }
+    if (this.timerHandle) clearInterval(this.timerHandle);
+    this.isTimerActive = false;
+  };
 }
+
 export = LoginDetailsPage;
