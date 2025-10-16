@@ -196,6 +196,7 @@ class AccountDetailsPage {
       this.isLoading(false);
     }
   };
+    
   //Page Specific Functions
   public switchTab = (tabName: string): void => {
     this.activeTab(tabName);

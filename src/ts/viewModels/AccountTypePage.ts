@@ -21,7 +21,6 @@ class AccountTypePage {
     this.restoreFromSharedSession();
 
     //Persistance:
-
     this.cnicNumber.subscribe((val) => {
       this.formatCNIC(val);
       this.saveToSharedSession();
@@ -113,19 +112,18 @@ class AccountTypePage {
       if (!response.ok) {
         const message = data?.message || "Account initialization failed.";
         if (message.includes("already exists")) {
-          this.cnicError("A digital account with this CNIC already exists.");
+          this.cnicError("You already have an Active Account.");
         } else if (message.includes("No registered user")) {
-          this.cnicError("No registered user found with this CNIC.");
+          this.cnicError("Sorry, No Registered User Exists with this Identity.");
         } else if (message.includes("account status")) {
-          this.cnicError("This CNIC already has an active account.");
+          this.cnicError("You already have an Active Account.");
         } else {
           this.cnicError(message);
         }
         return;
       }
+
       sessionStorage.setItem("cnicNo", requestBody.cnicNo);
-
-
       const accountId = data?.accountId || data?.id;
       if (accountId) {
         localStorage.setItem("accountId", String(accountId));
@@ -187,6 +185,7 @@ class AccountTypePage {
   onCnicFocus = () => {
     this.cnicError("");
   };
+  
   //Page Connected & Disconnected
   connected = (): void => {
     document.title = "MBL | Account Type";
