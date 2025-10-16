@@ -3,6 +3,11 @@ import "ojs/ojknockout";
 import { ojButton } from "ojs/ojbutton";
 import * as Router from "ojs/ojrouter";
 import appViewModel from "../appController";
+import "ojs/ojdialog";
+import "ojs/ojinputtext";
+import "ojs/ojbutton";
+
+
 const SLICE_KEY = "loginDetailsPage";
 //classCreation
 interface PasswordRequirements {
@@ -132,43 +137,45 @@ class LoginDetailsPage {
   };
 
   goNext = async (): Promise<void> => {
-    if (!this.isNextButtonEnabled()) return;
+  if (!this.isNextButtonEnabled()) return;
 
-    this.apiLoading(true);
-    this.apiError(null);
+  this.apiLoading(true);
+  this.apiError(null);
 
-    const cnicNo = localStorage.getItem("cnicNo");
-    const username = localStorage.getItem("username"); // optional
-    const password = this.password();
+  const cnicNo = localStorage.getItem("cnicNo");
+  const username = localStorage.getItem("username");
+  const password = this.password();
 
-    if (!cnicNo) {
-      this.apiError("Missing CNIC. Please restart the process.");
-      this.apiLoading(false);
-      return;
-    }
+  if (!cnicNo) {
+    this.apiError("Missing CNIC. Please restart the process.");
+    this.apiLoading(false);
+    return;
+  }
 
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/accounts/${encodeURIComponent(
-          cnicNo
-        )}/credentials`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: username || null, password }),
-        }
-      );
-
-      const data = await response.json();
-    } catch (err: any) {
-      this.apiError("Network or server error occurred.");
-    } finally {
-      this.apiLoading(false);
-      if (appViewModel) {
-        appViewModel.goToNextStep("loginDetailsPage", "termsPage");
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/credentials`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username || null, password }),
       }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      const otpDialog = document.getElementById("otpDialog") as any;
+      if (otpDialog) otpDialog.open();
+    } else {
+      this.apiError(data.message || "Server error occurred.");
     }
-  };
+  } catch (err: any) {
+    this.apiError("Network or server error occurred.");
+  } finally {
+    this.apiLoading(false);
+  }
+};
 
   //Page Specific Functions
   getBarColor = (index: number): string => {
@@ -261,9 +268,105 @@ class LoginDetailsPage {
     return this.isNextButtonEnabled();
   };
   //Page Connected & Disconnected
-  connected = (): void => {
-    document.title = "MBL | Login Details";
+ connected = (): void => {
+  document.title = "MBL | Login Details";
+
+  const otpInputs = Array.from(document.querySelectorAll<HTMLInputElement>(".otp-box"));
+  const otpMessage = document.getElementById("otpMessage") as HTMLElement;
+  const otpDialog = document.getElementById("otpDialog") as any;
+  const otpTimerDisplay = document.getElementById("otpTimer") as HTMLElement;
+  const verifyBtn = document.getElementById("verifyOtpBtn");
+  const cancelBtn = document.getElementById("cancelOtpBtn");
+
+  // OTP input behavior: numeric-only and auto-focus
+  otpInputs.forEach((input, index) => {
+    input.addEventListener("input", (e) => {
+      const value = (e.target as HTMLInputElement).value;
+      if (!/^[0-9]$/.test(value)) {
+        (e.target as HTMLInputElement).value = "";
+        return;
+      }
+      if (index < otpInputs.length - 1) otpInputs[index + 1].focus();
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !input.value && index > 0) {
+        otpInputs[index - 1].focus();
+      }
+    });
+  });
+
+  // OTP timer (5 min)
+  let timeLeft = 300;
+  const updateTimer = () => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    otpTimerDisplay.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    if (timeLeft > 0) {
+      timeLeft--;
+      setTimeout(updateTimer, 1000);
+    } else {
+      otpMessage.textContent = "OTP expired. Please request a new one.";
+      otpMessage.className = "otp-message error";
+    }
   };
+  updateTimer();
+
+  // 🔐 Verify OTP using API
+  verifyBtn?.addEventListener("click", async () => {
+    const otpValue = otpInputs.map((i) => i.value).join("");
+    const cnicNo = localStorage.getItem("cnicNo");
+
+    if (otpValue.length !== 6) {
+      otpMessage.textContent = "Please enter the complete 6-digit OTP.";
+      otpMessage.className = "otp-message error";
+      return;
+    }
+
+    if (!cnicNo) {
+      otpMessage.textContent = "Session expired. Please restart the process.";
+      otpMessage.className = "otp-message error";
+      return;
+    }
+
+    otpMessage.textContent = "Verifying OTP...";
+    otpMessage.className = "otp-message info";
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/verify-otp`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ otp: otpValue }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.verified === true) {
+        otpMessage.textContent = "OTP verified successfully!";
+        otpMessage.className = "otp-message success";
+
+        setTimeout(() => {
+          otpDialog.close();
+          appViewModel?.goToNextStep("loginDetailsPage", "termsPage");
+        }, 1000);
+      } else {
+        otpMessage.textContent = data.message || "Invalid OTP. Please try again.";
+        otpMessage.className = "otp-message error";
+      }
+    } catch (error) {
+      console.error("OTP verification error:", error);
+      otpMessage.textContent = "Network or server error occurred.";
+      otpMessage.className = "otp-message error";
+    }
+  });
+
+  cancelBtn?.addEventListener("click", () => {
+    otpDialog.close();
+  });
+};
 
   disconnected = (): void => {
 

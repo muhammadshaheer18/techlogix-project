@@ -348,3 +348,121 @@
         margin-top: 40px;
       }
     }
+
+    /* OJET - OTP DIALOG BOX CSS */
+/* =========================
+   OTP Dialog Styling
+========================= */
+
+/* ================================
+   Modern OTP Dialog UI
+================================ */
+
+.custom-otp-dialog {
+  width: 420px;
+  max-width: 90vw;
+  --oj-dialog-border-radius: 16px;
+  --oj-dialog-border-color: transparent;
+  --oj-dialog-header-font-size: 1.25rem;
+  --oj-dialog-header-font-weight: 600;
+  --oj-dialog-title-text-color: #7a147a;
+}
+
+.otp-dialog-body {
+  text-align: center;
+  padding: 1.5rem;
+  color: #333;
+}
+
+.otp-header {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #7a147a;
+  margin-bottom: 1rem;
+}
+
+.otp-box-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  background: #faf7fb;
+  border-radius: 10px;
+  padding: 1rem;
+  position: relative;
+}
+
+.otp-box {
+  width: 42px;
+  height: 50px;
+  border: 2px solid #7a147a;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  text-align: center;
+  color: #7a147a;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.otp-box:focus {
+  border-color: #00c855;
+  box-shadow: 0 0 5px rgba(0, 200, 85, 0.4);
+}
+
+.otp-timer {
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.otp-timer span {
+  color: #7a147a;
+  font-weight: 600;
+}
+
+.otp-instructions {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.otp-mobile {
+  color: #7a147a;
+  font-weight: 600;
+}
+
+.otp-message {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.otp-message.error {
+  color: #e53e3e;
+}
+
+.otp-message.success {
+  color: #00c855;
+}
+
+.otp-dialog-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.otp-cancel-btn,
+.otp-verify-btn {
+ padding: 0.75rem 1.5rem;
+  border: none;
+  background: #7a147a;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 130px;
+  height: 50px;
+}

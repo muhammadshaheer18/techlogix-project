@@ -90,4 +90,37 @@
   <div class="left-section">
     <help-card></help-card>
   </div>
+  <oj-dialog id="otpDialog" dialog-title="One Time Password" modality="modal" cancel-behavior="none"
+    class="custom-otp-dialog">
+    <div slot="body" class="otp-dialog-body">
+      <div class="otp-header">One Time Password</div>
+
+      <div class="otp-box-container">
+        <!-- 6 input boxes for OTP -->
+        <input type="text" maxlength="1" class="otp-box" id="otp1" />
+        <input type="text" maxlength="1" class="otp-box" id="otp2" />
+        <input type="text" maxlength="1" class="otp-box" id="otp3" />
+        <input type="text" maxlength="1" class="otp-box" id="otp4" />
+        <input type="text" maxlength="1" class="otp-box" id="otp5" />
+        <input type="text" maxlength="1" class="otp-box" id="otp6" />
+
+
+      </div>
+      
+      <p class="otp-instructions">
+        Please enter the OTP received on your registered Email Address<br />
+        <span class="otp-mobile">usr***1@gmail.com</span>
+      </p>
+      <div class="otp-timer">
+        OTP is active for <span id="otpTimer">05:00</span>
+      </div>
+      <div id="otpMessage" class="otp-message"></div>
+    </div>
+
+    <div slot="footer" class="otp-dialog-footer">
+      <button id="cancelOtpBtn" class="otp-cancel-btn">Cancel</button>
+      <button id="verifyOtpBtn" class="otp-verify-btn">Verify</button>
+    </div>
+  </oj-dialog>
+
 </div>

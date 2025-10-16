@@ -39,6 +39,9 @@
       ],
       "help-card/*": [
         "./src/ts/jet-composites/help-card/*"
+      ],
+      "otp-dialog/*": [
+        "src/js/jet-composites/otp-dialog/*"
       ]
     },
     "declaration": true,
