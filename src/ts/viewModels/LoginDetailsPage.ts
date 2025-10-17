@@ -135,6 +135,8 @@ class LoginDetailsPage {
   };
 
   // ============== MAIN NEXT HANDLER (API CALLS) ==============
+  // Replace your goNext method with this fixed version:
+
   goNext = async (): Promise<void> => {
     if (!this.isNextButtonEnabled()) return;
 
@@ -169,7 +171,7 @@ class LoginDetailsPage {
         return;
       }
 
-      // STEP 2️ Send OTP
+      // STEP 2: Send OTP
       const otpLoader = document.getElementById("otpLoader") as HTMLElement;
       if (otpLoader) otpLoader.style.display = "flex";
 
@@ -183,12 +185,24 @@ class LoginDetailsPage {
       const otpData = await otpResponse.json();
 
       if (!otpResponse.ok) {
-        this.apiError(otpData.message || "Failed to send OTP.");
+        // FIXED: Show the actual error message from backend
+        let errorMsg = "Failed to send OTP. Please check your email address.";
+
+        // Try to extract the actual error message from various response formats
+        if (otpData.message) {
+          errorMsg = otpData.message;
+        } else if (otpData.error) {
+          errorMsg = otpData.error;
+        } else if (otpData.data && otpData.data.message) {
+          errorMsg = otpData.data.message;
+        }
+
+        this.apiError(errorMsg);
         this.apiLoading(false);
         return;
       }
 
-      // Open OTP dialog instantly upon success
+      // Open OTP dialog only on success
       const otpDialog = document.getElementById("otpDialog") as any;
       const otpMessage = document.getElementById("otpMessage") as HTMLElement;
       const otpMobile = document.querySelector(".otp-mobile") as HTMLElement;
@@ -200,7 +214,9 @@ class LoginDetailsPage {
         );
 
         // Update dialog message and masked email
-        otpMobile.textContent = otpData?.data?.maskedEmail || 'registered email address';
+        if (otpMobile) {
+          otpMobile.textContent = otpData?.data?.maskedEmail || 'registered email address';
+        }
         otpMessage.textContent = otpData?.data?.maskedEmail
           ? `OTP sent successfully to ${otpData.data.maskedEmail}`
           : "OTP sent successfully!";
@@ -213,12 +229,53 @@ class LoginDetailsPage {
       }
     } catch (err) {
       console.error("Error in goNext:", err);
-      this.apiError("Network or server error occurred.");
+      this.apiError("Network or server error occurred. Please check your connection.");
     } finally {
       this.apiLoading(false);
     }
   };
 
+  // Also update the resendOtp method with better error handling:
+
+  private resendOtp = async () => { //2
+    const cnicNo = localStorage.getItem("cnicNo");
+    if (!cnicNo) return;
+
+    const otpMessage = document.getElementById("otpMessage") as HTMLElement;
+    const resendLink = document.getElementById("resendOtpLink") as HTMLElement;
+
+    otpMessage.textContent = "Requesting new OTP...";
+    otpMessage.className = "otp-message info";
+
+    try {
+      const otpResponse = await fetch(
+        `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/send-otp`,
+        { method: "POST", headers: { "Content-Type": "application/json" } }
+      );
+      const otpData = await otpResponse.json();
+
+      if (otpResponse.ok) {
+        otpMessage.textContent = otpData?.data?.maskedEmail
+          ? `New OTP sent successfully to ${otpData.data.maskedEmail}`
+          : "New OTP sent successfully!";
+        otpMessage.className = "otp-message success";
+        this.startOtpTimer();
+      } else {
+        // FIXED: Show actual backend error
+        const errorMsg = otpData.message || otpData.error || "Failed to resend OTP.";
+        otpMessage.textContent = errorMsg;
+        otpMessage.className = "otp-message error";
+        // Keep resend link visible so user can try again
+        if (resendLink) resendLink.style.display = 'inline';
+      }
+    } catch (err) {
+      console.error("Resend OTP error:", err);
+      otpMessage.textContent = "Network error occurred. Please try again.";
+      otpMessage.className = "otp-message error";
+      // Keep resend link visible
+      if (resendLink) resendLink.style.display = 'inline';
+    }
+  }
   // ============== VALIDATION GETTERS (Ko Bindings) ==============
 
   getBarColor = (i: number): string => {
@@ -326,36 +383,6 @@ class LoginDetailsPage {
     this.timerHandle = setInterval(updateDisplay, 1000);
   };
 
-  private resendOtp = async () => {
-    const cnicNo = localStorage.getItem("cnicNo");
-    if (!cnicNo) return;
-
-    const otpMessage = document.getElementById("otpMessage") as HTMLElement;
-    otpMessage.textContent = "Requesting new OTP...";
-    otpMessage.className = "otp-message info";
-
-    try {
-      const otpResponse = await fetch(
-        `http://localhost:8080/api/accounts/send-otp/${encodeURIComponent(cnicNo)}`,
-        { method: "POST", headers: { "Content-Type": "application/json" } }
-      );
-      const otpData = await otpResponse.json();
-
-      if (otpResponse.ok) {
-        otpMessage.textContent = otpData?.data?.maskedEmail
-          ? `New OTP sent successfully to ${otpData.data.maskedEmail}`
-          : "New OTP sent successfully!";
-        otpMessage.className = "otp-message success";
-        this.startOtpTimer();
-      } else {
-        otpMessage.textContent = otpData.message || "Failed to resend OTP.";
-        otpMessage.className = "otp-message error";
-      }
-    } catch (err) {
-      otpMessage.textContent = "Network or server error occurred during resend.";
-      otpMessage.className = "otp-message error";
-    }
-  }
   connected = (): void => {
     document.title = "MBL | Login Details";
 

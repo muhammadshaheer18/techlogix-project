@@ -76,6 +76,11 @@
         </div>
       </div>
 
+      <!-- Add this after the form-group divs and before button-group -->
+      <div class="error-message" data-bind="visible: apiError() !== null, text: apiError"
+        style="color: #e53e3e; padding: 10px; margin: 10px 0; border: 1px solid #e53e3e; border-radius: 4px; background-color: #fee;">
+      </div>
+
       <!-- Buttons -->
       <div class="button-group">
         <button type="button" class="btn btn-back" data-bind="click: goBack">
