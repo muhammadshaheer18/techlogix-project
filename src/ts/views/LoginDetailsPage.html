@@ -90,6 +90,16 @@
   <div class="left-section">
     <help-card></help-card>
   </div>
+
+  <!-- OTP Sending Loader -->
+  <div id="otpLoader" class="otp-loader-overlay" style="display: none;">
+    <div class="otp-loader-box">
+      <div class="spinner"></div>
+      <p>Sending OTP, please wait...</p>
+    </div>
+  </div>
+
+
   <oj-dialog id="otpDialog" dialog-title="One Time Password" modality="modal" cancel-behavior="none"
     class="custom-otp-dialog">
     <div slot="body" class="otp-dialog-body">
@@ -112,7 +122,7 @@
         <span class="otp-mobile">usr***1@gmail.com</span>
       </p>
       <div class="otp-timer">
-        OTP is active for <span id="otpTimer">05:00</span>
+        OTP is active for <span id="otpTimer">01:30</span>
         <a href="#" id="resendOtpLink" style="display: none; margin-left: 10px;">Resend OTP</a>
       </div>
       <div id="otpMessage" class="otp-message"></div>

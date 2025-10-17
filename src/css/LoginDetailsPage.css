@@ -466,3 +466,50 @@
   min-width: 130px;
   height: 50px;
 }
+/* ============================
+   OTP Loader Overlay Styling
+============================ */
+.otp-loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.otp-loader-box {
+  background: white;
+  border: 2px solid #7a147a;
+  border-radius: 12px;
+  padding: 1.5rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.otp-loader-box p {
+  color: #7a147a;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  letter-spacing: 0.5px;
+}
+
+/* Purple themed spinner */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #e0e0e0;
+  border-top-color: #7a147a;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

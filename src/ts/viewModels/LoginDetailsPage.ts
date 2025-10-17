@@ -152,7 +152,7 @@ class LoginDetailsPage {
     }
 
     try {
-      // STEP 1️⃣ Save credentials
+      // STEP 1: Save credentials
       const credentialsResponse = await fetch(
         `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/credentials`,
         {
@@ -169,11 +169,17 @@ class LoginDetailsPage {
         return;
       }
 
-      // STEP 2️⃣ Send OTP
+      // STEP 2️ Send OTP
+      const otpLoader = document.getElementById("otpLoader") as HTMLElement;
+      if (otpLoader) otpLoader.style.display = "flex";
+
       const otpResponse = await fetch(
         `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/send-otp`,
         { method: "POST", headers: { "Content-Type": "application/json" } }
       );
+
+      if (otpLoader) otpLoader.style.display = "none";
+
       const otpData = await otpResponse.json();
 
       if (!otpResponse.ok) {
@@ -182,7 +188,7 @@ class LoginDetailsPage {
         return;
       }
 
-      // ✅ Open OTP dialog instantly upon success
+      // Open OTP dialog instantly upon success
       const otpDialog = document.getElementById("otpDialog") as any;
       const otpMessage = document.getElementById("otpMessage") as HTMLElement;
       const otpMobile = document.querySelector(".otp-mobile") as HTMLElement;
