@@ -87,7 +87,9 @@ class SuccessOnboardPage {
       .finally(() => this.isLoading(false));
   }
   //Page Specific Functions
-  handleContinue = (): void => { };
+  handleContinue = (): void => { 
+        appViewModel.router.go({ path: "landingPage" });
+  };
 
   //Page Connected & Disconnected
   connected(): void {

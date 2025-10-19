@@ -277,6 +277,7 @@ nav-bar {
     padding: 1.5rem;
     justify-content: flex-start;
     padding-top: 1rem;
+    margin-top: -5rem;
   }
 
   .landing-content {
@@ -330,6 +331,7 @@ nav-bar {
   .landing-hero {
     padding: 1rem;
     padding-top: 0.5rem;
+    margin-top: -5rem;
   }
 
   .landing-content {
@@ -385,6 +387,7 @@ nav-bar {
 @media (max-width: 360px) {
   .landing-title {
     font-size: 1.625rem;
+    margin-top: -5rem;
   }
 
   .landing-subtitle {
@@ -402,6 +405,7 @@ nav-bar {
   .landing-hero {
     min-height: auto;
     padding: 1rem;
+    margin-top: -5rem;
   }
 
   .landing-content {
@@ -459,5 +463,20 @@ nav-bar {
 
   .landing-feature-card:active {
     transform: scale(0.98);
+  }
+}
+
+/* Prevent logo/nav collision on small screens */
+@media (max-width: 768px) {
+  .landing-hero {
+    margin-top: 3rem !important;   /* Push content down */
+    padding-top: 2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-hero {
+    margin-top: 4rem !important;
+    padding-top: 3rem !important;
   }
 }
