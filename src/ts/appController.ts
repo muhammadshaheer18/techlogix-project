@@ -51,6 +51,7 @@ class RootViewModel {
   completedSteps = ko.observableArray<string>([]);
   currentStep = ko.observable<string>("accountTypePage");
   private navOrder = [
+    "landingPage",
     "accountTypePage",
     "accountDetailsPage",
     "verificationPage",
@@ -81,7 +82,8 @@ class RootViewModel {
 
     // Router + nav items
     const navData = [
-      { path: "", redirect: "accountTypePage" },
+      { path: "", redirect: "landingPage" },
+      { path: "landingPage", detail: { label: "Welcome", iconClass: "none", value: "0" } },
       { path: "accountTypePage", detail: { label: "Account Type", iconClass: "circle", value: "1" } },
       { path: "accountDetailsPage", detail: { label: "Account Detail", iconClass: "circle", value: "2" } },
       { path: "verificationPage", detail: { label: "Verification", iconClass: "circle", value: "3" } },
@@ -100,11 +102,15 @@ class RootViewModel {
     this.selection = new KnockoutRouterAdapter(this.router);
 
     // Only show navigation on main flow
-    const hiddenPages = ["termsPage", "successPage", ""];
+    const hiddenPages = ["termsPage", "successPage", "", "landingPage"];
     const navItemsForNavigation = navData.filter(item => !hiddenPages.includes(item.path));
     this.navDataProvider = new ArrayDataProvider(navItemsForNavigation, { keyAttributes: "path" });
 
-    this.showNavigation = ko.pureComputed(() => this.selection.path() !== "successPage");
+    this.showNavigation = ko.pureComputed(() => {
+      const hiddenPages = ["landingPage", "successPage"]; // or add more if needed
+      return !hiddenPages.includes(this.selection.path());
+    });
+
 
     // Keep currentStep in sync with router
     this.selection.path.subscribe((newPath: string) => {
@@ -139,7 +145,7 @@ class RootViewModel {
   setOnboardingData(data: any): void {
     try {
       sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
-    } catch {}
+    } catch { }
   }
 
   getOnboardingSlice(sliceKey: string): any {

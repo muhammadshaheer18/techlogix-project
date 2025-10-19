@@ -1,0 +1,463 @@
+/* ========================================
+   LANDING PAGE SPECIFIC STYLES
+   ======================================== */
+
+/* Override default container and navigation for Landing Page */
+.primary-container {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  min-height: 100vh !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+nav-bar {
+  display: none !important;
+}
+
+.secondary-container {
+  padding: 0 !important;
+  min-height: 100vh;
+}
+
+.nav-style {
+  background: transparent !important;
+  padding: 2rem 0 1rem 0 !important;
+}
+
+/* Full Page Landing Hero */
+.landing-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin-top: -5rem;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* Hero Content - No Card, Direct on Background */
+.landing-content {
+  max-width: 1200px;
+  width: 100%;
+  animation: fadeInUp 1.2s ease-out 0.3s both;
+  margin-top: -4rem;
+}
+
+/* Main Heading */
+.landing-title {
+  font-size: 3.2rem;
+  font-weight: 600;
+  font-family: "Roboto Slab", serif;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+}
+
+/* Subtitle */
+.landing-subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 3rem;
+  line-height: 1.8;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-weight: 400;
+}
+
+/* CTA Button */
+.landing-cta-button {
+  background: #ffffff;
+  color: #7a147a;
+  border: none;
+  padding: 1.25rem 4rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 1;
+}
+
+.landing-cta-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(122, 20, 122, 0.1), transparent);
+  transition: left 0.6s ease;
+  z-index: -1;
+}
+
+.landing-cta-button:hover::before {
+  left: 100%;
+}
+
+.landing-cta-button:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4);
+  background: #f8f8f8;
+}
+
+.landing-cta-button:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Feature Grid */
+.landing-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8rem;
+  margin-top: 5rem;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.landing-feature-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2rem 1.5rem;
+  border-radius: 20px;
+  text-align: center;
+  transition: all 0.4s ease;
+  animation: fadeIn 1s ease-out;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.landing-feature-card:nth-child(1) {
+  animation-delay: 0.6s;
+}
+
+.landing-feature-card:nth-child(2) {
+  animation-delay: 0.8s;
+}
+
+.landing-feature-card:nth-child(3) {
+  animation-delay: 1s;
+}
+
+.landing-feature-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.landing-feature-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1.25rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7a147a;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.landing-feature-card:hover .landing-feature-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.landing-feature-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 0.75rem;
+}
+
+.landing-feature-text {
+  font-size: 0.9375rem;
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.15;
+  }
+
+  25% {
+    transform: translate(15px, -15px) scale(1.05);
+    opacity: 0.25;
+  }
+
+  50% {
+    transform: translate(-10px, -25px) scale(1.1);
+    opacity: 0.2;
+  }
+
+  75% {
+    transform: translate(-20px, -10px) scale(1.05);
+    opacity: 0.25;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .landing-title {
+    font-size: 3rem;
+  }
+
+  .landing-features {
+    gap: 1.5rem;
+  }
+
+  .landing-feature-card {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-hero {
+    padding: 1.5rem;
+    justify-content: flex-start;
+    padding-top: 1rem;
+  }
+
+  .landing-content {
+    margin-top: -1rem;
+  }
+
+  .landing-title {
+    font-size: 2.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .landing-subtitle {
+    font-size: 1.0625rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  .landing-cta-button {
+    padding: 1rem 3rem;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .landing-features {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 3rem;
+  }
+
+  .landing-feature-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .landing-feature-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.75rem;
+  }
+
+  .landing-particle {
+    display: none;
+  }
+
+  .nav-style {
+    padding: 1.5rem 0 0.75rem 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-hero {
+    padding: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  .landing-content {
+    margin-top: -0.5rem;
+  }
+
+  .landing-title {
+    font-size: 1.875rem;
+    margin-bottom: 1rem;
+  }
+
+  .landing-subtitle {
+    font-size: 0.9375rem;
+    margin-bottom: 2rem;
+  }
+
+  .landing-cta-button {
+    padding: 0.875rem 2.5rem;
+    font-size: 0.9375rem;
+    letter-spacing: 0.5px;
+  }
+
+  .landing-features {
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .landing-feature-card {
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+  }
+
+  .landing-feature-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .landing-feature-title {
+    font-size: 1rem;
+  }
+
+  .landing-feature-text {
+    font-size: 0.875rem;
+  }
+
+  .nav-style {
+    padding: 1rem 0 0.5rem 0 !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .landing-title {
+    font-size: 1.625rem;
+  }
+
+  .landing-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .landing-cta-button {
+    padding: 0.75rem 2rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Landscape Optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .landing-hero {
+    min-height: auto;
+    padding: 1rem;
+  }
+
+  .landing-content {
+    margin-top: 0;
+  }
+
+  .landing-title {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .landing-subtitle {
+    font-size: 0.9375rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .landing-features {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .landing-feature-card {
+    padding: 1rem;
+  }
+
+  .landing-feature-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 1.25rem;
+  }
+
+  .landing-feature-title {
+    font-size: 0.875rem;
+  }
+
+  .landing-feature-text {
+    font-size: 0.75rem;
+  }
+}
+
+/* Touch Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .landing-cta-button {
+    -webkit-tap-highlight-color: rgba(122, 20, 122, 0.2);
+  }
+
+  .landing-cta-button:active {
+    transform: scale(0.97);
+  }
+
+  .landing-feature-card:hover {
+    transform: none;
+  }
+
+  .landing-feature-card:active {
+    transform: scale(0.98);
+  }
+}

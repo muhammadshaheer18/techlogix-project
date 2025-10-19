@@ -87,6 +87,7 @@ class AccountTypePage {
   //goBack & goNext Handlers
   goBack = () => {
     this.saveToSharedSession();
+    appViewModel.router.go({ path: "landingPage" });
   };
 
   goNext = async () => {
