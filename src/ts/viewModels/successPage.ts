@@ -87,14 +87,21 @@ class SuccessOnboardPage {
       .finally(() => this.isLoading(false));
   }
   //Page Specific Functions
-  handleContinue = (): void => { 
-        appViewModel.router.go({ path: "landingPage" });
+  handleContinue = (): void => {
+    appViewModel.router.go({ path: "landingPage" });
   };
 
   //Page Connected & Disconnected
   connected(): void {
     document.title = "MBL | Onboarding Success";
     const cnicNo = localStorage.getItem("cnicNo");
+    
+    // to redirect to landing page, on going back
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", () => {
+      appViewModel.router.go({ path: "landingPage" }); // Redirect instead of going back
+    });
+
 
     if (!cnicNo) {
       this.isLoading(false);
