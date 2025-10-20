@@ -230,48 +230,110 @@
     .button-group {
       display: flex;
       gap: 1rem;
-      margin-top: 50px;
-      flex-wrap: wrap;
+      margin-top: 55px;
     }
 
+    /* Shared transition for consistency */
     .btn-back,
     .btn-next {
-      min-width: 190px;
-      height: 55px;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease, transform 0.2s ease;
     }
 
+    /* BACK BUTTON */
     .btn-back {
+      padding: 0.75rem 1.5rem;
       border: 2px solid #ccc;
       background-color: #eee;
       color: #7a147a;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 190px;
+      height: 55px;
     }
 
     .btn-back:hover {
       border-color: #999;
       color: #333;
+      transform: translateY(-2px);
     }
 
+    .btn-back:active {
+      transform: scale(0.97);
+    }
+
+    /* NEXT BUTTON */
     .btn-next {
+      padding: 0.75rem 1.5rem;
       border: none;
       background: #7a147a;
       color: #fff;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 190px;
+      height: 55px;
     }
 
-    .btn-next:disabled {
-      background: #cccccc !important;
-      color: #666 !important;
-      cursor: not-allowed !important;
-      transform: none !important;
+    /* Gradient Shine Effect */
+    .btn-next::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-next:hover::before {
+      left: 100%;
+      transform: translateY(-2px);
     }
 
     .btn-next:hover {
-      transform: translateY(-1px);
+      transform: translateY(-2px) scale(1.02);
     }
+
+    .btn-next:active {
+      transform: scale(0.97);
+    }
+
+    /* Disabled State */
+    .btn-next.btn-disabled {
+      background-color: #eee;
+      color: #7a147a;
+      border: 2px solid #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Loading Pulse Animation */
+    .btn-loading {
+      opacity: 0.7;
+      cursor: not-allowed;
+      animation: pulse 1s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.7;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+
+      100% {
+        opacity: 0.7;
+      }
+    }
+
 
     /* Responsive Styles */
     @media (max-width: 1024px) {
@@ -350,166 +412,167 @@
     }
 
     /* OJET - OTP DIALOG BOX CSS */
-/* =========================
+    /* =========================
    OTP Dialog Styling
 ========================= */
 
-/* ================================
+    /* ================================
    Modern OTP Dialog UI
 ================================ */
 
-.custom-otp-dialog {
-  width: 420px;
-  max-width: 90vw;
-  --oj-dialog-border-radius: 16px;
-  --oj-dialog-border-color: transparent;
-  --oj-dialog-header-font-size: 1.25rem;
-  --oj-dialog-header-font-weight: 600;
-  --oj-dialog-title-text-color: #7a147a;
-}
+    .custom-otp-dialog {
+      width: 420px;
+      max-width: 90vw;
+      --oj-dialog-border-radius: 16px;
+      --oj-dialog-border-color: transparent;
+      --oj-dialog-header-font-size: 1.25rem;
+      --oj-dialog-header-font-weight: 600;
+      --oj-dialog-title-text-color: #7a147a;
+    }
 
-.otp-dialog-body {
-  text-align: center;
-  padding: 1.5rem;
-  color: #333;
-}
+    .otp-dialog-body {
+      text-align: center;
+      padding: 1.5rem;
+      color: #333;
+    }
 
-.otp-header {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #7a147a;
-  margin-bottom: 1rem;
-}
+    .otp-header {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #7a147a;
+      margin-bottom: 1rem;
+    }
 
-.otp-box-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.6rem;
-  background: #faf7fb;
-  border-radius: 10px;
-  padding: 1rem;
-  position: relative;
-}
+    .otp-box-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.6rem;
+      background: #faf7fb;
+      border-radius: 10px;
+      padding: 1rem;
+      position: relative;
+    }
 
-.otp-box {
-  width: 42px;
-  height: 50px;
-  border: 2px solid #7a147a;
-  border-radius: 8px;
-  font-size: 1.25rem;
-  text-align: center;
-  color: #7a147a;
-  outline: none;
-  transition: all 0.2s ease;
-}
+    .otp-box {
+      width: 42px;
+      height: 50px;
+      border: 2px solid #7a147a;
+      border-radius: 8px;
+      font-size: 1.25rem;
+      text-align: center;
+      color: #7a147a;
+      outline: none;
+      transition: all 0.2s ease;
+    }
 
-.otp-box:focus {
-  border-color: #00c855;
-  box-shadow: 0 0 5px rgba(0, 200, 85, 0.4);
-}
+    .otp-box:focus {
+      border-color: #00c855;
+      box-shadow: 0 0 5px rgba(0, 200, 85, 0.4);
+    }
 
-.otp-timer {
-  font-size: 0.85rem;
-  color: #444;
-}
+    .otp-timer {
+      font-size: 0.85rem;
+      color: #444;
+    }
 
-.otp-timer span {
-  color: #7a147a;
-  font-weight: 600;
-}
+    .otp-timer span {
+      color: #7a147a;
+      font-weight: 600;
+    }
 
-.otp-instructions {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: #666;
-}
+    .otp-instructions {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
 
-.otp-mobile {
-  color: #7a147a;
-  font-weight: 600;
-}
+    .otp-mobile {
+      color: #7a147a;
+      font-weight: 600;
+    }
 
-.otp-message {
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
+    .otp-message {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
 
-.otp-message.error {
-  color: #e53e3e;
-}
+    .otp-message.error {
+      color: #e53e3e;
+    }
 
-.otp-message.success {
-  color: #00c855;
-}
+    .otp-message.success {
+      color: #00c855;
+    }
 
-.otp-dialog-footer {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
-}
+    .otp-dialog-footer {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
 
-.otp-cancel-btn,
-.otp-verify-btn {
- padding: 0.75rem 1.5rem;
-  border: none;
-  background: #7a147a;
-  color: #fff;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 130px;
-  height: 50px;
-}
-/* ============================
+    .otp-cancel-btn,
+    .otp-verify-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: #7a147a;
+      color: #fff;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 130px;
+      height: 50px;
+    }
+
+    /* ============================
    OTP Loader Overlay Styling
 ============================ */
-.otp-loader-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(2px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
+    .otp-loader-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(2px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
 
-.otp-loader-box {
-  background: white;
-  border: 2px solid #7a147a;
-  border-radius: 12px;
-  padding: 1.5rem 2.5rem;
-  text-align: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-}
+    .otp-loader-box {
+      background: white;
+      border: 2px solid #7a147a;
+      border-radius: 12px;
+      padding: 1.5rem 2.5rem;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
 
-.otp-loader-box p {
-  color: #7a147a;
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin-top: 1rem;
-  letter-spacing: 0.5px;
-}
+    .otp-loader-box p {
+      color: #7a147a;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-top: 1rem;
+      letter-spacing: 0.5px;
+    }
 
-/* Purple themed spinner */
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 5px solid #e0e0e0;
-  border-top-color: #7a147a;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
-}
+    /* Purple themed spinner */
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #e0e0e0;
+      border-top-color: #7a147a;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }

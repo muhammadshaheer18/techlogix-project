@@ -1,5 +1,6 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
+import "ojs/ojbutton";
 
 class LandingPage {
   constructor() {

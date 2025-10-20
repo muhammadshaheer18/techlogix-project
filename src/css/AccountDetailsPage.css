@@ -528,6 +528,7 @@
 
 /* Touch Optimizations */
 @media (max-width: 768px) {
+
   .tab-item,
   .btn-back,
   .btn-next {

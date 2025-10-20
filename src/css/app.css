@@ -5,7 +5,8 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-html, body {
+html,
+body {
   overflow-x: hidden;
   max-width: 100vw;
   height: 100%;
@@ -113,7 +114,7 @@ nav-bar {
   position: relative;
 }
 
-#navTabBar .oj-tab-bar-item > a {
+#navTabBar .oj-tab-bar-item>a {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -362,7 +363,7 @@ nav-bar {
 
 .btn-next:hover {
   transform: translateY(-1px);
-} 
+}
 
 .checkmark {
   position: absolute;
@@ -425,6 +426,7 @@ nav-bar {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -463,6 +465,7 @@ h6 {
     opacity: 0;
     transform: translateY(50px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -474,10 +477,12 @@ h6 {
     opacity: 0;
     transform: translateX(-50%) scale(0.3);
   }
+
   50% {
     opacity: 1;
     transform: translateX(-50%) scale(1.1);
   }
+
   100% {
     opacity: 1;
     transform: translateX(-50%) scale(1);
@@ -642,6 +647,7 @@ h6 {
 
 /* 768px - CRITICAL BREAKPOINT FOR GAP FIX */
 @media (max-width: 768px) {
+
   /* CRITICAL: Zero out all spacing that creates gaps */
   .secondary-container {
     padding: 0.25rem !important;
@@ -675,7 +681,7 @@ h6 {
     padding: 0 !important;
   }
 
-  #navTabBar .oj-tab-bar-item > a {
+  #navTabBar .oj-tab-bar-item>a {
     padding: 0.25rem 0.15rem !important;
   }
 
@@ -852,7 +858,7 @@ h6 {
     padding: 0 !important;
   }
 
-  #navTabBar .oj-tab-bar-item > a {
+  #navTabBar .oj-tab-bar-item>a {
     padding: 0.2rem 0.1rem !important;
   }
 
@@ -1072,6 +1078,7 @@ h6 {
 
 /* TOUCH OPTIMIZATIONS */
 @media (max-width: 768px) {
+
   .tab-item,
   button,
   .btn-back,
