@@ -1,5 +1,5 @@
 <head>
-  <link rel="stylesheet" href="../../css/AccountDetailsPage.css" />
+  <link rel="stylesheet" href="../../css/accountIbanPage.css" />
 </head>
 
 <div class="oj-hybrid-padding">
@@ -39,13 +39,11 @@
 
         <div class="button-group">
           <button class="btn-back" data-bind="click: goBack">Back</button>
-          <button class="btn-next" data-bind="
-          click: goNext,
-          enable: canProceed,
-          css: { 'btn-disabled': !canProceed }
-          attr: { disabled: !canProceed() }">
+          <button class="btn-next"
+            data-bind="click: goNext, enable: canProceed, css: { 'btn-disabled': !canProceed() }">
             Next
           </button>
+
 
         </div>
       </div>
@@ -64,13 +62,11 @@
 
         <div class="button-group">
           <button class="btn-back" data-bind="click: goBack">Back</button>
-          <button class="btn-next" data-bind="
-          click: goNext,
-          enable: canProceed,
-          css: { 'btn-disabled': !canProceed }
-          attr: { disabled: !canProceed() }">
+           <button class="btn-next"
+            data-bind="click: goNext, enable: canProceed, css: { 'btn-disabled': !canProceed() }">
             Next
           </button>
+
 
 
         </div>
@@ -186,103 +182,111 @@
 
   /* Buttons */
   .button-group {
-  display: flex;
-  gap: 1rem;
-  margin-top: 55px;
-}
+    display: flex;
+    gap: 1rem;
+    margin-top: 55px;
+  }
 
-/* Shared transition for consistency */
-.btn-back,
-.btn-next {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease, transform 0.2s ease;
-}
+  /* Shared transition for consistency */
+  .btn-back,
+  .btn-next {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease, transform 0.2s ease;
+  }
 
-/* BACK BUTTON */
-.btn-back {
-  padding: 0.75rem 1.5rem;
-  border: 2px solid #ccc;
-  background-color: #eee;
-  color: #7a147a;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  min-width: 190px;
-  height: 55px;
-}
+  /* BACK BUTTON */
+  .btn-back {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #ccc;
+    background-color: #eee;
+    color: #7a147a;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 190px;
+    height: 55px;
+  }
 
-.btn-back:hover {
-  border-color: #999;
-  color: #333;
-  transform: translateY(-2px);
-}
+  .btn-back:hover {
+    border-color: #999;
+    color: #333;
+    transform: translateY(-2px);
+  }
 
-.btn-back:active {
-  transform: scale(0.97);
-}
+  .btn-back:active {
+    transform: scale(0.97);
+  }
 
-/* NEXT BUTTON */
-.btn-next {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  background: #7a147a;
-  color: #fff;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  min-width: 190px;
-  height: 55px;
-}
+  /* NEXT BUTTON */
+  .btn-next {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: #7a147a;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 190px;
+    height: 55px;
+  }
 
-/* Gradient Shine Effect */
-.btn-next::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: left 0.5s ease;
-}
+  /* Gradient Shine Effect */
+  .btn-next::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
 
-.btn-next:hover::before {
-  left: 100%;
-  transform: translateY(-2px);
-}
+  .btn-next:hover::before {
+    left: 100%;
+    transform: translateY(-2px);
+  }
 
-.btn-next:hover {
-  transform: translateY(-2px) scale(1.02);
-}
+  .btn-next:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
 
-.btn-next:active {
-  transform: scale(0.97);
-}
+  .btn-next:active {
+    transform: scale(0.97);
+  }
 
-/* Disabled State */
-.btn-next.btn-disabled {
-  background-color: #eee;
-  color: #7a147a;
-  border: 2px solid #ccc;
-  cursor: not-allowed;
-  transform: none;
-}
+  /* Disabled State */
+  .btn-next.btn-disabled {
+    background-color: #eee;
+    color: #7a147a;
+    border: 2px solid #ccc;
+    cursor: not-allowed;
+    transform: none;
+  }
 
-/* Loading Pulse Animation */
-.btn-loading {
-  opacity: 0.7;
-  cursor: not-allowed;
-  animation: pulse 1s infinite ease-in-out;
-}
+  /* Loading Pulse Animation */
+  .btn-loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    animation: pulse 1s infinite ease-in-out;
+  }
 
-@keyframes pulse {
-  0% { opacity: 0.7; }
-  50% { opacity: 0.4; }
-  100% { opacity: 0.7; }
-}
+  @keyframes pulse {
+    0% {
+      opacity: 0.7;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+
+    100% {
+      opacity: 0.7;
+    }
+  }
 
   @media (max-width: 1200px) {
     .account-details-container {

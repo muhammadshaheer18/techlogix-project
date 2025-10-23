@@ -1,8 +1,8 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
-const SLICE_KEY = "accountTypePage";
+const SLICE_KEY = "cnicPage";
 //classCreation
-class AccountTypePage {
+class cnicPage {
   selectedAccountType = ko.observable<string>("Individual");
   cnicNumber = ko.observable<string>("");
   cnicError = ko.observable<string>("");
@@ -24,13 +24,26 @@ class AccountTypePage {
     this.cnicNumber.subscribe((val) => {
       this.formatCNIC(val);
       this.saveToSharedSession();
+
+      // Live validation
+      const clean = val.replace(/\D/g, "");
+      if (clean.length > 0 && clean.length < 13) {
+        this.cnicError("CNIC must be 13 digits long.");
+      } else if (clean.length === 13 && !this.isCnicStructurallyValid()) {
+        this.cnicError("Invalid CNIC format (e.g. 12345-1234567-1).");
+      } else {
+        this.cnicError("");
+      }
     });
+
 
     this.selectedAccountType.subscribe(() => this.saveToSharedSession());
 
     window.addEventListener("beforeunload", () => {
-      sessionStorage.clear();
+      // Only clear pageReloaded flag, not entire session
+      sessionStorage.removeItem("pageReloaded");
     });
+
   }
   //Session and Refresh Handling
   private handlePageReload() {
@@ -102,7 +115,7 @@ class AccountTypePage {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/accounts/init", {
+      const response = await fetch("http://localhost:8080/api/accounts/cnic-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
@@ -111,7 +124,7 @@ class AccountTypePage {
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        const message = data?.message || "Account initialization failed.";
+        const message = data?.message || "Account Initialization failed.";
         if (message.includes("already exists")) {
           this.cnicError("You already have an Active Account.");
         } else if (message.includes("No registered user")) {
@@ -133,7 +146,7 @@ class AccountTypePage {
 
       sessionStorage.setItem("navigatedFromAccountType", "true");
       this.saveToSharedSession();
-      appViewModel?.goToNextStep("accountTypePage", "accountDetailsPage");
+      appViewModel?.goToNextStep("cnicPage", "accountIbanPage");
     } catch (err) {
       console.error("API Error:", err);
       this.cnicError("Unexpected error occurred. Please try again.");
@@ -186,13 +199,13 @@ class AccountTypePage {
   onCnicFocus = () => {
     this.cnicError("");
   };
-  
+
   //Page Connected & Disconnected
   connected = (): void => {
-    document.title = "MBL | Account Type";
+    document.title = "MBL | Cnic Verification";
   };
 
   disconnected = (): void => { };
 }
 
-export = AccountTypePage;
+export = cnicPage;

@@ -1,5 +1,5 @@
 <head>
-  <link rel="stylesheet" href="../../css/VerificationPage.css" />
+  <link rel="stylesheet" href="../../css/usernamePage.css" />
 </head>
 
 <div class="verification-container">
@@ -15,15 +15,15 @@
       <input type="text" class="username-input" placeholder="03353186729"
         data-bind="value: username, valueUpdate: 'afterkeydown', event: { blur: onUsernameBlur }" />
 
-      <!-- Dynamic messages (✅ FIXED visible bindings) -->
+      <!-- Dynamic messages -->
       <div class="success-text" data-bind="visible: usernameStatus() === 'valid'">
-        ✅ Username available
+        Username available
       </div>
       <div class="error-text" data-bind="visible: usernameStatus() === 'exists'">
-        ❌ Username already exists
+        Username already exists
       </div>
       <div class="error-text" data-bind="visible: usernameStatus() === 'invalid'">
-        ⚠️ Username must be between 8 and 16 characters
+        Username must be between 8 and 16 characters
       </div>
       <div class="info-text" data-bind="visible: usernameStatus() === 'idle'">
         Your default username is your mobile number

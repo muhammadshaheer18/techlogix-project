@@ -1,8 +1,8 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
-const SLICE_KEY = "accountDetailsPage";
+const SLICE_KEY = "accountIbanPage";
 //classCreation
-class AccountDetailsPage {
+class accountIbanPage {
   public accountNumber: ko.Observable<string>;
   public ibanNumber: ko.Observable<string>;
   public activeTab: ko.Observable<string>;
@@ -47,12 +47,19 @@ class AccountDetailsPage {
     });
 
     this.accountNumber.subscribe((val) => {
+      // existing formatting
       if (!val) return;
       let clean = val.replace(/\D/g, "").substring(0, 14);
       if (clean.length > 5) clean = clean.slice(0, 5) + " " + clean.slice(5);
       if (clean !== val) this.accountNumber(clean);
       this.saveToSharedSession();
+
+      // live validation
+      if (!this.isAccountNumberValid() && val.length > 0) {
+        this.showError("Account number must be 14 digits long");
+      }
     });
+
 
     this.ibanNumber.subscribe((val) => {
       if (!val) return;
@@ -60,7 +67,12 @@ class AccountDetailsPage {
       clean = clean.replace(/(.{4})/g, "$1 ").trim();
       if (clean !== val) this.ibanNumber(clean);
       this.saveToSharedSession();
+
+      if (!this.isIbanValid() && val.length > 0) {
+        this.showError("Invalid IBAN format");
+      }
     });
+
 
     window.addEventListener("beforeunload", () => {
       sessionStorage.clear();
@@ -111,7 +123,7 @@ class AccountDetailsPage {
       if (navigatedFromAccountType !== "true") {
         console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
         this.clearLocalSlice();
-        appViewModel?.goToNextStep("accountDetailsPage", "accountTypePage");
+        appViewModel?.goToNextStep("accountIbanPage", "cnicPage");
       }
     } catch (e) {
       console.error("Error during reload check:", e);
@@ -131,7 +143,7 @@ class AccountDetailsPage {
   public goBack = (): void => {
     this.saveToSharedSession();
     if (appViewModel)
-      appViewModel.goToNextStep("accountDetailsPage", "accountTypePage");
+      appViewModel.goToNextStep("accountIbanPage", "cnicPage");
   };
 
   public goNext = async (): Promise<void> => {
@@ -167,7 +179,7 @@ class AccountDetailsPage {
             iban: this.ibanNumber().replace(/\s+/g, "").toUpperCase(),
           };
       const response = await fetch(
-        `http://localhost:8080/api/accounts/${cnicNo}/validate-account`,
+        `http://localhost:8080/api/accounts/${cnicNo}/account-iban-check`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -186,17 +198,17 @@ class AccountDetailsPage {
       localStorage.setItem("cnicNo", cnicNo);
       this.saveToSharedSession();
       if (appViewModel?.router)
-        appViewModel.goToNextStep("accountDetailsPage", "verificationPage");
+        appViewModel.goToNextStep("accountIbanPage", "usernamePage");
 
     } catch (error: unknown) {
       const msg =
-        error instanceof Error ? error.message : "Unexpected error occurred";
+        error instanceof Error ? error.message : "";
       this.showError(msg);
     } finally {
       this.isLoading(false);
     }
   };
-    
+
   //Page Specific Functions
   public switchTab = (tabName: string): void => {
     this.activeTab(tabName);
@@ -223,11 +235,11 @@ class AccountDetailsPage {
   };
   //Page Connected & Disconnected
   public connected = (): void => {
-    document.title = "MBL | Account Details";
+    document.title = "MBL | Account Details Verification";
   };
 
   public disconnected = (): void => {
 
   }
 }
-export = AccountDetailsPage;
+export = accountIbanPage;

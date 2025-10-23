@@ -1,8 +1,8 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
-const SLICE_KEY = "successPage";
+const SLICE_KEY = "summaryPage";
 //classCreation
-class SuccessOnboardPage {
+class summaryPage {
   accountTitle: ko.Observable<string>;
   username: ko.Observable<string>;
   accountNumber: ko.Observable<string>;
@@ -51,7 +51,7 @@ class SuccessOnboardPage {
       if (navigatedFromAccountType !== "true") {
         console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
         this.clearLocalSlice();
-        appViewModel?.goToNextStep("sucessPage", "accountTypePage");
+        appViewModel?.goToNextStep("summaryPage", "cnicPage");
       }
     } catch (e) {
       console.error("Error during reload check:", e);
@@ -61,7 +61,7 @@ class SuccessOnboardPage {
   fetchAccountSummary(cnicNo: string): void {
     const baseUrl = "http://localhost:8080/api/accounts"; // backend base path
 
-    fetch(`${baseUrl}/${encodeURIComponent(cnicNo)}/summary`, {
+    fetch(`${baseUrl}/${encodeURIComponent(cnicNo)}/show-summary`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
@@ -113,4 +113,4 @@ class SuccessOnboardPage {
 
   disconnected = (): void => { }
 }
-export = SuccessOnboardPage;
+export = summaryPage;

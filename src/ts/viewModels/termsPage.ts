@@ -13,7 +13,7 @@ interface TermsData {
   sections: Section[];
 }
 
-class Terms {
+class termsPage {
   accepted: ko.Observable<boolean>;
   title = ko.observable<string>("");
   intro = ko.observable<string>("");
@@ -59,7 +59,7 @@ class Terms {
       if (navigatedFromAccountType !== "true") {
         console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
         this.clearLocalSlice();
-        appViewModel?.goToNextStep("termsPage", "accountTypePage");
+        appViewModel?.goToNextStep("termsPage", "cnicPage");
       }
     } catch (e) {
       console.error("Error during reload check:", e);
@@ -68,17 +68,17 @@ class Terms {
   //goBack & goNext Handlers
   goBack = (): void => {
     if (appViewModel.router) {
-      appViewModel.router.go({ path: "loginDetailsPage" });
+      appViewModel.router.go({ path: "passwordPage" });
     }
   };
 
   goNext = (): void => {
     if (this.accepted()) {
       if (appViewModel.router) {
-        appViewModel.router.go({ path: "successPage" });
+        appViewModel.router.go({ path: "summaryPage" });
       }
     } else {
-      alert("Please accept the terms and conditions to continue.");
+      console.log("Terms not Accepted");
     }
   };
   //Page Specific Functions
@@ -96,9 +96,9 @@ class Terms {
   }
   //Page Connected & Disconnected
   connected = (): void => {
-    document.title = "MBL | Terms";
+    document.title = "MBL | Terms & Conditions";
   };
 
   disconnected = (): void => { }
 }
-export = Terms;
+export = termsPage;

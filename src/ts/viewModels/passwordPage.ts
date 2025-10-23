@@ -1,13 +1,12 @@
 import * as ko from "knockout";
 import "ojs/ojknockout";
-import { ojButton } from "ojs/ojbutton";
 import * as Router from "ojs/ojrouter";
 import appViewModel from "../appController";
 import "ojs/ojdialog";
 import "ojs/ojinputtext";
 import "ojs/ojbutton";
 
-const SLICE_KEY = "loginDetailsPage";
+const SLICE_KEY = "passwordPage";
 const OTP_TIMER_SECONDS = 90; // The timer duration in seconds
 
 interface PasswordRequirements {
@@ -16,7 +15,7 @@ interface PasswordRequirements {
   hasSpecial: boolean;
 }
 
-class LoginDetailsPage {
+class passwordPage {
   password: ko.Observable<string>;
   confirmPassword: ko.Observable<string>;
   showPassword: ko.Observable<boolean>;
@@ -111,7 +110,7 @@ class LoginDetailsPage {
       const navigatedFromAccountType = sessionStorage.getItem("navigatedFromAccountType");
       if (navigatedFromAccountType !== "true") {
         this.clearLocalSlice();
-        appViewModel?.goToNextStep("loginDetailsPage", "accountTypePage");
+        appViewModel?.goToNextStep("passwordPage", "cnicPage");
       }
     } catch (e) {
       console.error("Error during reload check:", e);
@@ -130,12 +129,11 @@ class LoginDetailsPage {
 
   goBack = (): void => {
     appViewModel?.router
-      ? appViewModel.router.go({ path: "verificationPage" })
+      ? appViewModel.router.go({ path: "usernamePage" })
       : window.history.back();
   };
 
-  // ============== MAIN NEXT HANDLER (API CALLS) ==============
-  // Replace your goNext method with this fixed version:
+  // MAIN NEXT HANDLER (API CALLS) 
 
   goNext = async (): Promise<void> => {
     if (!this.isNextButtonEnabled()) return;
@@ -154,9 +152,9 @@ class LoginDetailsPage {
     }
 
     try {
-      // STEP 1: Save credentials
+      // STEP 1: Save password-check
       const credentialsResponse = await fetch(
-        `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/credentials`,
+        `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/password-set`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -166,7 +164,7 @@ class LoginDetailsPage {
 
       const credentialsData = await credentialsResponse.json();
       if (!credentialsResponse.ok) {
-        this.apiError(credentialsData.message || "Error saving credentials.");
+        this.apiError(credentialsData.message || "Error saving Credentials.");
         this.apiLoading(false);
         return;
       }
@@ -185,7 +183,7 @@ class LoginDetailsPage {
       const otpData = await otpResponse.json();
 
       if (!otpResponse.ok) {
-        // FIXED: Show the actual error message from backend
+        // Show the actual error message from backend
         let errorMsg = "Failed to send OTP. Please check your email address.";
 
         // Try to extract the actual error message from various response formats
@@ -384,7 +382,7 @@ class LoginDetailsPage {
   };
 
   connected = (): void => {
-    document.title = "MBL | Login Details";
+    document.title = "MBL | Password Set";
 
     const otpInputs = Array.from(document.querySelectorAll<HTMLInputElement>(".otp-box"));
     const otpDialog = document.getElementById("otpDialog") as any;
@@ -522,4 +520,4 @@ class LoginDetailsPage {
   };
 }
 
-export = LoginDetailsPage;
+export = passwordPage;

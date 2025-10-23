@@ -1,9 +1,9 @@
 import * as ko from "knockout";
 import appViewModel from "../appController";
-const SLICE_KEY = "verificationPage";
+const SLICE_KEY = "usernamePage";
 
 //classCreation
-class VerificationPage {
+class usernamePage {
   public username = ko.observable<string>("");
   public apiError = ko.observable<string | null>(null);
   public apiLoading = ko.observable<boolean>(false);
@@ -71,7 +71,7 @@ class VerificationPage {
       if (navigatedFromAccountType !== "true") {
         console.warn("Invalid access/hard reload detected on Account Details page. Redirecting to Account Type page.");
         this.clearLocalSlice();
-        appViewModel?.goToNextStep("verificationPage", "accountTypePage");
+        appViewModel?.goToNextStep("usernamePage", "cnicPage");
       }
     } catch (e) {
       console.error("Error during reload check:", e);
@@ -90,7 +90,7 @@ class VerificationPage {
   //goBack & goNext Handlers
   goBack = () => {
     this.saveToSharedSession();
-    appViewModel?.router?.go({ path: "accountDetailsPage" });
+    appViewModel?.router?.go({ path: "accountIbanPage" });
   };
 
   goNext = () => {
@@ -99,7 +99,7 @@ class VerificationPage {
   if (!usernameValue) {
     localStorage.removeItem("username");
     this.saveToSharedSession();
-    appViewModel?.goToNextStep("verificationPage", "loginDetailsPage");
+    appViewModel?.goToNextStep("usernamePage", "passwordPage");
     return;
   }
 
@@ -115,7 +115,7 @@ class VerificationPage {
 
   localStorage.setItem("username", usernameValue);
   this.saveToSharedSession();
-  appViewModel?.goToNextStep("verificationPage", "loginDetailsPage");
+  appViewModel?.goToNextStep("usernamePage", "passwordPage");
 };
 
 
@@ -131,7 +131,7 @@ class VerificationPage {
     this.apiLoading(true);
     this.apiError(null);
 
-    const url = `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/user-with-username-check`;
+    const url = `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/username-check`;
 
     try {
       const response = await fetch(url);
@@ -175,7 +175,7 @@ class VerificationPage {
     }
   });
 
-  // ✅ Replaced old check with unified API call
+  // Replaced old check with unified API call
   public checkUsernameAvailability = async (): Promise<void> => {
     const usernameValue = this.username()?.trim();
     const cnicNo = localStorage.getItem("cnicNo");
@@ -191,7 +191,7 @@ class VerificationPage {
     this.apiError(null);
 
     try {
-      const url = `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/user-with-username-check?username=${encodeURIComponent(usernameValue)}`;
+      const url = `http://localhost:8080/api/accounts/${encodeURIComponent(cnicNo)}/username-check?username=${encodeURIComponent(usernameValue)}`;
       const res = await fetch(url);
       const json = await res.json().catch(() => null);
 
@@ -215,11 +215,11 @@ class VerificationPage {
 
   //Page Connected & Disconnected
   connected(): void {
-    document.title = "MBL | Verification";
+    document.title = "MBL | Username Set";
     this.fetchUserData();
   }
 
   disconnected(): void { }
 }
 
-export = VerificationPage;
+export = usernamePage;
